@@ -17,6 +17,10 @@ struct HaebitLightMeterView: View {
         ZStack {
             CameraView(previewLayer: viewModel.previewLayer)
                 .ignoresSafeArea()
+            Text(String(format: "EV: %.3f", viewModel.exposureValue))
+                .font(.largeTitle)
+                .foregroundStyle(.white)
+                .shadow(radius: 5)
         }
         .onChange(of: scenePhase) { phase in
             guard phase == .active else { return }

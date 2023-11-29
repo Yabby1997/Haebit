@@ -18,6 +18,24 @@ final class HaebitLightMeterViewModel: ObservableObject {
     var previewLayer: CALayer { camera.previewLayer }
     
     @Published var shouldRequestCameraAccess = false
+    @Published private(set) var exposureValue: Float = .zero
+    
+    init() {
+        bind()
+    }
+    
+    private func bind() {
+        camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
+            .compactMap { [weak self] iso, shutterSpeed, aperture in
+                try? self?.lightMeter.getExposureValue(
+                    iso: iso,
+                    shutterSpeed: shutterSpeed,
+                    aperture: aperture
+                )
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$exposureValue)
+    }
     
     func setupIfNeeded() {
         Task {
