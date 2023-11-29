@@ -7,7 +7,12 @@ let targets: [Target] = [
         product: .app,
         bundleId: "com.seunghun.haebit",
         deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-        infoPlist: .extendingDefault(with: ["UILaunchStoryboardName": "LaunchScreen"]),
+        infoPlist: .extendingDefault(
+            with: [
+                "UILaunchStoryboardName": "LaunchScreen",
+                "NSCameraUsageDescription": "노출계 사용에 카메라 기능이 필요합니다.",
+            ]
+        ),
         sources: ["Haebit/Sources/**"],
         resources: ["Haebit/Resources/**"],
         dependencies: [

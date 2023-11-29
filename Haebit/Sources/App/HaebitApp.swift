@@ -4,7 +4,7 @@ import SwiftUI
 struct HaebitApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HaebitLightMeterView(viewModel: HaebitLightMeterViewModel())
         }
     }
 }
