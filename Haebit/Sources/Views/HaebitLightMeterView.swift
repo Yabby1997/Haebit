@@ -21,6 +21,43 @@ struct HaebitLightMeterView: View {
                 .font(.largeTitle)
                 .foregroundStyle(.white)
                 .shadow(radius: 5)
+            VStack {
+                Spacer()
+                HStack {
+                    ValueSlider(
+                        title: "ISO",
+                        subtitle: "\(Int(viewModel.iso))",
+                        valueRange: 50...3200,
+                        value: $viewModel.iso
+                    )
+                    Toggle(isOn: $viewModel.isIsoMode) {}
+                        .labelsHidden()
+                }
+                .disabled(viewModel.isIsoMode)
+                HStack {
+                    ValueSlider(
+                        title: "Shutter",
+                        subtitle: String(format: "%.4fs", viewModel.shutterSpeed),
+                        valueRange: 0.0005...1,
+                        value: $viewModel.shutterSpeed
+                    )
+                    Toggle(isOn: $viewModel.isShutterSpeedMode) {}
+                        .labelsHidden()
+                }
+                .disabled(viewModel.isShutterSpeedMode)
+                HStack {
+                    ValueSlider(
+                        title: "Aperture",
+                        subtitle: String(format: "ƒ%.1f", viewModel.aperture),
+                        valueRange: 1.4...22,
+                        value: $viewModel.aperture
+                    )
+                    Toggle(isOn: $viewModel.isApertureMode) {}
+                        .labelsHidden()
+                }
+                .disabled(viewModel.isApertureMode)
+            }
+            .padding()
         }
         .onChange(of: scenePhase) { phase in
             guard phase == .active else { return }
