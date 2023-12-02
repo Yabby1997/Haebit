@@ -6,7 +6,7 @@ let targets: [Target] = [
         platform: .iOS,
         product: .app,
         bundleId: "com.seunghun.haebit",
-        deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
+        deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         infoPlist: .extendingDefault(
             with: [
                 "UILaunchStoryboardName": "LaunchScreen",
@@ -18,8 +18,10 @@ let targets: [Target] = [
         dependencies: [
 //            .project(target: "Obscura", path: "../../Feature/Obscura"),
 //            .project(target: "LightMeter", path: "../../Feature/LightMeter"),
+//            .project(target: "HaebitUI", path: "../../Feature/HaebitUI")
             .package(product: "Obscura", type: .runtime),
             .package(product: "LightMeter", type: .runtime),
+            .package(product: "HaebitUI", type: .runtime)
         ],
         settings: .settings(
             base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
@@ -35,6 +37,7 @@ let project = Project(
     packages: [
         .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.1.0")),
         .remote(url: "https://github.com/Yabby1997/LightMeter.git", requirement: .exact("0.1.0")),
+        .remote(url: "https://github.com/Yabby1997/HaebitUI.git", requirement: .exact("0.1.0")),
     ],
     targets: targets
 )
