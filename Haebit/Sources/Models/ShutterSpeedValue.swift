@@ -12,6 +12,7 @@ struct ShutterSpeedValue: Hashable {
     let denominator: Int
     var value: Float { 1 / Float(denominator) }
     var title: String { "¹⁄" + (String(Int(denominator)).compactMap { $0.subscript }).reduce("") { $0 + String($1) } + "s" }
+    var description: String { "¹⁄ \(Int(denominator))s"}
 }
 
 extension String.Element {

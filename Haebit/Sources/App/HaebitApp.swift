@@ -1,6 +1,6 @@
 //
 //  HaebitApp.swift
-//  HaebitUI
+//  Haebit
 //
 //  Created by Seunghun on 11/15/23.
 //  Copyright © 2023 seunghun. All rights reserved.
@@ -13,12 +13,8 @@ import HaebitUI
 struct HaebitApp: App {
     var body: some Scene {
         WindowGroup {
-            HaebitLightMeterView(viewModel: HaebitLightMeterViewModel())
-                .environmentObject(
-                    HaebitApertureRingDependencies(
-                        feedbackProvidable: DefaultFeedbackProvidable()
-                    )
-                )
+            HaebitLightMeterView(viewModel: HaebitLightMeterViewModel(feedbackProvider: DefaultLightMeterFeedbackProvider()))
+                .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
         }
     }
 }

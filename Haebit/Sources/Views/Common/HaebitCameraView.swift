@@ -1,5 +1,5 @@
 //
-//  CameraView.swift
+//  HaebitCameraView.swift
 //  Haebit
 //
 //  Created by Seunghun on 11/29/23.
@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-struct CameraView: UIViewRepresentable {
+struct HaebitCameraView: UIViewRepresentable {
     private final class _CameraView: UIView {
         private let previewLayer: CALayer
         
         init(previewLayer: CALayer) {
             self.previewLayer = previewLayer
             super.init(frame: .zero)
-            layer.addSublayer(previewLayer)
+            setupLayer()
         }
         
         required init?(coder: NSCoder) {
@@ -25,6 +25,11 @@ struct CameraView: UIViewRepresentable {
         override func layoutSubviews() {
             super.layoutSubviews()
             previewLayer.frame = layer.bounds
+        }
+        
+        private func setupLayer() {
+            previewLayer.backgroundColor = UIColor.black.cgColor
+            layer.addSublayer(previewLayer)
         }
     }
     

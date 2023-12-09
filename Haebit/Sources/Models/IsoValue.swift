@@ -12,4 +12,5 @@ struct IsoValue: Hashable {
     let iso: Int
     var value: Float { Float(iso) }
     var title: String { "\(iso)" }
+    var description: String { title }
 }
