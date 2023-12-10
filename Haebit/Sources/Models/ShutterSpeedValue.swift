@@ -9,10 +9,17 @@
 import Foundation
 
 struct ShutterSpeedValue: Hashable {
-    let denominator: Int
+    let denominator: Float
     var value: Float { 1 / Float(denominator) }
-    var title: String { "¹⁄" + (String(Int(denominator)).compactMap { $0.subscript }).reduce("") { $0 + String($1) } + "s" }
-    var description: String { "¹⁄ \(Int(denominator))s"}
+    var title: String { isLessThanOneSecond ? "¹⁄" + Int(denominator).subscriptString + "s" : "\(Int(1 / denominator))s" }
+    var description: String { isLessThanOneSecond ? "¹⁄ \(Int(denominator))s" : "\(Int(1 / denominator))s" }
+    private var isLessThanOneSecond: Bool { denominator > 1 }
+}
+
+extension Int {
+    fileprivate var subscriptString: String {
+        String(self).compactMap { $0.subscript }.reduce("") { $0 + String($1) }
+    }
 }
 
 extension String.Element {
