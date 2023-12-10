@@ -31,12 +31,10 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         }
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase, perform: didChangeScene(phase:))
-        .alert("카메라 권한 요청", isPresented: $viewModel.shouldRequestCameraAccess) {
-            Button(action: openSettings) {
-                Text("설정 열기")
-            }
+        .alert(.lightMeterViewAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
+            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
         } message :{
-            Text("노출계 기능 사용을 위해선 카메라 권한이 필요합니다. 설정 앱에서 카메라 권한을 허용해주세요.")
+            Text(.lightMeterViewAccessAlertMessage)
         }
     }
     

@@ -15,7 +15,7 @@ struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterV
     var body: some View {
         VStack {
             Spacer()
-            Button(action: viewModel.didTapUnlock) { Text("Unlock") }
+            Button(action: viewModel.didTapUnlock) { Text(.lightMeterControlViewUnlockButton) }
                 .opacity(viewModel.isLocked ? 1.0 : .zero)
                 .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .foregroundStyle(.yellow)
