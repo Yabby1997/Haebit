@@ -13,6 +13,7 @@ let targets: [Target] = [
                     "UIImageName": "LaunchScreenIcon",
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
+                "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
             ]
         ),
         sources: ["Haebit/Sources/**"],
