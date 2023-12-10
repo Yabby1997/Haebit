@@ -11,7 +11,7 @@ import LightMeter
 import Obscura
 import QuartzCore
 
-final class HaebitLightMeterViewModel: ObservableObject {
+final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Dependencies
     
     private let camera = ObscuraCamera()
@@ -104,7 +104,7 @@ final class HaebitLightMeterViewModel: ObservableObject {
                     iso: iso.value,
                     aperture: aperture.value
                 )
-                .nearest(among: shutterSpeedValues.map { $0.value } )
+                    .nearest(among: shutterSpeedValues.map { $0.value } )
                 return shutterSpeedValues.first { $0.value == value }
             }
             .removeDuplicates()
@@ -155,7 +155,7 @@ final class HaebitLightMeterViewModel: ObservableObject {
     }
     
     // MARK: - Internal Methods
-
+    
     func setupIfNeeded() {
         Task {
             do {

@@ -9,8 +9,8 @@
 import SwiftUI
 import HaebitUI
 
-struct HaebitLightMeterView: View {
-    @StateObject var viewModel: HaebitLightMeterViewModel
+struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
+    @StateObject var viewModel: ViewModel
     @Environment(\.openURL) var openURL
     @Environment(\.scenePhase) var scenePhase
     
@@ -52,6 +52,6 @@ struct HaebitLightMeterView: View {
 }
 
 #Preview {
-    HaebitLightMeterView(viewModel: HaebitLightMeterViewModel(feedbackProvider: DefaultLightMeterFeedbackProvider()))
+    HaebitLightMeterView(viewModel: DemoHaebitLightMeterViewModel())
         .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
 }

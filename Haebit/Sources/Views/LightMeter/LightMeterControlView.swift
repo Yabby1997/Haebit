@@ -9,8 +9,8 @@
 import SwiftUI
 import HaebitUI
 
-struct LightMeterControlView: View {
-    @StateObject var viewModel: HaebitLightMeterViewModel
+struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
+    @StateObject var viewModel: ViewModel
     
     var body: some View {
         VStack {
@@ -64,6 +64,6 @@ struct LightMeterControlView: View {
 }
 
 #Preview {
-    LightMeterControlView(viewModel: HaebitLightMeterViewModel(feedbackProvider: DefaultLightMeterFeedbackProvider()))
+    LightMeterControlView(viewModel: DemoHaebitLightMeterViewModel())
             .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
 }
