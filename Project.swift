@@ -13,7 +13,6 @@ let targets: [Target] = [
                     "UIImageName": "LaunchScreenIcon",
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
-                "NSCameraUsageDescription": "노출계 사용에 카메라 기능이 필요합니다.",
             ]
         ),
         sources: ["Haebit/Sources/**"],
