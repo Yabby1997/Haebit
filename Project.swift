@@ -9,7 +9,10 @@ let targets: [Target] = [
         deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         infoPlist: .extendingDefault(
             with: [
-                "UILaunchStoryboardName": "LaunchScreen",
+                "UILaunchScreen": [
+                    "UIImageName": "LaunchScreenIcon",
+                    "UIColorName": "LaunchScreenBackgroundColor",
+                ],
                 "NSCameraUsageDescription": "노출계 사용에 카메라 기능이 필요합니다.",
             ]
         ),
