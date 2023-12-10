@@ -50,6 +50,6 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
 }
 
 #Preview {
-    HaebitLightMeterView(viewModel: DemoHaebitLightMeterViewModel())
+    HaebitLightMeterView(viewModel: DemoHaebitLightMeterViewModel(exposureValue: 11, lockPoint: nil, isLocked: false))
         .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
 }
