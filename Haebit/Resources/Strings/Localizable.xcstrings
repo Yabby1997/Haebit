@@ -24,12 +24,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sunlight uses the camera to measure the exposure value. Please allow camera access in Settings."
+            "value" : "illumeter uses the camera to measure the exposure value. Please allow camera access in Settings."
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "해빛은 노출값(EV) 측정을 위해 카메라를 사용합니다. 설정을 열어 카메라 권한을 허용해주세요."
           }
         }

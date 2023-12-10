@@ -7,7 +7,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sunlight"
+            "value" : "illumeter"
           }
         },
         "ko" : {
@@ -24,7 +24,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sunlight"
+            "value" : "illumeter"
           }
         },
         "ko" : {
@@ -42,7 +42,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sunlight uses the camera to measure the exposure value."
+            "value" : "illumeter uses the camera to measure the exposure value."
           }
         },
         "ko" : {
