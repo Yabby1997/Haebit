@@ -14,6 +14,7 @@ let targets: [Target] = [
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "ITSAppUsesNonExemptEncryption": false,
             ]
         ),
         sources: ["Haebit/Sources/**"],
