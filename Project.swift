@@ -103,8 +103,8 @@ let project = Project(
     name: "Haebit",
     organizationName: "seunghun",
     packages: [
-        .remote(url: "https://github.com/Yabby1997/HaebitUI.git", requirement: .exact("0.2.0")),
-        .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.2.1")),
+        .remote(url: "https://github.com/Yabby1997/HaebitUI.git", requirement: .exact("0.2.1")),
+        .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.3.0")),
         .remote(url: "https://github.com/Yabby1997/LightMeter.git", requirement: .exact("0.1.0")),
     ],
     targets: targets

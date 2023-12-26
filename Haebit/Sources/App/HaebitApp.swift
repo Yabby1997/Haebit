@@ -14,7 +14,12 @@ struct HaebitApp: App {
     var body: some Scene {
         WindowGroup {
             HaebitLightMeterView(viewModel: HaebitLightMeterViewModel(feedbackProvider: DefaultLightMeterFeedbackProvider()))
-                .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
+                .environmentObject(
+                    LightMeterControlViewDependencies(
+                        exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
+                        zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
+                    )
+                )
         }
     }
 }

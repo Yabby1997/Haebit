@@ -51,5 +51,10 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
 
 #Preview {
     HaebitLightMeterView(viewModel: DemoHaebitLightMeterViewModel())
-        .environmentObject(HaebitApertureRingDependencies(feedbackProvidable: ApertureRingFeedbackProvider()))
+        .environmentObject(
+            LightMeterControlViewDependencies(
+                exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
+                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
+            )
+        )
 }

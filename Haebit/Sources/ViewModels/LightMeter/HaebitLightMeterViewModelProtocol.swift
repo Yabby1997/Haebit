@@ -11,6 +11,7 @@ import QuartzCore
 
 protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var previewLayer: CALayer { get }
+    var focalLengths: [FocalLengthValue] { get }
     var apertureValues: [ApertureValue] { get }
     var shutterSpeedValues: [ShutterSpeedValue] { get }
     var isoValues: [IsoValue] { get }
@@ -22,6 +23,7 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     
     var shouldRequestCameraAccess: Bool { get set }
     var lightMeterMode: LightMeterMode { get set }
+    var focalLength: FocalLengthValue { get set }
     var aperture: ApertureValue { get set }
     var shutterSpeed: ShutterSpeedValue { get set }
     var iso: IsoValue { get set }
