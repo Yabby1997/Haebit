@@ -2,6 +2,70 @@ import ProjectDescription
 
 let targets: [Target] = [
     Target(
+        name: "HaebitDev",
+        platform: .iOS,
+        product: .app,
+        bundleId: "com.seunghun.haebit.dev",
+        deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
+        infoPlist: .extendingDefault(
+            with: [
+                "UILaunchScreen": [
+                    "UIImageName": "LaunchScreenIcon",
+                    "UIColorName": "LaunchScreenBackgroundColor",
+                ],
+                "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "ITSAppUsesNonExemptEncryption": false,
+            ]
+        ),
+        sources: ["Haebit/Sources/**"],
+        resources: [
+            "Haebit/Resources/Common/**",
+            "Haebit/Resources/Dev/**"
+        ],
+        dependencies: [
+            .project(target: "HaebitUI", path: "../../Feature/HaebitUI"),
+            .project(target: "Obscura", path: "../../Feature/Obscura"),
+            .project(target: "LightMeter", path: "../../Feature/LightMeter"),
+        ],
+        settings: .settings(
+            base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
+            configurations: [],
+            defaultSettings: .recommended
+        )
+    ),
+    Target(
+        name: "HaebitRC",
+        platform: .iOS,
+        product: .app,
+        bundleId: "com.seunghun.haebit.rc",
+        deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
+        infoPlist: .extendingDefault(
+            with: [
+                "UILaunchScreen": [
+                    "UIImageName": "LaunchScreenIcon",
+                    "UIColorName": "LaunchScreenBackgroundColor",
+                ],
+                "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "ITSAppUsesNonExemptEncryption": false,
+            ]
+        ),
+        sources: ["Haebit/Sources/**"],
+        resources: [
+            "Haebit/Resources/Common/**",
+            "Haebit/Resources/RC/**"
+        ],
+        dependencies: [
+            .package(product: "HaebitUI", type: .runtime),
+            .package(product: "Obscura", type: .runtime),
+            .package(product: "LightMeter", type: .runtime),
+        ],
+        settings: .settings(
+            base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
+            configurations: [],
+            defaultSettings: .recommended
+        )
+    ),
+    Target(
         name: "Haebit",
         platform: .iOS,
         product: .app,
@@ -18,11 +82,11 @@ let targets: [Target] = [
             ]
         ),
         sources: ["Haebit/Sources/**"],
-        resources: ["Haebit/Resources/**"],
+        resources: [
+            "Haebit/Resources/Common/**",
+            "Haebit/Resources/Real/**"
+        ],
         dependencies: [
-//            .project(target: "HaebitUI", path: "../../Feature/HaebitUI"),
-//            .project(target: "Obscura", path: "../../Feature/Obscura"),
-//            .project(target: "LightMeter", path: "../../Feature/LightMeter"),
             .package(product: "HaebitUI", type: .runtime),
             .package(product: "Obscura", type: .runtime),
             .package(product: "LightMeter", type: .runtime),
