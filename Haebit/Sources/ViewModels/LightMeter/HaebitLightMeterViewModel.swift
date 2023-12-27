@@ -17,7 +17,8 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     private let camera = ObscuraCamera()
     private let lightMeter = LightMeterService()
     private let statePersistence: LightMeterStatePersistenceProtocol
-    private let feedbackProvider: HaebitLightMeterFeedbackProvidable
+    private let reviewRequestValidator: ReviewRequestValidatable
+    private let feedbackProvider: LightMeterFeedbackProvidable
     private let debounceQueue = DispatchQueue.global()
     var previewLayer: CALayer { camera.previewLayer }
     
@@ -46,6 +47,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     var apertureMode: Bool { lightMeterMode == .aperture }
     var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     var isoMode: Bool { lightMeterMode == .iso }
+    @Published var shouldRequestReview = false
     
     @Published var shouldRequestCameraAccess = false
     @Published private(set) var exposureValue: Float = .zero
@@ -63,9 +65,11 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     init(
         statePersistence: LightMeterStatePersistenceProtocol,
-        feedbackProvider: HaebitLightMeterFeedbackProvidable
+        reviewRequestValidator: ReviewRequestValidatable,
+        feedbackProvider: LightMeterFeedbackProvidable
     ) {
         self.statePersistence = statePersistence
+        self.reviewRequestValidator = reviewRequestValidator
         self.feedbackProvider = feedbackProvider
         self.lightMeterMode = statePersistence.mode
         self.aperture = statePersistence.aperture
@@ -77,6 +81,12 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Private Methods
     
     private func bind() {
+        cancellables = []
+        
+        reviewRequestValidator.shouldRequestReview
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$shouldRequestReview)
+
         $focalLength
             .sink { [weak self] focalLength in
                 try? self?.camera.zoom(factor: focalLength.zoomFactor)
@@ -191,7 +201,6 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             do {
                 try await camera.setup()
                 try camera.setHDRMode(isEnabled: false)
-                cancellables = []
                 bind()
             } catch {
                 Task { @MainActor in

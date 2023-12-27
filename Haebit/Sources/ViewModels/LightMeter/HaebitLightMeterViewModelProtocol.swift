@@ -20,6 +20,7 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var shutterSpeedMode: Bool { get }
     var isoMode: Bool { get }
     var exposureValue: Float { get }
+    var shouldRequestReview: Bool { get }
     
     var shouldRequestCameraAccess: Bool { get set }
     var lightMeterMode: LightMeterMode { get set }

@@ -16,13 +16,14 @@ struct HaebitApp: App {
             HaebitLightMeterView(
                 viewModel: HaebitLightMeterViewModel(
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
-                    feedbackProvider: DefaultLightMeterFeedbackProvider()
+                    reviewRequestValidator: DefaultReviewRequestValidator(),
+                    feedbackProvider: LightMeterHapticFeedbackProvider()
                 )
             )
             .environmentObject(
                 LightMeterControlViewDependencies(
-                    exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
-                    zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
+                    exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
+                    zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
                 )
             )
         }

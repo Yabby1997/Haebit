@@ -34,6 +34,7 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     var iso: IsoValue = IsoValue(iso: 400)
     var lockPoint: CGPoint? = nil
     var isLocked: Bool = false
+    var shouldRequestReview: Bool { false }
     
     func setupIfNeeded() {}
     func prepareInactive() {}

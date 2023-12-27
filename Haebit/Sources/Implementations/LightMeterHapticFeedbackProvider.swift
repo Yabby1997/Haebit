@@ -1,19 +1,14 @@
 //
-//  HaebitLightMeterFeedbackProvidable.swift
+//  LightMeterHapticFeedbackProvider.swift
 //  Haebit
 //
-//  Created by Seunghun on 12/9/23.
+//  Created by Seunghun on 12/27/23.
 //  Copyright © 2023 seunghun. All rights reserved.
 //
 
 import UIKit
 
-protocol HaebitLightMeterFeedbackProvidable {
-    func generateInteractionFeedback()
-    func generateCompletionFeedback()
-}
-
-final class DefaultLightMeterFeedbackProvider: HaebitLightMeterFeedbackProvidable {
+final class LightMeterHapticFeedbackProvider: LightMeterFeedbackProvidable {
     private let interactionFeedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionFeedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
     

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import HaebitUI
+import StoreKit
 
 struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
     @StateObject var viewModel: ViewModel
@@ -30,7 +31,8 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
             }
         }
         .persistentSystemOverlays(.hidden)
-        .onChange(of: scenePhase, perform: didChangeScene(phase:))
+        .onChange(of: scenePhase, perform: didChangeScene)
+        .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
         .alert(.lightMeterViewAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
             Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
         } message :{
@@ -49,6 +51,13 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         }
     }
     
+    private func requestReview(_ request: Bool) {
+        guard request,
+              let scene = (UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive }),
+              let windowScene = scene as? UIWindowScene else { return }
+        SKStoreReviewController.requestReview(in: windowScene)
+    }
+    
     private func openSettings() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         openURL(settingsUrl)
@@ -59,8 +68,8 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
     HaebitLightMeterView(viewModel: DemoHaebitLightMeterViewModel())
         .environmentObject(
             LightMeterControlViewDependencies(
-                exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
-                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
+                exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
+                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
             )
         )
 }
