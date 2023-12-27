@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct IsoValue: Hashable {
+struct IsoValue: Hashable, Codable {
     let iso: Int
     var value: Float { Float(iso) }
     var title: String { "\(iso)" }

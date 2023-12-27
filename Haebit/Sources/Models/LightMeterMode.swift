@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum LightMeterMode: Equatable {
+enum LightMeterMode: Equatable, Codable {
     case aperture
     case shutterSpeed
     case iso

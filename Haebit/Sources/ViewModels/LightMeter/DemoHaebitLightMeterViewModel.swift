@@ -36,6 +36,7 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     var isLocked: Bool = false
     
     func setupIfNeeded() {}
+    func prepareInactive() {}
     func didTap(point: CGPoint) {}
     func didTapUnlock() {}
 }

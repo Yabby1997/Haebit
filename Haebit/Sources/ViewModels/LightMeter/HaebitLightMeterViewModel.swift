@@ -16,23 +16,25 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     private let camera = ObscuraCamera()
     private let lightMeter = LightMeterService()
-    private let debounceQueue = DispatchQueue.global()
+    private let statePersistence: LightMeterStatePersistenceProtocol
     private let feedbackProvider: HaebitLightMeterFeedbackProvidable
+    private let debounceQueue = DispatchQueue.global()
     var previewLayer: CALayer { camera.previewLayer }
     
     // MARK: - Constants
     
-    private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
     private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
     private let availableShutterSpeedDenominators: [Float] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2, 1, 0.5, 0.25, 0.125, 0.0625, 0.03333333, 0.01666666]
     private let availableIsoValues: [Int] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+    private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
     
     // MARK: - Properties
     
-    lazy var focalLengths: [FocalLengthValue] = { availableFocalLengths.map { FocalLengthValue(value: $0) }.filter { $0.zoomFactor <= camera.maxZoomFactor } }()
     lazy var apertureValues: [ApertureValue] = { availableApertureValues.map { ApertureValue(value: $0) } }()
     lazy var shutterSpeedValues: [ShutterSpeedValue] = { availableShutterSpeedDenominators.map { ShutterSpeedValue(denominator: $0) } }()
     lazy var isoValues: [IsoValue] = { availableIsoValues.map { IsoValue(iso: $0) } }()
+    lazy var focalLengths: [FocalLengthValue] = { availableFocalLengths.map { FocalLengthValue(value: $0) }.filter { $0.zoomFactor <= camera.maxZoomFactor } }()
+    
     var resultDescription: String {
         switch lightMeterMode {
         case .aperture: return aperture.description
@@ -47,11 +49,11 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     @Published var shouldRequestCameraAccess = false
     @Published private(set) var exposureValue: Float = .zero
-    @Published var lightMeterMode: LightMeterMode = .shutterSpeed { didSet { feedbackProvider.generateInteractionFeedback() } }
-    @Published var focalLength: FocalLengthValue = FocalLengthValue(value: 50)
-    @Published var aperture: ApertureValue = ApertureValue(value: 1.4)
-    @Published var shutterSpeed: ShutterSpeedValue = ShutterSpeedValue(denominator: 60)
-    @Published var iso: IsoValue = IsoValue(iso: 200)
+    @Published var lightMeterMode: LightMeterMode { didSet { feedbackProvider.generateInteractionFeedback() } }
+    @Published var aperture: ApertureValue
+    @Published var shutterSpeed: ShutterSpeedValue
+    @Published var iso: IsoValue
+    @Published var focalLength: FocalLengthValue
     @Published var lockPoint: CGPoint? = nil
     @Published var isLocked: Bool = false
     
@@ -59,8 +61,17 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     // MARK: - Initializers
     
-    init(feedbackProvider: HaebitLightMeterFeedbackProvidable) {
+    init(
+        statePersistence: LightMeterStatePersistenceProtocol,
+        feedbackProvider: HaebitLightMeterFeedbackProvidable
+    ) {
+        self.statePersistence = statePersistence
         self.feedbackProvider = feedbackProvider
+        self.lightMeterMode = statePersistence.mode
+        self.aperture = statePersistence.aperture
+        self.shutterSpeed = statePersistence.shutterSpeed
+        self.iso = statePersistence.iso
+        self.focalLength = statePersistence.focalLength
     }
     
     // MARK: - Private Methods
@@ -188,6 +199,14 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 }
             }
         }
+    }
+    
+    func prepareInactive() {
+        statePersistence.mode = lightMeterMode
+        statePersistence.aperture = aperture
+        statePersistence.shutterSpeed = shutterSpeed
+        statePersistence.iso = iso
+        statePersistence.focalLength = focalLength
     }
     
     func didTap(point: CGPoint) {

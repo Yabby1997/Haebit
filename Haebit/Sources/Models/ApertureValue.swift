@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ApertureValue: Hashable {
+struct ApertureValue: Hashable, Codable {
     let value: Float
     var title: String { String(format: "ƒ%g", value) }
     var description: String { title }

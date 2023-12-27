@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FocalLengthValue: Hashable {
+struct FocalLengthValue: Hashable, Codable {
     let value: Int
     var title: String { "\(value)mm" }
 }

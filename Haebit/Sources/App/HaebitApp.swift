@@ -13,13 +13,18 @@ import HaebitUI
 struct HaebitApp: App {
     var body: some Scene {
         WindowGroup {
-            HaebitLightMeterView(viewModel: HaebitLightMeterViewModel(feedbackProvider: DefaultLightMeterFeedbackProvider()))
-                .environmentObject(
-                    LightMeterControlViewDependencies(
-                        exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
-                        zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
-                    )
+            HaebitLightMeterView(
+                viewModel: HaebitLightMeterViewModel(
+                    statePersistence: LightMeterStateUserDefaultsPersistence(),
+                    feedbackProvider: DefaultLightMeterFeedbackProvider()
                 )
+            )
+            .environmentObject(
+                LightMeterControlViewDependencies(
+                    exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ExposureFeedbackProvider()),
+                    zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ZoomFeedbackProvider())
+                )
+            )
         }
     }
 }
