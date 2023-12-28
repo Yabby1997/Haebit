@@ -15,6 +15,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
+                "CFBundleShortVersionString": "1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -47,6 +48,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
+                "CFBundleShortVersionString": "1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -79,6 +81,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
+                "CFBundleShortVersionString": "1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
