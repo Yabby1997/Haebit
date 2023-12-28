@@ -31,7 +31,7 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var lockPoint: CGPoint? { get set }
     var isLocked: Bool { get set }
     
-    func setupIfNeeded()
+    func setupIfNeeded() async
     func prepareInactive()
     func didTap(point: CGPoint)
     func didTapUnlock()

@@ -43,7 +43,9 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
     private func didChangeScene(phase: ScenePhase) {
         switch phase {
         case .active:
-            viewModel.setupIfNeeded()
+            Task {
+               await viewModel.setupIfNeeded()
+            }
         case .background, .inactive:
             viewModel.prepareInactive()
         @unknown default:
