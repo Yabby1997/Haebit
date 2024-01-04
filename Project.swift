@@ -15,7 +15,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1",
+                "CFBundleShortVersionString": "1.1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -48,7 +48,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1",
+                "CFBundleShortVersionString": "1.1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -81,7 +81,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1",
+                "CFBundleShortVersionString": "1.1.1",
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -107,7 +107,7 @@ let project = Project(
     organizationName: "seunghun",
     packages: [
         .remote(url: "https://github.com/Yabby1997/HaebitUI.git", requirement: .exact("0.2.1")),
-        .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.3.0")),
+        .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.4.0")),
         .remote(url: "https://github.com/Yabby1997/LightMeter.git", requirement: .exact("0.1.0")),
     ],
     targets: targets
