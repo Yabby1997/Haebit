@@ -203,6 +203,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             try? camera.setHDRMode(isEnabled: false)
             bind()
         } catch {
+            guard case .notAuthorized = error as? ObscuraCamera.Errors else { return }
             Task { @MainActor in
                 shouldRequestCameraAccess = true
             }
