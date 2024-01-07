@@ -1,5 +1,10 @@
 import ProjectDescription
 
+let majorVersion: Int = 1
+let minorVersion: Int = 1
+let patchVersion: Int = 2
+let versionString: Plist.Value = "\(majorVersion).\(minorVersion).\(patchVersion)"
+
 let targets: [Target] = [
     Target(
         name: "HaebitDev",
@@ -15,7 +20,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1.1",
+                "CFBundleShortVersionString": versionString,
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -48,7 +53,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1.1",
+                "CFBundleShortVersionString": versionString,
             ]
         ),
         sources: ["Haebit/Sources/**"],
@@ -81,7 +86,7 @@ let targets: [Target] = [
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
                 "ITSAppUsesNonExemptEncryption": false,
-                "CFBundleShortVersionString": "1.1.1",
+                "CFBundleShortVersionString": versionString,
             ]
         ),
         sources: ["Haebit/Sources/**"],
