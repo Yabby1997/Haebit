@@ -200,7 +200,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         guard !camera.isRunning else { return }
         do {
             try await camera.setup()
-            try camera.setHDRMode(isEnabled: false)
+            try? camera.setHDRMode(isEnabled: false)
             bind()
         } catch {
             Task { @MainActor in
