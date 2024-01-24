@@ -39,13 +39,17 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var exposureValue: Float = 11
     var shouldRequestCameraAccess: Bool = false
     @Published var lightMeterMode: LightMeterMode
+    @Published var shutterSpeedInNanoSeconds: UInt64 = 1_000_000_000
     @Published var aperture: ApertureValue
     @Published var shutterSpeed: ShutterSpeedValue
     @Published var iso: IsoValue
     @Published var focalLength: FocalLengthValue = FocalLengthValue(value: 50)
+    @Published var result: CaptureResult? = nil
+    var isCapturing: Bool { true }
     var lockPoint: CGPoint? = nil
     var isLocked: Bool = false
     var shouldRequestReview: Bool { false }
+    var isPresentingLogger = false
     
     init(
         exposureValue: Float = 11,
@@ -129,4 +133,8 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     func prepareInactive() {}
     func didTap(point: CGPoint) {}
     func didTapUnlock() {}
+    func didTapShutter() {}
+    func didCloseShutter() {}
+    func didTapLogger() {}
+    func didCloseLogger() {}
 }

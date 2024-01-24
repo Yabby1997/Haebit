@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@" : {
-
-    },
     "lightMeterControlViewUnlockButton" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -71,6 +68,9 @@
           }
         }
       }
+    },
+    "로거" : {
+
     }
   },
   "version" : "1.0"

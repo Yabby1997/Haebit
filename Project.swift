@@ -19,6 +19,8 @@ let targets: [Target] = [
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "NSPhotoLibraryAddUsageDescription": "Need photo library access to save result",
+                "NSLocationWhenInUseUsageDescription": true,
                 "ITSAppUsesNonExemptEncryption": false,
                 "CFBundleShortVersionString": versionString,
             ]
@@ -32,6 +34,7 @@ let targets: [Target] = [
             .project(target: "HaebitUI", path: "../../Feature/HaebitUI"),
             .project(target: "Obscura", path: "../../Feature/Obscura"),
             .project(target: "LightMeter", path: "../../Feature/LightMeter"),
+            .project(target: "Portolan", path: "../../Feature/Portolan"),
         ],
         settings: .settings(
             base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
@@ -52,6 +55,8 @@ let targets: [Target] = [
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "NSPhotoLibraryAddUsageDescription": "Need photo library access to save result",
+                "NSLocationWhenInUseUsageDescription": true,
                 "ITSAppUsesNonExemptEncryption": false,
                 "CFBundleShortVersionString": versionString,
             ]
@@ -85,6 +90,8 @@ let targets: [Target] = [
                     "UIColorName": "LaunchScreenBackgroundColor",
                 ],
                 "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+                "NSPhotoLibraryAddUsageDescription": "Need photo library access to save result",
+                "NSLocationWhenInUseUsageDescription": true,
                 "ITSAppUsesNonExemptEncryption": false,
                 "CFBundleShortVersionString": versionString,
             ]

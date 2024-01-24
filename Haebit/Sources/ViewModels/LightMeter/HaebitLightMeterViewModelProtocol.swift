@@ -21,6 +21,8 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var isoMode: Bool { get }
     var exposureValue: Float { get }
     var shouldRequestReview: Bool { get }
+    var isCapturing: Bool { get }
+    var isPresentingLogger: Bool { get set }
     
     var shouldRequestCameraAccess: Bool { get set }
     var lightMeterMode: LightMeterMode { get set }
@@ -31,8 +33,12 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var lockPoint: CGPoint? { get set }
     var isLocked: Bool { get set }
     
-    func setupIfNeeded() async
+    func setupIfNeeded()
     func prepareInactive()
     func didTap(point: CGPoint)
     func didTapUnlock()
+    func didTapShutter()
+    func didCloseShutter()
+    func didTapLogger()
+    func didCloseLogger()
 }

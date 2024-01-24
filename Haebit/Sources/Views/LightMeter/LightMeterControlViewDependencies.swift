@@ -12,12 +12,15 @@ import HaebitUI
 final class LightMeterControlViewDependencies: ObservableObject {
     let exposureControlDependency: HaebitApertureRingDependencies
     let zoomControlDependency: HaebitApertureRingDependencies
+    let shutterButtonDependency: HaebitShutterButtonDependencies
     
     init(
         exposureControlDependency: HaebitApertureRingDependencies,
-        zoomControlDependency: HaebitApertureRingDependencies
+        zoomControlDependency: HaebitApertureRingDependencies,
+        shutterButtonDependency: HaebitShutterButtonDependencies
     ) {
         self.exposureControlDependency = exposureControlDependency
         self.zoomControlDependency = zoomControlDependency
+        self.shutterButtonDependency = shutterButtonDependency
     }
 }

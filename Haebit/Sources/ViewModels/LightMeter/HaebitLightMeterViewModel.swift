@@ -10,6 +10,7 @@ import Combine
 import LightMeter
 import Obscura
 import QuartzCore
+import Photos
 
 final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Dependencies
@@ -48,7 +49,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     var isoMode: Bool { lightMeterMode == .iso }
     @Published var shouldRequestReview = false
-    
+    @Published var isPresentingLogger = false
     @Published var shouldRequestCameraAccess = false
     @Published private(set) var exposureValue: Float = .zero
     @Published var lightMeterMode: LightMeterMode { didSet { feedbackProvider.generateInteractionFeedback() } }
@@ -58,6 +59,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var focalLength: FocalLengthValue
     @Published var lockPoint: CGPoint? = nil
     @Published var isLocked: Bool = false
+    @Published private(set) var isCapturing = false
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -111,7 +113,8 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .removeDuplicates { $0 == $1 }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .iso
+                self?.lightMeterMode == .iso 
+                && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
@@ -132,6 +135,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .shutterSpeed
+                && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, aperture in
                 guard let self else { return nil }
@@ -152,6 +156,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .aperture
+                && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
                 guard let self else { return nil }
@@ -196,16 +201,20 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     // MARK: - Internal Methods
     
-    func setupIfNeeded() async {
+    func setupIfNeeded() {
         guard !camera.isRunning else { return }
-        do {
-            try await camera.setup()
-            try? camera.setHDRMode(isEnabled: false)
-            bind()
-        } catch {
-            guard case .notAuthorized = error as? ObscuraCamera.Errors else { return }
-            Task { @MainActor in
-                shouldRequestCameraAccess = true
+        Task.detached { [weak self] in
+            guard let self else { return }
+            do {
+                try await camera.setup()
+                try? camera.setHDRMode(isEnabled: false)
+                try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
+                bind()
+            } catch {
+                guard case .notAuthorized = error as? ObscuraCamera.Errors else { return }
+                Task { @MainActor [weak self] in
+                    self?.shouldRequestCameraAccess = true
+                }
             }
         }
     }
@@ -232,5 +241,39 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             try camera.unlockFocus()
             feedbackProvider.generateInteractionFeedback()
         } catch {}
+    }
+    
+    func didTapShutter() {
+        isCapturing = true
+        Task { @MainActor in
+            let _ = try? await camera.capture()?.captureResult
+        }
+    }
+    
+    func didCloseShutter() {
+        isCapturing = false
+    }
+    
+    func didTapLogger() {
+        isPresentingLogger = true
+        feedbackProvider.generateInteractionFeedback()
+        Task.detached { [weak self] in
+            await self?.camera.stop()
+        }
+    }
+    
+    func didCloseLogger() {
+        isPresentingLogger = false
+        feedbackProvider.generateInteractionFeedback()
+        Task.detached { [weak self] in
+            await self?.camera.start()
+            try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
+        }
+    }
+}
+
+extension ObscuraCaptureResult {
+    var captureResult: CaptureResult {
+        .init(image: self.image, video: self.video)
     }
 }

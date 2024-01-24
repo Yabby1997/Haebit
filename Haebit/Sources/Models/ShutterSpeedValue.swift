@@ -10,7 +10,7 @@ import Foundation
 
 struct ShutterSpeedValue: Hashable, Codable {
     let denominator: Float
-    var value: Float { 1 / Float(denominator) }
+    var value: Float { 1 / denominator }
     var title: String { isLessThanOneSecond ? "¹⁄" + Int(denominator).subscriptString + "s" : "\(Int(1 / denominator))s" }
     var description: String { isLessThanOneSecond ? "¹⁄ \(Int(denominator))s" : "\(Int(1 / denominator))s" }
     private var isLessThanOneSecond: Bool { denominator > 1 }

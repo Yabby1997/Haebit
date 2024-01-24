@@ -51,7 +51,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -73,7 +74,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -95,7 +97,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -117,7 +120,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -139,7 +143,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -161,7 +166,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -183,7 +189,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -205,7 +212,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }
@@ -227,7 +235,8 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
     .environmentObject(
         LightMeterControlViewDependencies(
             exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
         )
     )
 }

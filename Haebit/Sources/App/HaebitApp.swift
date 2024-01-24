@@ -23,7 +23,8 @@ struct HaebitApp: App {
             .environmentObject(
                 LightMeterControlViewDependencies(
                     exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-                    zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+                    zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+                    shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
                 )
             )
         }

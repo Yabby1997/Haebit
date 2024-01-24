@@ -38,14 +38,17 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         } message :{
             Text(.lightMeterViewAccessAlertMessage)
         }
+        .fullScreenCover(isPresented: $viewModel.isPresentingLogger) {
+            HaebitLoggerView {
+                viewModel.didCloseLogger()
+            }
+        }
     }
     
     private func didChangeScene(phase: ScenePhase) {
         switch phase {
         case .active:
-            Task {
-               await viewModel.setupIfNeeded()
-            }
+            viewModel.setupIfNeeded()
         case .background, .inactive:
             viewModel.prepareInactive()
         @unknown default:
@@ -71,7 +74,8 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         .environmentObject(
             LightMeterControlViewDependencies(
                 exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider())
+                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+                shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
             )
         )
 }

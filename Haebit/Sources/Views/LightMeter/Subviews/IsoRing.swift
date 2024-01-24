@@ -1,0 +1,35 @@
+//
+//  IsoRing.swift
+//  HaebitDev
+//
+//  Created by Seunghun on 1/24/24.
+//  Copyright © 2024 seunghun. All rights reserved.
+//
+
+import SwiftUI
+import HaebitUI
+
+struct IsoRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
+    @StateObject var viewModel: ViewModel
+    @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
+    
+    var body: some View {
+        HaebitApertureRing(selection: $viewModel.iso, entries: viewModel.isoValues) { iso in
+            Text(iso.title)
+                .foregroundStyle(
+                    viewModel.isCapturing
+                        ? .gray
+                        : viewModel.isoMode
+                            ? viewModel.iso == iso
+                                ? .yellow
+                                : .gray
+                            : .white)
+                .font(.system(size: 14, weight: .bold, design: .serif))
+                .shadow(radius: 2)
+        }
+        .disabled(viewModel.isCapturing)
+        .environmentObject(dependencies.exposureControlDependency)
+        .onTapGesture { viewModel.lightMeterMode = .iso }
+        .disabled(viewModel.isoMode)
+    }
+}
