@@ -16,7 +16,7 @@ struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterV
     var body: some View {
         VStack {
             Spacer()
-            VStack {
+            VStack(spacing: 6) {
                 UnlockButton(viewModel: viewModel)
                 ApertureRing(viewModel: viewModel)
                 ShutterSpeedRing(viewModel: viewModel)
@@ -26,8 +26,8 @@ struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterV
                     LoggerButton(viewModel: viewModel)
                     ShutterButton(viewModel: viewModel)
                 }
+                .padding(.vertical, 8)
             }
-            .padding(.vertical, 8)
             .background {
                 BackgroundGradient()
             }
