@@ -7,29 +7,39 @@
 //
 
 import SwiftUI
+import HaebitLogger
 
 struct HaebitLoggerView: View {
-    let closeButtonAction: () -> Void
+    @Binding var isPresented: Bool
+    @StateObject var viewModel: HaebitLoggerViewModel
     
     var body: some View {
         NavigationStack {
             VStack {
-                Text("로거")
+                List {
+                    ForEach(viewModel.logs, id: \.self) { log in
+                        Text(log.memo)
+                    }
+                }
             }
             .navigationTitle("Logger")
             .toolbar {
                 Button {
-                    closeButtonAction()
+                    isPresented = false
                 } label: {
                     Image(systemName: "xmark")
                 }
             }
         }
+        .onAppear(perform: viewModel.onAppear)
     }
 }
 
 #Preview {
-    HaebitLoggerView {
-        print("close")
-    }
+    HaebitLoggerView(
+        isPresented: .constant(true),
+        viewModel: HaebitLoggerViewModel(
+            logger: HaebitLogger(repository: MockHaebitLogRepository())
+        )
+    )
 }

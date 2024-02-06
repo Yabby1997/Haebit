@@ -9,6 +9,7 @@
 import SwiftUI
 import HaebitUI
 import StoreKit
+import HaebitLogger
 
 struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
     @StateObject var viewModel: ViewModel
@@ -38,10 +39,13 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         } message :{
             Text(.lightMeterViewAccessAlertMessage)
         }
-        .fullScreenCover(isPresented: $viewModel.isPresentingLogger) {
-            HaebitLoggerView {
-                viewModel.didCloseLogger()
-            }
+        .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
+            HaebitLoggerView(
+                isPresented: $viewModel.isPresentingLogger,
+                viewModel: HaebitLoggerViewModel(
+                    logger: HaebitLogger(repository: MockHaebitLogRepository())
+                )
+            )
         }
     }
     

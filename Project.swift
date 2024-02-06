@@ -35,6 +35,7 @@ let targets: [Target] = [
             .project(target: "Obscura", path: "../../Feature/Obscura"),
             .project(target: "LightMeter", path: "../../Feature/LightMeter"),
             .project(target: "Portolan", path: "../../Feature/Portolan"),
+            .project(target: "HaebitLogger", path: "../../Feature/HaebitLogger"),
         ],
         settings: .settings(
             base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
