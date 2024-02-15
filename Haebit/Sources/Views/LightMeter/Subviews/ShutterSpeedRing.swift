@@ -17,17 +17,15 @@ struct ShutterSpeedRing<ViewModel>: View where ViewModel: HaebitLightMeterViewMo
         HaebitApertureRing(selection: $viewModel.shutterSpeed, entries: viewModel.shutterSpeedValues) { shutterSpeed in
             Text(shutterSpeed.title)
                 .foregroundStyle(
-                    viewModel.isCapturing
-                    ? .gray
-                    : viewModel.shutterSpeedMode
-                    ? viewModel.shutterSpeed == shutterSpeed
-                    ? .yellow
-                    : .gray
-                    : .white)
+                    viewModel.shutterSpeedMode
+                        ? viewModel.shutterSpeed == shutterSpeed
+                            ? .yellow
+                            : .gray
+                        : .white
+                )
                 .font(.system(size: 18, weight: .bold, design: .serif))
                 .shadow(radius: 2)
         }
-        .disabled(viewModel.isCapturing)
         .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
         .disabled(viewModel.shutterSpeedMode)

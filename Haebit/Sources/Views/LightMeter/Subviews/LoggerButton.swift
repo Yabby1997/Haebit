@@ -24,7 +24,7 @@ struct LoggerButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModelP
                     .frame(width: 30, height: 30)
             }
             .disabled(viewModel.isCapturing)
-            .foregroundStyle(viewModel.isCapturing ? .gray : .yellow)
+            .foregroundStyle(.yellow)
         }
         .padding(.horizontal, 20)
     }

@@ -21,8 +21,6 @@ struct ShutterButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModel
             )
         ) {
             viewModel.didTapShutter()
-        } completion: {
-            viewModel.didCloseShutter()
         }
         .disabled(viewModel.isCapturing)
         .environmentObject(dependencies.shutterButtonDependency)

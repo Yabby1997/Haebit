@@ -17,17 +17,15 @@ struct IsoRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtoc
         HaebitApertureRing(selection: $viewModel.iso, entries: viewModel.isoValues) { iso in
             Text(iso.title)
                 .foregroundStyle(
-                    viewModel.isCapturing
-                        ? .gray
-                        : viewModel.isoMode
-                            ? viewModel.iso == iso
-                                ? .yellow
-                                : .gray
-                            : .white)
+                    viewModel.isoMode
+                        ? viewModel.iso == iso
+                            ? .yellow
+                            : .gray
+                        : .white
+                )
                 .font(.system(size: 14, weight: .bold, design: .serif))
                 .shadow(radius: 2)
         }
-        .disabled(viewModel.isCapturing)
         .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .iso }
         .disabled(viewModel.isoMode)

@@ -21,18 +21,15 @@ struct ApertureRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelP
         } content: { aperture in
             Text(aperture.title)
                 .foregroundStyle(
-                    viewModel.isCapturing
-                        ? .gray
-                        : viewModel.apertureMode
-                            ? viewModel.aperture == aperture
-                                ? .yellow
-                                : .gray
-                            : .white
+                    viewModel.apertureMode
+                        ? viewModel.aperture == aperture
+                            ? .yellow
+                            : .gray
+                        : .white
                 )
                 .font(.system(size: 14, weight: .semibold, design: .monospaced))
                 .shadow(radius: 2)
         }
-        .disabled(viewModel.isCapturing)
         .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .aperture }
         .disabled(viewModel.apertureMode)

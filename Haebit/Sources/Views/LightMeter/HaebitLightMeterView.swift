@@ -34,6 +34,7 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase, perform: didChangeScene)
         .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
+        .disabled(viewModel.isCapturing)
         .alert(.lightMeterViewAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
             Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
         } message :{

@@ -9,30 +9,45 @@
 import SwiftUI
 import PhotosUI
 
-struct CaptureResult: Equatable {
+struct LivePhoto: Equatable {
     let image: URL
-    let video: URL
+    let video: URL?
 }
 
-struct LivePhotoView: UIViewRepresentable, Equatable {
-    var result: CaptureResult
+struct LivePhotoView: View {
+    let livePhoto: LivePhoto
+    @State private var photo: PHLivePhoto?
+    
+    var body: some View {
+        VStack {
+            PHLivePhotoRepresentable(livePhoto: $photo)
+                .aspectRatio((photo?.size.width ?? 1) / (photo?.size.height ?? 1), contentMode: .fill)
+        }
+        .onAppear {
+            PHLivePhoto.request(
+                withResourceFileURLs: [livePhoto.image, livePhoto.video].compactMap { $0 },
+                placeholderImage: UIImage(contentsOfFile: livePhoto.image.relativePath),
+                targetSize: .zero,
+                contentMode: .aspectFill
+            ) { photo, _ in
+                Task { @MainActor in
+                    self.photo = photo
+                }
+            }
+        }
+    }
+}
+
+struct PHLivePhotoRepresentable: UIViewRepresentable {
+    @Binding var livePhoto: PHLivePhoto?
     
     func makeUIView(context: Context) -> PHLivePhotoView {
         let view = PHLivePhotoView()
-        view.contentMode = .scaleAspectFit
         return view
     }
     
     func updateUIView(_ view: PHLivePhotoView, context: Context) {
-        PHLivePhoto.request(
-            withResourceFileURLs: [result.image, result.video],
-            placeholderImage: nil,
-            targetSize: .zero,
-            contentMode: .aspectFit
-        ) { photo, x in
-            guard let photo else { return }
-            view.livePhoto = photo
-            view.startPlayback(with: .hint)
-        }
+        view.livePhoto = livePhoto
+        view.startPlayback(with: .hint)
     }
 }

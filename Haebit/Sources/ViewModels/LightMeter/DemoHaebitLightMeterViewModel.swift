@@ -134,7 +134,6 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     func didTap(point: CGPoint) {}
     func didTapUnlock() {}
     func didTapShutter() {}
-    func didCloseShutter() {}
     func didTapLogger() {}
     func didCloseLogger() {}
 }

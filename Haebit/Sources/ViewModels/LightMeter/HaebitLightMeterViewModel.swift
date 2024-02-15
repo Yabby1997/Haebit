@@ -115,6 +115,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .filter { [weak self] _ in
                 self?.lightMeterMode == .iso 
                 && self?.isCapturing == false
+                && self?.isPresentingLogger == false
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
@@ -136,6 +137,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .filter { [weak self] _ in
                 self?.lightMeterMode == .shutterSpeed
                 && self?.isCapturing == false
+                && self?.isPresentingLogger == false
             }
             .compactMap { [weak self] ev, iso, aperture in
                 guard let self else { return nil }
@@ -157,6 +159,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .filter { [weak self] _ in
                 self?.lightMeterMode == .aperture
                 && self?.isCapturing == false
+                && self?.isPresentingLogger == false
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
                 guard let self else { return nil }
@@ -245,8 +248,30 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     func didTapShutter() {
         isCapturing = true
-        Task { @MainActor in
-            let _ = try? await camera.capture()?.captureResult
+        Task {
+            guard let captured = try? await camera.capture() else { return }
+            do {
+                try await logger.save(
+                    log: HaebitLog(
+                        date: Date(),
+                        coordinate: location?.haebitCoordinate,
+                        image: captured.haebitImage,
+                        focalLength: UInt16(focalLength.value),
+                        iso: UInt16(iso.iso),
+                        shutterSpeed: shutterSpeed.denominator,
+                        aperture: aperture.value,
+                        memo: "TEST IMAGE!"
+                    )
+                )
+                Task { @MainActor [weak self] in
+                    self?.isCapturing = false
+                }
+            } catch {
+                print(error.localizedDescription)
+                Task { @MainActor [weak self] in
+                    self?.isCapturing = false
+                }
+            }
         }
     }
     
