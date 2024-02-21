@@ -14,7 +14,7 @@ protocol HaebitNavigationAnimatorSnapshotProvidable: UIViewController {
 }
 
 class HaebitNavigationAnimator: NSObject {
-    var isInteracting = false
+    var isDismissingWithGesture = false
     private var isPresenting = true
     
     private let pushPopDuration: TimeInterval = 0.5
@@ -31,7 +31,7 @@ class HaebitNavigationAnimator: NSObject {
     
     // MARK: - Internal Methods
     
-    func dismissWithPanGesture(gesture: UIPanGestureRecognizer) {
+    func dismissWithGesture(translation: CGPoint, velocity: CGPoint, isEnded: Bool) {
         guard let transitionContext,
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
@@ -43,8 +43,6 @@ class HaebitNavigationAnimator: NSObject {
         pushedTargetView.isHidden = true
         baseTargetView.isHidden = true
         
-        let translation = gesture.translation(in: pushed.view)
-        let velocity = gesture.velocity(in: pushed.view)
         let newCenter = CGPoint(
             x: pushedTargetView.center.x + translation.x,
             y: pushedTargetView.center.y + translation.y
@@ -55,9 +53,26 @@ class HaebitNavigationAnimator: NSObject {
         pushed.view.alpha = 1 - percentage
         transitionContext.updateInteractiveTransition(percentage)
         
-        guard case .ended = gesture.state else { return }
+        guard isEnded else { return }
         
-        guard velocity.y >= 0, newCenter.y > pushedTargetView.center.y else {
+        if velocity.y >= 0, newCenter.y > pushedTargetView.center.y {
+            UIView.animate(
+                withDuration: interactionSuccessDuration,
+                delay: .zero,
+                options: []
+            ) { [weak self] in
+                self?.snapshot?.frame = baseTargetFrame
+                pushed.view.alpha = .zero
+                base.tabBarController?.tabBar.alpha = 1
+            } completion: { [weak self] _ in
+                pushedTargetView.isHidden = false
+                baseTargetView.isHidden = false
+                transitionContext.finishInteractiveTransition()
+                transitionContext.completeTransition(true)
+                self?.snapshot?.removeFromSuperview()
+                self?.transitionContext = nil
+            }
+        } else {
             UIView.animate(
                 withDuration: interactionCancelDuration,
                 delay: .zero,
@@ -72,28 +87,10 @@ class HaebitNavigationAnimator: NSObject {
                 pushedTargetView.isHidden = false
                 baseTargetView.isHidden = false
                 transitionContext.cancelInteractiveTransition()
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                transitionContext.completeTransition(false)
                 self?.snapshot?.removeFromSuperview()
                 self?.transitionContext = nil
             }
-            return
-        }
-        
-        UIView.animate(
-            withDuration: interactionSuccessDuration,
-            delay: .zero,
-            options: []
-        ) { [weak self] in
-            self?.snapshot?.frame = baseTargetFrame
-            pushed.view.alpha = .zero
-            base.tabBarController?.tabBar.alpha = 1
-        } completion: { [weak self] _ in
-            pushedTargetView.isHidden = false
-            baseTargetView.isHidden = false
-            self?.snapshot?.removeFromSuperview()
-            self?.transitionContext?.finishInteractiveTransition()
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            self?.transitionContext = nil
         }
     }
     
@@ -191,7 +188,7 @@ extension HaebitNavigationAnimator: UINavigationControllerDelegate {
         _ navigationController: UINavigationController,
         interactionControllerFor animationController: UIViewControllerAnimatedTransitioning
     ) -> UIViewControllerInteractiveTransitioning? {
-        isInteracting ? self : nil
+        isDismissingWithGesture ? self : nil
     }
 }
 
