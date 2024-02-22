@@ -14,7 +14,7 @@ protocol HaebitNavigationAnimatorSnapshotProvidable: UIViewController {
 }
 
 class HaebitNavigationAnimator: NSObject {
-    var isDismissingWithGesture = false
+    private var isDismissingWithGesture = false
     private var isPresenting = true
     
     private let pushPopDuration: TimeInterval = 0.5
@@ -29,9 +29,24 @@ class HaebitNavigationAnimator: NSObject {
     private var pushedTargetFrame: CGRect?
     private var snapshot: UIView?
     
-    // MARK: - Internal Methods
+    private let dismissGestureRecognizer = UIPanGestureRecognizer()
+    private weak var navigationController: UINavigationController?
     
-    func dismissWithGesture(translation: CGPoint, velocity: CGPoint, isEnded: Bool) {
+    // MARK: - Initializers
+    
+    override init() {
+        super.init()
+        dismissGestureRecognizer.addTarget(self, action: #selector(interactDismissGestureRecognizer))
+    }
+    
+    // MARK: - Private Methods
+    
+    @objc private func interactDismissGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
+        if gesture.state == .began {
+            isDismissingWithGesture = true
+            navigationController?.popViewController(animated: true)
+        }
+        
         guard let transitionContext,
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
@@ -40,20 +55,32 @@ class HaebitNavigationAnimator: NSObject {
               let baseTargetView = base.viewForTransition(),
               let baseTargetFrame else { return }
         
-        pushedTargetView.isHidden = true
-        baseTargetView.isHidden = true
+        let translation = gesture.translation(in: pushed.view)
+        let velocity = gesture.velocity(in: pushed.view)
         
         let newCenter = CGPoint(
             x: pushedTargetView.center.x + translation.x,
             y: pushedTargetView.center.y + translation.y
         )
         
-        snapshot?.center = newCenter
-        let percentage = min((translation.y < .zero ? .zero : translation.y / pushedTargetView.center.y), 1.0)
-        pushed.view.alpha = 1 - percentage
-        transitionContext.updateInteractiveTransition(percentage)
+        let diffWidth = pushedTargetFrame.width - baseTargetFrame.width
+        let diffHeight = pushedTargetFrame.height - baseTargetFrame.height
         
-        guard isEnded else { return }
+        let progress = min((translation.y < .zero ? .zero : translation.y / pushedTargetView.center.y), 1.0)
+        pushed.view.alpha = 1 - progress
+        transitionContext.updateInteractiveTransition(progress)
+        
+        snapshot?.frame = CGRect(
+            origin: .zero,
+            size: CGSize(
+                width: pushedTargetFrame.width - diffWidth * progress,
+                height: pushedTargetFrame.height - diffHeight * progress
+            )
+        )
+        snapshot?.center = newCenter
+        
+        guard gesture.state == .ended else { return }
+        isDismissingWithGesture = false
         
         if velocity.y >= 0, newCenter.y > pushedTargetView.center.y {
             UIView.animate(
@@ -94,19 +121,20 @@ class HaebitNavigationAnimator: NSObject {
         }
     }
     
-    // MARK: - Private Methods
-    
     private func animatePushTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let pushed = transitionContext.viewController(forKey: .to) as? HaebitNavigationAnimatorSnapshotProvidable,
-              let pushedTargetView = pushed.regionForTransition(),
-              let pushedTargetFrame = pushed.viewForTransition(),
+              let pushedTargetView = pushed.viewForTransition(),
+              let pushedTargetFrame = pushed.regionForTransition(),
               let base = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let baseTargetView = base.viewForTransition(),
               let baseTargetFrame = base.regionForTransition(),
               let snapshot = baseTargetView.snapshotView(afterScreenUpdates: false) else { return }
         
+        navigationController = pushed.navigationController
+        pushed.view.addGestureRecognizer(dismissGestureRecognizer)
+        
         baseTargetView.isHidden = true
-        pushedTargetFrame.isHidden = true
+        pushedTargetView.isHidden = true
         
         pushed.view.alpha = .zero
         transitionContext.containerView.addSubview(pushed.view)
@@ -121,12 +149,12 @@ class HaebitNavigationAnimator: NSObject {
             initialSpringVelocity: .zero,
             options: .transitionCrossDissolve
         ) {
-            snapshot.frame = pushedTargetView
+            snapshot.frame = pushedTargetFrame
             pushed.view.alpha = 1.0
             base.tabBarController?.tabBar.alpha = .zero
         } completion: { _ in
             baseTargetView.isHidden = false
-            pushedTargetFrame.isHidden = false
+            pushedTargetView.isHidden = false
             snapshot.removeFromSuperview()
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -211,15 +239,19 @@ extension HaebitNavigationAnimator: UIViewControllerInteractiveTransitioning {
         self.transitionContext = transitionContext
         guard let base = transitionContext.viewController(forKey: .to) as? HaebitNavigationAnimatorSnapshotProvidable,
               let baseTargetFrame = base.regionForTransition(),
+              let baseTargetView = base.viewForTransition(),
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
               let pushedTargetFrame = pushed.regionForTransition(),
               let snapshot = pushedTargetView.snapshotView(afterScreenUpdates: false) else { return }
         
+        baseTargetView.isHidden = true
+        pushedTargetView.isHidden = true
+
         self.baseTargetFrame = baseTargetFrame
         self.pushedTargetFrame = pushedTargetFrame
         self.snapshot = snapshot
-        snapshot.frame = baseTargetFrame
+        snapshot.frame = pushedTargetFrame
         
         transitionContext.containerView.insertSubview(base.view, belowSubview: pushed.view)
         transitionContext.containerView.addSubview(snapshot)
