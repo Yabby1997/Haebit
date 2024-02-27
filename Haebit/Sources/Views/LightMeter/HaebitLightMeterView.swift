@@ -35,19 +35,6 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         .onChange(of: scenePhase, perform: didChangeScene)
         .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
         .disabled(viewModel.isCapturing)
-        .alert(.lightMeterViewAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
-            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
-        } message :{
-            Text(.lightMeterViewAccessAlertMessage)
-        }
-        .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
-            HaebitLoggerView(
-                isPresented: $viewModel.isPresentingLogger,
-                viewModel: HaebitLoggerViewModel(
-                    logger: HaebitLogger(repository: MockHaebitLogRepository())
-                )
-            )
-        }
     }
     
     private func didChangeScene(phase: ScenePhase) {

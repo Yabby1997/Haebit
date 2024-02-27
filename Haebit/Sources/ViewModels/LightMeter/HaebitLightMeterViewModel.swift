@@ -9,8 +9,8 @@
 import Combine
 import LightMeter
 import Obscura
-import QuartzCore
 import Photos
+import QuartzCore
 
 final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Dependencies
@@ -205,18 +205,20 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Internal Methods
     
     func setupIfNeeded() {
-        guard !camera.isRunning else { return }
+        guard !camera.isRunning else {
+            return
+        }
         Task.detached { [weak self] in
             guard let self else { return }
             do {
                 try await camera.setup()
                 try? camera.setHDRMode(isEnabled: false)
-                try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
                 bind()
             } catch {
-                guard case .notAuthorized = error as? ObscuraCamera.Errors else { return }
-                Task { @MainActor [weak self] in
-                    self?.shouldRequestCameraAccess = true
+                if case .notAuthorized = error as? ObscuraCamera.Errors {
+                    Task { @MainActor [weak self] in
+                        self?.shouldRequestCameraAccess = true
+                    }
                 }
             }
         }
@@ -249,34 +251,17 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     func didTapShutter() {
         isCapturing = true
         Task {
-            guard let captured = try? await camera.capture() else { return }
+            guard let captured = try? await camera.capturePhoto() else { return }
             do {
-                try await logger.save(
-                    log: HaebitLog(
-                        date: Date(),
-                        coordinate: location?.haebitCoordinate,
-                        image: captured.haebitImage,
-                        focalLength: UInt16(focalLength.value),
-                        iso: UInt16(iso.iso),
-                        shutterSpeed: shutterSpeed.denominator,
-                        aperture: aperture.value,
-                        memo: "TEST IMAGE!"
-                    )
-                )
                 Task { @MainActor [weak self] in
                     self?.isCapturing = false
                 }
             } catch {
-                print(error.localizedDescription)
                 Task { @MainActor [weak self] in
                     self?.isCapturing = false
                 }
             }
         }
-    }
-    
-    func didCloseShutter() {
-        isCapturing = false
     }
     
     func didTapLogger() {
@@ -294,11 +279,5 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             await self?.camera.start()
             try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
         }
-    }
-}
-
-extension ObscuraCaptureResult {
-    var captureResult: CaptureResult {
-        .init(image: self.image, video: self.video)
     }
 }
