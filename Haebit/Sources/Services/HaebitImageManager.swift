@@ -12,7 +12,7 @@ import UIKit
 /// Image that managed by `Haebit`.
 struct HaebitImage {
     /// Identifier of full quality image that saved in Photo Library.
-    let assetIdentifier: String
+    let assetIdentifier: String?
     /// Relative path to low quality thumbnail image file from Home directory.s
     let thumbnailPath: String
 }
@@ -73,10 +73,13 @@ final class HaebitImageManager {
     ) async throws -> HaebitImage {
         let thumbnailURL = thumbnailDirectory.appending(path: UUID().uuidString + ".jpeg")
         let tempImageData = try Data(contentsOf: url)
-        try compressAndWrite(image: tempImageData, with: 0.5, to: thumbnailURL)
-        let photoAssetIdentifier = try await saveToPhotoLibrary(imageData: tempImageData, date: date, coordinate: coordinate)
+        try compressAndWrite(image: tempImageData, with: 0.1, to: thumbnailURL)
+        let photoAssetIdentifier = await saveToPhotoLibrary(imageData: tempImageData, date: date, coordinate: coordinate)
         try? fileManager.removeItem(at: url)
-        return HaebitImage(assetIdentifier: photoAssetIdentifier, thumbnailPath: thumbnailURL.relativePath)
+        return HaebitImage(
+            assetIdentifier: photoAssetIdentifier,
+            thumbnailPath: thumbnailURL.relativePathToHomeDirectory
+        )
     }
     
     private func compressAndWrite(image data: Data, with quality: CGFloat, to url: URL) throws {
@@ -86,9 +89,9 @@ final class HaebitImageManager {
         try compressed.write(to: url, options: [.atomic, .completeFileProtection])
     }
     
-    private func saveToPhotoLibrary(imageData: Data, date: Date, coordinate: Coordinate?) async throws -> String {
+    private func saveToPhotoLibrary(imageData: Data, date: Date, coordinate: Coordinate?) async -> String? {
         var identifier: String?
-        return try await withCheckedThrowingContinuation { continuation in
+        return await withCheckedContinuation { continuation in
             PHPhotoLibrary.shared().performChanges {
                 let creationRequest = PHAssetCreationRequest.forAsset()
                 creationRequest.addResource(with: .photo, data: imageData, options: nil)
@@ -100,15 +103,22 @@ final class HaebitImageManager {
                     identifier = assetPlaceholder.localIdentifier
                 }
             } completionHandler: { isSuccess, error in
-                if let error {
-                    continuation.resume(throwing: error)
+                if error != nil {
+                    continuation.resume(returning: nil)
                 }
                 guard isSuccess, let identifier else {
-                    continuation.resume(throwing: NSError(domain: "", code: 0))
+                    continuation.resume(returning: nil)
                     return
                 }
                 continuation.resume(returning: identifier)
             }
         }
+    }
+}
+
+extension URL {
+    var relativePathToHomeDirectory: String {
+        guard path.hasPrefix(URL.homeDirectory.path) else { return path }
+        return String(path.dropFirst(URL.homeDirectory.path.count))
     }
 }
