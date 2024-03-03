@@ -41,6 +41,7 @@ final class HaebitImageManager {
                     continuation.resume(throwing: Errors.notAuthorized)
                     return
                 }
+                continuation.resume()
             }
         }
     }
