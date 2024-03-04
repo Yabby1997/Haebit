@@ -25,17 +25,16 @@ class HaebitFilmCarouselViewController: UIViewController {
         return pageViewController
     }()
     
-    private lazy var usernameLabel: UILabel = {
+    private lazy var locationLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }()
     
-    private lazy var sponsorLabel: UILabel = {
+    private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "Sponsored"
         label.textColor = .lightGray
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 12)
@@ -43,7 +42,7 @@ class HaebitFilmCarouselViewController: UIViewController {
     }()
     
     private lazy var infoStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [usernameLabel, sponsorLabel])
+        let stack = UIStackView(arrangedSubviews: [locationLabel, dateLabel])
         stack.axis = .vertical
         stack.spacing = 0
         return stack
@@ -55,15 +54,14 @@ class HaebitFilmCarouselViewController: UIViewController {
     private var viewModel: HaebitLoggerViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
-    private var navigationAnimator: HaebitNavigationAnimator
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitLoggerViewModel, delegate: HaebitFilmCarouselViewControllerDelegate, navigationAnimator: HaebitNavigationAnimator) {
+    init(viewModel: HaebitLoggerViewModel, delegate: HaebitFilmCarouselViewControllerDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
-        self.navigationAnimator = navigationAnimator
         super.init(nibName: nil, bundle: nil)
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -74,77 +72,48 @@ class HaebitFilmCarouselViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.configureUI()
-        self.bindUI()
+        self.setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.navigationBar.alpha = 1.0
-        self.tabBarController?.tabBar.isHidden = false
-//        self.navigationController?.navigationBar.standardAppearance = Appearances.transparentNavigationBar
-//        self.navigationController?.navigationBar.scrollEdgeAppearance = Appearances.transparentNavigationBar
+        navigationItem.setHidesBackButton(true, animated: false)
+        navigationItem.titleView = infoStack
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationItem.titleView = nil
     }
     
     // MARK: - Helpers
     
-    private func configureUI() {
-        self.view.backgroundColor = .black//unsplashTheme
-        
-        self.navigationItem.titleView = self.infoStack
-        
-        self.addChild(self.photoCarouselContainerViewController)
-        self.view.addSubview(self.photoCarouselContainerViewController.view)
-        self.photoCarouselContainerViewController.didMove(toParent: self)
-        
-        let index = self.viewModel.currentIndex
-        let film = self.viewModel.films[index]
-        let viewController = HaebitFilmViewController(film: film, index: index)
-        self.photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
-    }
-    
-    private func bindUI() {
-        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanView))
-        view.addGestureRecognizer(gestureRecognizer)
-//        self.view.publisher(for: UIPanGestureRecognizer())
-//            .sink { [weak self] gesture in
-//                self?.handlePanGesture(gesture)
-//            }
-//            .store(in: &self.cancellables)
-        
-//        self.viewModel.$currentIndex
-//            .sink { [weak self] index in
-//                guard (self?.viewModel.films[index]) != nil else { return }
-////                self?.usernameLabel.text = photo.user
-////                self?.sponsorLabel.isHidden = photo.sponsor == nil
-//            }
-//            .store(in: &self.cancellables)
-    }
-    
-    @objc private func didPanView(_ gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
-        case .began:
-            guard gesture.velocity(in: view).y > .zero else { return }
-            navigationAnimator.isDismissingWithGesture = true
-        case .changed:
-            guard navigationAnimator.isDismissingWithGesture else {
-                print("UP")
-                return
+    private func bind() {
+        viewModel.$currentFilmAddress
+            .sink { [weak self] location in
+                self?.locationLabel.text = location
             }
-        case .ended:
-            guard navigationAnimator.isDismissingWithGesture else { return }
-            navigationAnimator.isDismissingWithGesture = false
-        default:
-            break
-        }
-        navigationAnimator.dismissWithGesture(
-            translation: gesture.translation(in: view),
-            velocity: gesture.velocity(in: view),
-            isEnded: gesture.state == .ended
-        )
-        navigationController?.popViewController(animated: true)
+            .store(in: &cancellables)
+        
+        viewModel.$currentFilmTime
+            .sink { [weak self] time in
+                self?.dateLabel.text = time
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func setupViews() {
+        view.backgroundColor = .black
+        
+        addChild(photoCarouselContainerViewController)
+        view.addSubview(photoCarouselContainerViewController.view)
+        photoCarouselContainerViewController.didMove(toParent: self)
+        
+        let index = viewModel.currentIndex
+        let film = viewModel.films[index]
+        let viewController = HaebitFilmViewController(film: film, index: index)
+        photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
     }
 }
 
@@ -169,7 +138,7 @@ extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPage
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         guard let nextViewController = pendingViewControllers.first as? HaebitFilmViewController else { return }
-        self.viewModel.nextIndex = nextViewController.currentIndex
+        viewModel.nextIndex = nextViewController.index
     }
     
     func pageViewController(
@@ -179,12 +148,6 @@ extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPage
         transitionCompleted completed: Bool
     ) {
         guard completed, let nextIndex = self.viewModel.nextIndex else { return self.viewModel.nextIndex = nil }
-        
-//        previousViewControllers.forEach {
-//            guard let previousViewController = $0 as? HaebitFilmViewController else { return }
-////            previousViewController.scrollView.zoomScale = previousViewController.scrollView.minimumZoomScale
-//        }
-        
         self.viewModel.currentIndex = nextIndex
         self.delegate?.carouselDidScroll(self, toIndex: nextIndex)
     }

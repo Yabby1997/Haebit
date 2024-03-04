@@ -24,6 +24,8 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     var isCapturing: Bool { get }
     var isPresentingLogger: Bool { get set }
     
+    var shouldRequestCameraAccess: Bool { get set }
+    var shouldRequestGPSAccess: Bool { get set }
     var lightMeterMode: LightMeterMode { get set }
     var focalLength: FocalLengthValue { get set }
     var aperture: ApertureValue { get set }
@@ -37,6 +39,8 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     func didTap(point: CGPoint)
     func didTapUnlock()
     func didTapShutter()
+    func didTapDoNotAskGPSAccess()
     func didTapLogger()
     func didCloseLogger()
+    func loggerViewModel() -> HaebitLoggerViewModel
 }

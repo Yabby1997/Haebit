@@ -35,6 +35,23 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
         .onChange(of: scenePhase, perform: didChangeScene)
         .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
         .disabled(viewModel.isCapturing)
+        .alert(.lightMeterViewAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
+            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
+        } message :{
+            Text(.lightMeterViewAccessAlertMessage)
+        }
+        .alert("위치 정보 요청", isPresented: $viewModel.shouldRequestGPSAccess) {
+            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
+            Button(action: viewModel.didTapDoNotAskGPSAccess) { Text("다시 묻지 않기") }
+        } message :{
+            Text("위치정보 로깅을 위해 위치 권한을 허용해주세요")
+        }
+        .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
+            HaebitFilmListView(viewModel: viewModel.loggerViewModel())
+                .persistentSystemOverlays(.hidden)
+                .statusBarHidden()
+                .ignoresSafeArea()
+        }
     }
     
     private func didChangeScene(phase: ScenePhase) {

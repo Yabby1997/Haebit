@@ -7,9 +7,11 @@
 //
 
 import Combine
+import HaebitLogger
 import LightMeter
 import Obscura
 import Photos
+import Portolan
 import QuartzCore
 
 final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
@@ -17,6 +19,8 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     private let camera = ObscuraCamera()
     private let lightMeter = LightMeterService()
+    private let logger = HaebitLogger(repository: DefaultHaebitLogRepository())
+    private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
     private let reviewRequestValidator: ReviewRequestValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
@@ -45,12 +49,18 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         }
     }
     
+    @UserDefault(key: "HaebitLightMeterViewModel.shouldAskGPSAccess", defaultValue: false)
+    private var shouldAskGPSAccess: Bool
+    @UserDefault(key: "HaebitLightMeterViewModel.doNotAskGPSAccess", defaultValue: false)
+    private var doNotAskGPSAccess: Bool
+    
     var apertureMode: Bool { lightMeterMode == .aperture }
     var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     var isoMode: Bool { lightMeterMode == .iso }
     @Published var shouldRequestReview = false
     @Published var isPresentingLogger = false
     @Published var shouldRequestCameraAccess = false
+    @Published var shouldRequestGPSAccess = false
     @Published private(set) var exposureValue: Float = .zero
     @Published var lightMeterMode: LightMeterMode { didSet { feedbackProvider.generateInteractionFeedback() } }
     @Published var aperture: ApertureValue
@@ -60,6 +70,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var lockPoint: CGPoint? = nil
     @Published var isLocked: Bool = false
     @Published private(set) var isCapturing = false
+    @Published private var location: PortolanCoordinate? = nil
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -78,6 +89,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         self.shutterSpeed = statePersistence.shutterSpeed
         self.iso = statePersistence.iso
         self.focalLength = statePersistence.focalLength
+        shouldAskGPSAccess = false
     }
     
     // MARK: - Private Methods
@@ -200,11 +212,20 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 self?.feedbackProvider.generateCompletionFeedback()
             }
             .store(in: &cancellables)
+        
+        portolan.currentLocationPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$location)
     }
     
     // MARK: - Internal Methods
     
     func setupIfNeeded() {
+        setupCameraIfNeeded()
+        setupLocationManagerIfNeeded()
+    }
+    
+    private func setupCameraIfNeeded() {
         guard !camera.isRunning else {
             return
         }
@@ -218,6 +239,25 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 if case .notAuthorized = error as? ObscuraCamera.Errors {
                     Task { @MainActor [weak self] in
                         self?.shouldRequestCameraAccess = true
+                    }
+                }
+            }
+        }
+    }
+    
+    private func setupLocationManagerIfNeeded() {
+        Task.detached { [weak self] in
+            guard let self else { return }
+            do {
+                try portolan.setup()
+            } catch {
+                if case .notAuthorized = error as? PortolanLocationManager.Errors {
+                    guard shouldAskGPSAccess, !doNotAskGPSAccess else {
+                        shouldAskGPSAccess = true
+                        return
+                    }
+                    Task { @MainActor [weak self] in
+                        self?.shouldRequestGPSAccess = true
                     }
                 }
             }
@@ -253,6 +293,18 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         Task {
             guard let captured = try? await camera.capturePhoto() else { return }
             do {
+                try await logger.save(
+                    log: HaebitLog(
+                        date: Date(),
+                        coordinate: location?.haebitCoordinate,
+                        image: captured.imagePath,
+                        focalLength: UInt16(focalLength.value),
+                        iso: UInt16(iso.iso),
+                        shutterSpeed: shutterSpeed.denominator,
+                        aperture: aperture.value,
+                        memo: ""
+                    )
+                )
                 Task { @MainActor [weak self] in
                     self?.isCapturing = false
                 }
@@ -262,6 +314,11 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 }
             }
         }
+    }
+    
+    func didTapDoNotAskGPSAccess() {
+        doNotAskGPSAccess = true
+        shouldRequestGPSAccess = false
     }
     
     func didTapLogger() {
@@ -279,5 +336,15 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             await self?.camera.start()
             try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
         }
+    }
+    
+    func loggerViewModel() -> HaebitLoggerViewModel {
+        .init(logger: logger)
+    }
+}
+
+extension PortolanCoordinate {
+    var haebitCoordinate: HaebitCoordinate {
+        .init(latitude: latitude, longitude: longitude)
     }
 }
