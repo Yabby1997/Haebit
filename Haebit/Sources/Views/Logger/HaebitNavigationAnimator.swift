@@ -42,7 +42,7 @@ class HaebitNavigationAnimator: NSObject {
     // MARK: - Private Methods
     
     @objc private func interactDismissGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
-        if gesture.state == .began {
+        if gesture.state == .began, gesture.velocity(in: gesture.view).y > .zero {
             isDismissingWithGesture = true
             navigationController?.popViewController(animated: true)
         }
