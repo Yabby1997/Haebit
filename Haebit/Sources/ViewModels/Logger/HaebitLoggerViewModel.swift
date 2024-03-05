@@ -6,10 +6,11 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
+import Combine
 import Foundation
 import HaebitLogger
+import HaebitUtil
 import Portolan
-import Combine
 
 final class HaebitLoggerViewModel: ObservableObject {
     private let logger: HaebitLogger
@@ -58,13 +59,14 @@ final class HaebitLoggerViewModel: ObservableObject {
                 coordinateRepresentation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
             }
             
-            let formattedString = dateFormatter.format(date: film.date)
+            let formattedDate = dateFormatter.formatDate(from: film.date)
+            let formattedTime = dateFormatter.formatTime(from: film.date)
             if let coordinateRepresentation {
                 mainTitle = coordinateRepresentation
-                subTitle = formattedString.date + " " + formattedString.time
+                subTitle = formattedDate + " " + formattedTime
             } else {
-                mainTitle = formattedString.date
-                subTitle = formattedString.time
+                mainTitle = formattedDate
+                subTitle = formattedTime
             }
         }
     }
