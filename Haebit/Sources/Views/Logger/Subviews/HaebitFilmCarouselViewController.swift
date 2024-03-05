@@ -25,7 +25,7 @@ class HaebitFilmCarouselViewController: UIViewController {
         return pageViewController
     }()
     
-    private lazy var locationLabel: UILabel = {
+    private lazy var mainTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -33,7 +33,7 @@ class HaebitFilmCarouselViewController: UIViewController {
         return label
     }()
     
-    private lazy var dateLabel: UILabel = {
+    private lazy var subTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
         label.textAlignment = .center
@@ -41,8 +41,8 @@ class HaebitFilmCarouselViewController: UIViewController {
         return label
     }()
     
-    private lazy var infoStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [locationLabel, dateLabel])
+    private lazy var titleStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [mainTitleLabel, subTitleLabel])
         stack.axis = .vertical
         stack.spacing = 0
         return stack
@@ -79,7 +79,7 @@ class HaebitFilmCarouselViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationItem.setHidesBackButton(true, animated: false)
-        navigationItem.titleView = infoStack
+        navigationItem.titleView = titleStack
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -90,15 +90,10 @@ class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        viewModel.$currentFilmAddress
-            .sink { [weak self] location in
-                self?.locationLabel.text = location
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$currentFilmTime
-            .sink { [weak self] time in
-                self?.dateLabel.text = time
+        viewModel.$mainTitle.zip(viewModel.$subTitle)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] mainTitle, subTitle in
+                self?.updateTitle(main: mainTitle, sub: subTitle)
             }
             .store(in: &cancellables)
     }
@@ -115,6 +110,13 @@ class HaebitFilmCarouselViewController: UIViewController {
         let viewController = HaebitFilmViewController(film: film, index: index)
         photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
     }
+    
+    private func updateTitle(main: String, sub: String) {
+        UIView.transition(with: titleStack, duration: 0.2, options: .transitionCrossDissolve) { [weak self] in
+            self?.mainTitleLabel.text = main
+            self?.subTitleLabel.text = sub
+        }
+    }
 }
 
 // MARK: - UIPageViewControllerDelegate, UIPageViewControllerDataSource
@@ -130,15 +132,15 @@ extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPage
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard viewModel.currentIndex < viewModel.films.count - 1 else { return nil }
-        let index = self.viewModel.currentIndex + 1
-        let film = self.viewModel.films[index]
+        let index = viewModel.currentIndex + 1
+        let film = viewModel.films[index]
         let viewController = HaebitFilmViewController(film: film, index: index)
         return viewController
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        guard let nextViewController = pendingViewControllers.first as? HaebitFilmViewController else { return }
-        viewModel.nextIndex = nextViewController.index
+        guard let viewController = pendingViewControllers.first as? HaebitFilmViewController else { return }
+        viewModel.currentIndex = viewController.index
     }
     
     func pageViewController(
@@ -147,9 +149,12 @@ extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPage
         previousViewControllers: [UIViewController],
         transitionCompleted completed: Bool
     ) {
-        guard completed, let nextIndex = self.viewModel.nextIndex else { return self.viewModel.nextIndex = nil }
-        self.viewModel.currentIndex = nextIndex
-        self.delegate?.carouselDidScroll(self, toIndex: nextIndex)
+        if completed {
+            delegate?.carouselDidScroll(self, toIndex: viewModel.currentIndex)
+        } else if let viewController = previousViewControllers.first as? HaebitFilmViewController {
+            viewModel.currentIndex = viewController.index
+            delegate?.carouselDidScroll(self, toIndex: viewController.index)
+        }
     }
 }
 

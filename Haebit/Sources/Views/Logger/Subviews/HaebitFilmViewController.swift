@@ -48,7 +48,7 @@ class HaebitFilmViewController: UIViewController {
     // MARK: - Properties
     
     private var film: Film
-    private(set) var index: Int?
+    private(set) var index: Int
     
     // MARK: - Initizliers
     

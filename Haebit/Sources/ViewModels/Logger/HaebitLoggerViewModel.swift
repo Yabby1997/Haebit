@@ -13,20 +13,14 @@ import Combine
 
 final class HaebitLoggerViewModel: ObservableObject {
     private let logger: HaebitLogger
+    private let dateFormatter = HaebitDateFormatter()
+    
+    @Published var mainTitle: String = ""
+    @Published var subTitle: String = ""
     @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
-    var nextIndex: Int?
-    @Published var currentFilmAddress: String?
-    @Published var currentFilmTime: String = ""
-    private var cancellables: Set<AnyCancellable> = []
     
-    var currentFilm: AnyPublisher<Film, Never> {
-        $currentIndex
-            .compactMap { [weak self] index in
-                self?.films[safe: index]
-            }
-            .eraseToAnyPublisher()
-    }
+    private var cancellables: Set<AnyCancellable> = []
     
     init(logger: HaebitLogger) {
         self.logger = logger
@@ -34,10 +28,12 @@ final class HaebitLoggerViewModel: ObservableObject {
     }
     
     private func bind() {
-        currentFilm
+        $currentIndex
+            .compactMap { [weak self] index in
+                self?.films[safe: index]
+            }
             .sink { [weak self] film in
-                self?.setAddress(film)
-                self?.setTime(film)
+                self?.updateTitle(for: film)
             }
             .store(in: &cancellables)
     }
@@ -55,15 +51,22 @@ final class HaebitLoggerViewModel: ObservableObject {
         }
     }
     
-    private func setAddress(_ film: Film) {
-        guard let coordinate = film.coordinate else { return }
+    private func updateTitle(for film: Film) {
         Task { @MainActor in
-            currentFilmAddress = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
+            var coordinateRepresentation: String?
+            if let coordinate = film.coordinate {
+                coordinateRepresentation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
+            }
+            
+            let formattedString = dateFormatter.format(date: film.date)
+            if let coordinateRepresentation {
+                mainTitle = coordinateRepresentation
+                subTitle = formattedString.date + " " + formattedString.time
+            } else {
+                mainTitle = formattedString.date
+                subTitle = formattedString.time
+            }
         }
-    }
-    
-    private func setTime(_ film: Film) {
-        currentFilmTime = DateFormatter.localizedString(from: film.date, dateStyle: .medium, timeStyle: .short)
     }
 }
 
