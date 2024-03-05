@@ -36,6 +36,7 @@ let targets: [Target] = [
             .project(target: "LightMeter", path: "../../Feature/LightMeter"),
             .project(target: "Portolan", path: "../../Feature/Portolan"),
             .project(target: "HaebitLogger", path: "../../Feature/HaebitLogger"),
+            .package(product: "SnapKit", type: .runtime),
         ],
         settings: .settings(
             base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
@@ -122,6 +123,7 @@ let project = Project(
         .remote(url: "https://github.com/Yabby1997/HaebitUI.git", requirement: .exact("0.2.1")),
         .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.4.0")),
         .remote(url: "https://github.com/Yabby1997/LightMeter.git", requirement: .exact("0.1.0")),
+        .remote(url: "https://github.com/SnapKit/SnapKit", requirement: .upToNextMajor(from: "5.7.1")),
     ],
     targets: targets
 )
