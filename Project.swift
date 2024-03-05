@@ -36,6 +36,7 @@ let targets: [Target] = [
             .project(target: "LightMeter", path: "../../Feature/LightMeter"),
             .project(target: "Portolan", path: "../../Feature/Portolan"),
             .project(target: "HaebitLogger", path: "../../Feature/HaebitLogger"),
+            .project(target: "HaebitUtil", path: "../../Feature/HaebitUtil"),
             .package(product: "SnapKit", type: .runtime),
         ],
         settings: .settings(
