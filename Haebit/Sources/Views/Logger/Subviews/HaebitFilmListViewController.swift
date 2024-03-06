@@ -20,7 +20,7 @@ struct HaebitFilmListView: UIViewControllerRepresentable {
     }
 }
 
-class HaebitFilmListNavigationController: UINavigationController {
+final class HaebitFilmListNavigationController: UINavigationController {
     private let animator = HaebitNavigationAnimator()
     
     init(viewModel: HaebitLoggerViewModel) {
@@ -33,7 +33,7 @@ class HaebitFilmListNavigationController: UINavigationController {
     }
 }
 
-class HaebitFilmListViewController: UIViewController {
+final class HaebitFilmListViewController: UIViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Film>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Film>
     
@@ -93,9 +93,9 @@ class HaebitFilmListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupViews()
-        self.bindUI()
-        self.configureDataSource()
+        setupViews()
+        bindUI()
+        configureDataSource()
         viewModel.onAppear()
     }
 
@@ -134,7 +134,7 @@ class HaebitFilmListViewController: UIViewController {
     }
     
     private func configureDataSource() {
-        dataSource = DataSource(collectionView: self.photoListCollectionView) { collectionView, indexPath, film in
+        dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
             cell.transform = .init(scaleX: 1, y: -1)
             cell.setImage(UIImage(url: film.image))
@@ -143,10 +143,10 @@ class HaebitFilmListViewController: UIViewController {
     }
     
     private func applySnapshot(films: [Film], withAnimation: Bool = false) {
-        self.dataSourceSnapshot = DataSourceSnapshot()
-        self.dataSourceSnapshot.appendSections([Section.List])
-        self.dataSourceSnapshot.appendItems(films)
-        self.dataSource?.apply(self.dataSourceSnapshot, animatingDifferences: withAnimation)
+        dataSourceSnapshot = DataSourceSnapshot()
+        dataSourceSnapshot.appendSections([Section.List])
+        dataSourceSnapshot.appendItems(films)
+        dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation)
     }
     
     @objc private func didTapClose(_ sender: UIButton) {

@@ -7,10 +7,11 @@
 //
 
 import Combine
+import SnapKit
 import SwiftUI
 import UIKit
 
-class HaebitFilmListCell: UICollectionViewCell {
+final class HaebitFilmListCell: UICollectionViewCell {
     
     // MARK: - Static Properties
     
@@ -30,7 +31,7 @@ class HaebitFilmListCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupViews()
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
@@ -44,41 +45,26 @@ class HaebitFilmListCell: UICollectionViewCell {
     // MARK: - Helpers
     
     private func setupViews() {
-        guard let bgView = UIHostingController(rootView: Frame135()).view else { return }
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(bgView)
-        NSLayoutConstraint.activate([
-            bgView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            bgView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bgView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        ])
-        guard let bgView = UIHostingController(rootView: Frame135()).view else { return }
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(bgView)
-        NSLayoutConstraint.activate([
-            bgView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            bgView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bgView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        ])
+        contentView.backgroundColor = .black
+        
+        guard let frameView = UIHostingController(rootView: Frame135()).view else { return }
+        contentView.addSubview(frameView)
+        frameView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         contentView.addSubview(photoView)
-        photoView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            photoView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            photoView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            photoView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 24.0 / 35.0),
-            photoView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 36.0 / 35.0),
-        ])
+        photoView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(24.0 / 35.0)
+            make.height.equalTo(contentView.snp.width).multipliedBy(36.0 / 35.0)
+        }
     }
     
     func setImage(_ image: UIImage?) {
         guard let image = image else { return }
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            UIView.transition(with: self.photoView, duration: 0.5, options: .transitionCrossDissolve) {
-                self.photoView.image = image
+            guard let self else { return }
+            UIView.transition(with: photoView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
+                self?.photoView.image = image
             }
         }
     }

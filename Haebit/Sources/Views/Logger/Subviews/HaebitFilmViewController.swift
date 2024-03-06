@@ -11,7 +11,7 @@ import UIKit
 import PhotosUI
 import SnapKit
 
-class HaebitFilmViewController: UIViewController {
+final class HaebitFilmViewController: UIViewController {
     
     // MARK: - Subviews
     
@@ -27,9 +27,9 @@ class HaebitFilmViewController: UIViewController {
         let gradientLayer: CAGradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
         gradientLayer.locations = [0.0, 0.15]
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.startPoint = .zero
         gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        gradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+        gradientLayer.frame = CGRect(origin: .zero, size: view.frame.size)
         return gradientLayer
     }()
     
@@ -66,13 +66,14 @@ class HaebitFilmViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupViews()
+        setupViews()
     }
     
     // MARK: - Helpers
     
     private func setupViews() {
         view.backgroundColor = .black
+        view.layer.addSublayer(shadowLayer)
         
         view.addSubview(photoView)
         photoView.snp.makeConstraints { make in
@@ -85,7 +86,5 @@ class HaebitFilmViewController: UIViewController {
             make.top.equalTo(photoView.snp.bottom)
             make.leading.trailing.equalToSuperview()
         }
-        
-        view.layer.addSublayer(shadowLayer)
     }
 }

@@ -13,13 +13,12 @@ protocol HaebitFilmCarouselViewControllerDelegate: AnyObject {
     func carouselDidScroll(_ haebitFilmCarouselViewController: HaebitFilmCarouselViewController, toIndex index: Int)
 }
 
-class HaebitFilmCarouselViewController: UIViewController {
+final class HaebitFilmCarouselViewController: UIViewController {
     
     // MARK: - Subviews
     
     private lazy var photoCarouselContainerViewController: UIPageViewController = {
         let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        pageViewController.view.frame = self.view.frame
         pageViewController.delegate = self
         pageViewController.dataSource = self
         return pageViewController
@@ -72,7 +71,7 @@ class HaebitFilmCarouselViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupViews()
+        setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,6 +103,7 @@ class HaebitFilmCarouselViewController: UIViewController {
         addChild(photoCarouselContainerViewController)
         view.addSubview(photoCarouselContainerViewController.view)
         photoCarouselContainerViewController.didMove(toParent: self)
+        photoCarouselContainerViewController.view.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         let index = viewModel.currentIndex
         let film = viewModel.films[index]
