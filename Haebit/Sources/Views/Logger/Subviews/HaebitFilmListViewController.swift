@@ -48,9 +48,9 @@ class HaebitFilmListViewController: UIViewController {
         collectionView.register(HaebitFilmListCell.self, forCellWithReuseIdentifier: HaebitFilmListCell.reuseIdentifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
-        collectionView.backgroundColor = .black
+        collectionView.backgroundColor = .white
+        collectionView.contentInset = .init(top: view.frame.height / 4.0, left: .zero, bottom: view.frame.height / 4.0, right: .zero)
         collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.contentInset = .init(top: .zero, left: .zero, bottom: view.frame.height / 2.0, right: .zero)
         collectionView.transform = .init(scaleX: 1, y: -1)
         return collectionView
     }()
@@ -172,7 +172,7 @@ extension HaebitFilmListViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         CGSize(
             width: view.frame.width,
-            height: view.frame.width * 38.0 / 35.0
+            height: ceil(view.frame.width * 38.0 / 35.0)
         )
     }
 }

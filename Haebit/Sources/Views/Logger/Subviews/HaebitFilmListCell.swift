@@ -53,6 +53,15 @@ class HaebitFilmListCell: UICollectionViewCell {
             bgView.topAnchor.constraint(equalTo: contentView.topAnchor),
             bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
+        guard let bgView = UIHostingController(rootView: Frame135()).view else { return }
+        bgView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(bgView)
+        NSLayoutConstraint.activate([
+            bgView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            bgView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            bgView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            bgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
         
         contentView.addSubview(photoView)
         photoView.translatesAutoresizingMaskIntoConstraints = false
