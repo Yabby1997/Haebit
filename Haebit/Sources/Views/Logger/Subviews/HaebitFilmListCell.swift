@@ -45,6 +45,10 @@ final class HaebitFilmListCell: UICollectionViewCell {
     // MARK: - Helpers
     
     private func setupViews() {
+        layer.shadowOffset = CGSize(width: 4, height: 4)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.7
+        
         contentView.backgroundColor = .black
         
         guard let frameView = UIHostingController(rootView: Frame135()).view else { return }

@@ -102,11 +102,10 @@ final class HaebitFilmListViewController: UIViewController {
     // MARK: - Helpers
     
     private func setupViews() {
-        view.backgroundColor = .black
+        view.backgroundColor = .white
+        
         view.addSubview(photoListCollectionView)
-        photoListCollectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        photoListCollectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         view.layer.addSublayer(shadowLayer)
         
@@ -170,9 +169,10 @@ extension HaebitFilmListViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        CGSize(
-            width: view.frame.width,
-            height: ceil(view.frame.width * 38.0 / 35.0)
+        let width = collectionView.frame.width - 12.0
+        return CGSize(
+            width: width,
+            height: ceil(width * 38.0 / 35.0)
         )
     }
 }

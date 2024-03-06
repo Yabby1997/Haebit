@@ -23,16 +23,6 @@ final class HaebitFilmViewController: UIViewController {
         return imageView
     }()
     
-    private lazy var shadowLayer: CAGradientLayer = {
-        let gradientLayer: CAGradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
-        gradientLayer.locations = [0.0, 0.15]
-        gradientLayer.startPoint = .zero
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        gradientLayer.frame = CGRect(origin: .zero, size: view.frame.size)
-        return gradientLayer
-    }()
-    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -73,7 +63,6 @@ final class HaebitFilmViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .black
-        view.layer.addSublayer(shadowLayer)
         
         view.addSubview(photoView)
         photoView.snp.makeConstraints { make in
