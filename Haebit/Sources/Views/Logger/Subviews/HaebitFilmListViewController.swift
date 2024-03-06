@@ -43,6 +43,18 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Subviews
     
+    private lazy var closeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .white
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 3, height: 3)
+        button.layer.shadowOpacity = 0.7
+        button.layer.shadowRadius = 5
+        button.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var photoListCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: photoListCollectionViewFlowLayout)
         collectionView.register(HaebitFilmListCell.self, forCellWithReuseIdentifier: HaebitFilmListCell.reuseIdentifier)
@@ -115,12 +127,7 @@ final class HaebitFilmListViewController: UIViewController {
         appearance.titlePositionAdjustment = .zero
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        
-        navigationItem.rightBarButtonItem = .init(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(didTapClose)
-        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
     
     private func bindUI() {
