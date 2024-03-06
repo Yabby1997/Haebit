@@ -44,13 +44,25 @@ class HaebitFilmListViewController: UIViewController {
     // MARK: - Subviews
     
     private lazy var photoListCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: self.photoListCollectionViewFlowLayout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: photoListCollectionViewFlowLayout)
         collectionView.register(HaebitFilmListCell.self, forCellWithReuseIdentifier: HaebitFilmListCell.reuseIdentifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.backgroundColor = .black
         collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.contentInset = .init(top: .zero, left: .zero, bottom: view.frame.height / 2.0, right: .zero)
+        collectionView.transform = .init(scaleX: 1, y: -1)
         return collectionView
+    }()
+    
+    private lazy var shadowLayer: CAGradientLayer = {
+        let gradientLayer: CAGradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradientLayer.locations = [0.0, 0.15]
+        gradientLayer.startPoint = .zero
+        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
+        gradientLayer.frame = CGRect(origin: .zero, size: view.frame.size)
+        return gradientLayer
     }()
     
     // MARK: - Properties
@@ -92,6 +104,11 @@ class HaebitFilmListViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .black
         view.addSubview(photoListCollectionView)
+        photoListCollectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        view.layer.addSublayer(shadowLayer)
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
@@ -119,6 +136,7 @@ class HaebitFilmListViewController: UIViewController {
     private func configureDataSource() {
         dataSource = DataSource(collectionView: self.photoListCollectionView) { collectionView, indexPath, film in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
+            cell.transform = .init(scaleX: 1, y: -1)
             cell.setImage(UIImage(url: film.image))
             return cell
         }
