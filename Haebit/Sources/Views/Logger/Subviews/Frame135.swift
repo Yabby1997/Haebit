@@ -20,8 +20,8 @@ struct Frame135: View {
                     PerforationHoles(size: geo.size)
                     Color.black.frame(width: geo.size.width * 2.0 / 35.0)
                 }
-                LeftPerforationMetadataLabel(size: geo.size, text: "\t13\t\tHAEBIT 400")
-                RightPerforationMetadataLabel(size: geo.size, text: "\t13\t\t\t\t\t➞")
+//                LeftPerforationMetadataLabel(size: geo.size, text: "\t13\t\tHAEBIT 400")
+//                RightPerforationMetadataLabel(size: geo.size, text: "\t13\t\t\t\t\t➞")
             }
             .background(.black)
         }
