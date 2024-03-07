@@ -18,13 +18,12 @@ struct LoggerButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModelP
             Button {
                 viewModel.didTapLogger()
             } label: {
-                Image(systemName: "book.closed.fill")
+                Image(asset: HaebitDevAsset.Assets.filmMagazine)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 60, height: 60)
             }
             .disabled(viewModel.isCapturing)
-            .foregroundStyle(.yellow)
         }
         .padding(.horizontal, 20)
     }
