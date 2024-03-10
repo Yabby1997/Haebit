@@ -47,7 +47,7 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
             Text("위치정보 로깅을 위해 위치 권한을 허용해주세요")
         }
         .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
-            HaebitFilmListView(viewModel: viewModel.loggerViewModel())
+            HaebitFilmListView(viewModel: viewModel.filmListViewModel())
                 .persistentSystemOverlays(.hidden)
                 .statusBarHidden()
                 .ignoresSafeArea()

@@ -138,7 +138,7 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     func didTapDoNotAskGPSAccess() {}
     func didTapLogger() {}
     func didCloseLogger() {}
-    func loggerViewModel() -> HaebitLoggerViewModel {
+    func filmListViewModel() -> HaebitFilmListViewModel {
         .init(logger: HaebitLogger(repository: MockHaebitLogRepository()))
     }
 }

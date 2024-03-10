@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 struct HaebitFilmListView: UIViewControllerRepresentable {
-    @StateObject var viewModel: HaebitLoggerViewModel
+    @StateObject var viewModel: HaebitFilmListViewModel
     
     func makeUIViewController(context: Context) -> some UIViewController {
         HaebitFilmListNavigationController(viewModel: viewModel)
@@ -23,7 +23,7 @@ struct HaebitFilmListView: UIViewControllerRepresentable {
 final class HaebitFilmListNavigationController: UINavigationController {
     private let animator = HaebitNavigationAnimator()
     
-    init(viewModel: HaebitLoggerViewModel) {
+    init(viewModel: HaebitFilmListViewModel) {
         super.init(rootViewController: HaebitFilmListViewController(viewModel: viewModel))
         delegate = animator
     }
@@ -69,7 +69,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: HaebitLoggerViewModel
+    private let viewModel: HaebitFilmListViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -82,7 +82,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitLoggerViewModel) {
+    init(viewModel: HaebitFilmListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

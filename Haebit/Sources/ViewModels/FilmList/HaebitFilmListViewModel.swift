@@ -1,5 +1,5 @@
 //
-//  HaebitLoggerViewModel.swift
+//  HaebitFilmListViewModel.swift
 //  HaebitDev
 //
 //  Created by Seunghun on 2/6/24.
@@ -12,7 +12,7 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
-final class HaebitLoggerViewModel: ObservableObject {
+final class HaebitFilmListViewModel: ObservableObject {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
