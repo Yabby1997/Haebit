@@ -52,10 +52,12 @@ final class HaebitFilmListCell: UICollectionViewCell {
         contentView.backgroundColor = .black
         
         guard let frameView = UIHostingController(rootView: Frame135()).view else { return }
+        frameView.backgroundColor = .black
         contentView.addSubview(frameView)
         frameView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         contentView.addSubview(photoView)
+        photoView.backgroundColor = .black
         photoView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(24.0 / 35.0)

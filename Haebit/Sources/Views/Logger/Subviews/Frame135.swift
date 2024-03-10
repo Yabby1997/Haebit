@@ -23,8 +23,8 @@ struct Frame135: View {
 //                LeftPerforationMetadataLabel(size: geo.size, text: "\t13\t\tHAEBIT 400")
 //                RightPerforationMetadataLabel(size: geo.size, text: "\t13\t\t\t\t\t➞")
             }
-            .background(.black)
         }
+        .background(.black)
         .ignoresSafeArea()
     }
 }

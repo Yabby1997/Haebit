@@ -48,9 +48,9 @@ final class HaebitFilmListViewController: UIViewController {
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.tintColor = .white
         button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 3, height: 3)
-        button.layer.shadowOpacity = 0.7
-        button.layer.shadowRadius = 5
+        button.layer.shadowOffset = .zero
+        button.layer.shadowOpacity = 1
+        button.layer.shadowRadius = 10
         button.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
         return button
     }()
@@ -65,16 +65,6 @@ final class HaebitFilmListViewController: UIViewController {
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.transform = .init(scaleX: 1, y: -1)
         return collectionView
-    }()
-    
-    private lazy var shadowLayer: CAGradientLayer = {
-        let gradientLayer: CAGradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
-        gradientLayer.locations = [0.0, 0.15]
-        gradientLayer.startPoint = .zero
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        gradientLayer.frame = CGRect(origin: .zero, size: view.frame.size)
-        return gradientLayer
     }()
     
     // MARK: - Properties
@@ -118,8 +108,6 @@ final class HaebitFilmListViewController: UIViewController {
         
         view.addSubview(photoListCollectionView)
         photoListCollectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        view.layer.addSublayer(shadowLayer)
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
