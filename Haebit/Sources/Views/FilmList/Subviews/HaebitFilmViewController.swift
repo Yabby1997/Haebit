@@ -25,9 +25,9 @@ final class HaebitFilmViewController: UIViewController {
     
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .haebitYellow
         label.font = .italicSystemFont(ofSize: 12)
-        label.text = "\(film.aperture.description) \(film.shutterSpeed.description) ISO\(film.iso.description) \(film.focalLength.title)"
+        label.text = "\(film.aperture.description)  \(film.shutterSpeed.description)  ISO\(film.iso.description)  \(film.focalLength.title)"
         label.textAlignment = .center
         return label
     }()
