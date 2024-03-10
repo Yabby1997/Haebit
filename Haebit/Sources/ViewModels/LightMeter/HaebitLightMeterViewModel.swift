@@ -23,6 +23,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
     private let reviewRequestValidator: ReviewRequestValidatable
+    private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
     private let debounceQueue = DispatchQueue.global()
     var previewLayer: CALayer { camera.previewLayer }
@@ -49,11 +50,6 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         }
     }
     
-    @UserDefault(key: "HaebitLightMeterViewModel.shouldAskGPSAccess", defaultValue: false)
-    private var shouldAskGPSAccess: Bool
-    @UserDefault(key: "HaebitLightMeterViewModel.doNotAskGPSAccess", defaultValue: false)
-    private var doNotAskGPSAccess: Bool
-    
     var apertureMode: Bool { lightMeterMode == .aperture }
     var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     var isoMode: Bool { lightMeterMode == .iso }
@@ -79,17 +75,18 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     init(
         statePersistence: LightMeterStatePersistenceProtocol,
         reviewRequestValidator: ReviewRequestValidatable,
+        gpsAccessValidator: GPSAccessValidatable,
         feedbackProvider: LightMeterFeedbackProvidable
     ) {
         self.statePersistence = statePersistence
         self.reviewRequestValidator = reviewRequestValidator
+        self.gpsAccessValidator = gpsAccessValidator
         self.feedbackProvider = feedbackProvider
         self.lightMeterMode = statePersistence.mode
         self.aperture = statePersistence.aperture
         self.shutterSpeed = statePersistence.shutterSpeed
         self.iso = statePersistence.iso
         self.focalLength = statePersistence.focalLength
-        shouldAskGPSAccess = false
     }
     
     // MARK: - Private Methods
@@ -97,9 +94,13 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     private func bind() {
         cancellables = []
         
-        reviewRequestValidator.shouldRequestReview
+        reviewRequestValidator.shouldRequestReviewPublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$shouldRequestReview)
+        
+        gpsAccessValidator.shouldAskGPSAccessPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$shouldRequestGPSAccess)
 
         $focalLength
             .sink { [weak self] focalLength in
@@ -250,15 +251,10 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             guard let self else { return }
             do {
                 try portolan.setup()
+                gpsAccessValidator.isAccessAuthorized = true
             } catch {
                 if case .notAuthorized = error as? PortolanLocationManager.Errors {
-                    guard shouldAskGPSAccess, !doNotAskGPSAccess else {
-                        shouldAskGPSAccess = true
-                        return
-                    }
-                    Task { @MainActor [weak self] in
-                        self?.shouldRequestGPSAccess = true
-                    }
+                    gpsAccessValidator.isAccessAuthorized = false
                 }
             }
         }
@@ -317,8 +313,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     }
     
     func didTapDoNotAskGPSAccess() {
-        doNotAskGPSAccess = true
-        shouldRequestGPSAccess = false
+        gpsAccessValidator.requestDoNotAsk()
     }
     
     func didTapLogger() {

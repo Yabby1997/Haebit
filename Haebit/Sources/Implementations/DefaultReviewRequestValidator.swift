@@ -12,11 +12,11 @@ import Foundation
 final class DefaultReviewRequestValidator: ReviewRequestValidatable {
     // MARK: - Public Properties
     
-    var shouldRequestReview: AnyPublisher<Bool, Never> { $_shouldRequestReview.eraseToAnyPublisher() }
+    var shouldRequestReviewPublisher: AnyPublisher<Bool, Never> { $shouldRequestReview.eraseToAnyPublisher() }
     
     // MARK: - Private properties
     
-    @Published private var _shouldRequestReview = false
+    @Published private var shouldRequestReview = false
     
     @UserDefault(key: "DefaultReviewRequestValidator.flag", defaultValue: 0)
     private var flag: Int
@@ -32,6 +32,6 @@ final class DefaultReviewRequestValidator: ReviewRequestValidatable {
     private func validate() {
         flag = (flag + 1) % 5
         guard flag == 0 else { return }
-        _shouldRequestReview = true
+        shouldRequestReview = true
     }
 }

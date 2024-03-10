@@ -10,5 +10,5 @@ import Combine
 import Foundation
 
 protocol ReviewRequestValidatable: AnyObject {
-    var shouldRequestReview: AnyPublisher<Bool, Never> { get }
+    var shouldRequestReviewPublisher: AnyPublisher<Bool, Never> { get }
 }

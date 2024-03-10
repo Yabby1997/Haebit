@@ -16,7 +16,8 @@ struct HaebitApp: App {
             HaebitLightMeterView(
                 viewModel: HaebitLightMeterViewModel(
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
-                    reviewRequestValidator: DefaultReviewRequestValidator(),
+                    reviewRequestValidator: DefaultReviewRequestValidator(), 
+                    gpsAccessValidator: DefaultGPSAccessValidator(),
                     feedbackProvider: LightMeterHapticFeedbackProvider()
                 )
             )
