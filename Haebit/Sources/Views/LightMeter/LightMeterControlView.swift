@@ -32,7 +32,6 @@ struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterV
                 BackgroundGradient()
             }
         }
-        .saturation(viewModel.isCapturing ? 0.2 : 1)
         .animation(.easeIn(duration: 0.1), value: viewModel.isCapturing)
     }
 }
