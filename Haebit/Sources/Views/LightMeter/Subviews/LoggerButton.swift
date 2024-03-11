@@ -18,7 +18,7 @@ struct LoggerButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModelP
             Button {
                 viewModel.didTapLogger()
             } label: {
-                Image(asset: HaebitDevAsset.Assets.filmMagazine)
+                Image(asset: .init(name: "filmMagazine"))
                     .resizable()
                     .scaledToFit()
                     .frame(width: 60, height: 60)
