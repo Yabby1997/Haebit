@@ -40,6 +40,10 @@ final class HaebitFilmListViewModel: ObservableObject {
     }
     
     func onAppear() {
+        reload()
+    }
+    
+    private func reload() {
         Task {
             do {
                 let logs = try await logger.logs().sorted { $0.date > $1.date }.map { $0.film }

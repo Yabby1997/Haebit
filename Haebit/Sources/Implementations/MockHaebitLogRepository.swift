@@ -102,7 +102,7 @@ class MockHaebitLogRepository: HaebitLogRepository {
         data.append(log)
     }
     
-    func remove(log: HaebitLog) async throws {
-        data.removeAll { $0 == log }
+    func remove(log id: UUID) async throws {
+        data.removeAll { $0.id == id }
     }
 }
