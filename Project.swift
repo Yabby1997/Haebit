@@ -134,7 +134,7 @@ let project = Project(
         .remote(url: "https://github.com/Yabby1997/Obscura.git", requirement: .exact("0.5.0")),
         .remote(url: "https://github.com/Yabby1997/LightMeter.git", requirement: .exact("0.1.0")),
         .remote(url: "https://github.com/Yabby1997/Portolan.git", requirement: .exact("0.1.0")),
-        .remote(url: "https://github.com/Yabby1997/HaebitLogger.git", requirement: .exact("0.2.0")),
+        .remote(url: "https://github.com/Yabby1997/HaebitLogger.git", requirement: .exact("0.2.1")),
         .remote(url: "https://github.com/Yabby1997/HaebitUtil.git", requirement: .exact("0.1.0")),
     ],
     targets: targets
