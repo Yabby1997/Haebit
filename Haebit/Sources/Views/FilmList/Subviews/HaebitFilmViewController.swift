@@ -19,7 +19,7 @@ final class HaebitFilmViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(url: film.image)
+        imageView.image = UIImage(asset: .init(name: "goldengate"))//UIImage(url: film.image)
         return imageView
     }()
     

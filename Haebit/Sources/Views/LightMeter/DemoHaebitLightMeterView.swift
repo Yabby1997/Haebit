@@ -240,3 +240,27 @@ struct DemoHaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMet
         )
     )
 }
+
+
+#Preview("logging") {
+    DemoHaebitLightMeterView(
+        imageName: "goldengate",
+        viewModel: DemoHaebitLightMeterViewModel(
+            exposureValue: 12.96,
+            lightMeterMode: .shutterSpeed,
+            aperture: .init(value: 8),
+            shutterSpeed: .init(denominator: 500),
+            iso: .init(iso: 400),
+            focalLength: .init(value: 70),
+            lockPoint: nil,
+            isLocked: false
+        )
+    )
+    .environmentObject(
+        LightMeterControlViewDependencies(
+            exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
+            zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
+            shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
+        )
+    )
+}

@@ -50,13 +50,13 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Properties
     
     private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
-    private var viewModel: HaebitFilmListViewModel
+    private var viewModel: any HaebitFilmListViewModelProtocol
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmListViewModel, delegate: HaebitFilmCarouselViewControllerDelegate) {
+    init(viewModel: any HaebitFilmListViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -89,12 +89,14 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        viewModel.$mainTitle.zip(viewModel.$subTitle)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] mainTitle, subTitle in
-                self?.updateTitle(main: mainTitle, sub: subTitle)
-            }
-            .store(in: &cancellables)
+//        viewModel.$mainTitle.zip(viewModel.$subTitle)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] mainTitle, subTitle in
+//                self?.updateTitle(main: mainTitle, sub: subTitle)
+//            }
+//            .store(in: &cancellables)
+        mainTitleLabel.text = viewModel.mainTitle
+        subTitleLabel.text = viewModel.subTitle
     }
     
     private func setupViews() {
@@ -172,3 +174,34 @@ extension HaebitFilmCarouselViewController: HaebitNavigationAnimatorSnapshotProv
         return photoViewController.photoView.frame
     }
 }
+
+
+#Preview("korean", traits: .defaultLayout, body: {
+    class MockDelegate: HaebitFilmCarouselViewControllerDelegate {
+        func carouselDidScroll(_ haebitFilmCarouselViewController: HaebitFilmCarouselViewController, toIndex index: Int) {}
+    }
+    
+    let nav = UINavigationController(
+        rootViewController: HaebitFilmCarouselViewController(
+            viewModel: DemoHaebitFilmListViewModel(),
+            delegate: MockDelegate()
+        )
+    )
+    
+    return nav
+})
+
+#Preview("english", traits: .defaultLayout, body: {
+    class MockDelegate: HaebitFilmCarouselViewControllerDelegate {
+        func carouselDidScroll(_ haebitFilmCarouselViewController: HaebitFilmCarouselViewController, toIndex index: Int) {}
+    }
+    
+    let nav = UINavigationController(
+        rootViewController: HaebitFilmCarouselViewController(
+            viewModel: DemoHaebitFilmListViewModel(mainTitle: "Golden Gate Bridge", subTitle: "Today - 13:54"),
+            delegate: MockDelegate()
+        )
+    )
+    
+    return nav
+})

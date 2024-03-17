@@ -12,7 +12,7 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
-final class HaebitFilmListViewModel: ObservableObject {
+final class HaebitFilmListViewModel: HaebitFilmListViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
