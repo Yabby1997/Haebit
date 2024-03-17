@@ -69,7 +69,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: HaebitFilmListViewModel
+    private let viewModel: any HaebitFilmListViewModelProtocol
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -82,7 +82,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmListViewModel) {
+    init(viewModel: any HaebitFilmListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -96,8 +96,8 @@ final class HaebitFilmListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        bindUI()
         configureDataSource()
+        bindUI()
         viewModel.onAppear()
     }
 
@@ -119,12 +119,13 @@ final class HaebitFilmListViewController: UIViewController {
     }
     
     private func bindUI() {
-        viewModel.$films
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] logs in
-                self?.applySnapshot(films: logs)
-            }
-            .store(in: &cancellables)
+//        viewModel.$films
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] logs in
+//                self?.applySnapshot(films: logs)
+//            }
+//            .store(in: &cancellables)
+        applySnapshot(films: viewModel.films)
     }
     
     private func configureDataSource() {
@@ -224,3 +225,11 @@ extension HaebitFilmListViewController: HaebitNavigationAnimatorSnapshotProvidab
         return photoListCollectionView.convert(cell.convert(cell.photoView.frame, to: photoListCollectionView), to: view)
     }
 }
+
+
+
+#Preview("", traits: .defaultLayout, body: {
+    UINavigationController(
+        rootViewController: HaebitFilmListViewController(viewModel: DemoHaebitFilmListViewModel())
+    )
+})

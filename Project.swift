@@ -11,7 +11,7 @@ let targets: [Target] = [
         platform: .iOS,
         product: .app,
         bundleId: "com.seunghun.haebit.dev",
-        deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
+        deploymentTarget: .iOS(targetVersion: "17.0", devices: [.iphone]),
         infoPlist: .extendingDefault(
             with: [
                 "UILaunchScreen": [
