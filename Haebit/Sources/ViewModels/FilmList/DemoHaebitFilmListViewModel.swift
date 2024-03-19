@@ -21,7 +21,7 @@ final class DemoHaebitFilmListViewModel: HaebitFilmListViewModelProtocol {
     
     func onAppear() {}
     
-    init(mainTitle: String = "금문교", subTitle: String = "오늘 - 13:54") {
+    init(mainTitle: String = "금문교", subTitle: String = "오늘 13:54") {
         self.mainTitle = mainTitle
         self.subTitle = subTitle
     }

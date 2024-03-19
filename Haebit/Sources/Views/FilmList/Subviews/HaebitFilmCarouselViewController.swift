@@ -198,7 +198,7 @@ extension HaebitFilmCarouselViewController: HaebitNavigationAnimatorSnapshotProv
     
     let nav = UINavigationController(
         rootViewController: HaebitFilmCarouselViewController(
-            viewModel: DemoHaebitFilmListViewModel(mainTitle: "Golden Gate Bridge", subTitle: "Today - 13:54"),
+            viewModel: DemoHaebitFilmListViewModel(mainTitle: "Golden Gate Bridge", subTitle: "Today 13:54"),
             delegate: MockDelegate()
         )
     )
