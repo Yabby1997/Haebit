@@ -71,7 +71,10 @@ let targets: [Target] = [
             ]
         ),
         sources: ["Haebit/Sources/**"],
-        resources: ["Haebit/Resources/Common/**"],
+        resources: [
+            "Haebit/Resources/Common/**",
+            "Haebit/Resources/RC/**"
+        ],
         dependencies: [
             .package(product: "SnapKit", type: .runtime),
             .package(product: "HaebitUI", type: .runtime),
@@ -107,7 +110,10 @@ let targets: [Target] = [
             ]
         ),
         sources: ["Haebit/Sources/**"],
-        resources: ["Haebit/Resources/Common/**"],
+        resources: [
+            "Haebit/Resources/Common/**",
+            "Haebit/Resources/Real/**"
+        ],
         dependencies: [
             .package(product: "SnapKit", type: .runtime),
             .package(product: "HaebitUI", type: .runtime),

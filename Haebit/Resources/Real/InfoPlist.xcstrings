@@ -7,13 +7,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "illumeterRC"
+            "value" : "illumeter"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해빛RC"
+            "value" : "해빛"
           }
         }
       }
@@ -24,31 +24,30 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "illumeterRC"
+            "value" : "illumeter"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해빛RC"
+            "value" : "해빛"
           }
         }
       }
     },
     "NSCameraUsageDescription" : {
       "comment" : "Privacy - Camera Usage Description",
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "illumeter uses the camera to measure the exposure value."
+            "value" : "illumeter uses the camera to measure and log the exposure value."
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "해빛은 노출값(EV) 측정을 위해 카메라를 사용합니다. "
+            "state" : "translated",
+            "value" : "해빛은 노출값(EV) 측정과 기록을 위해 카메라를 사용합니다."
           }
         }
       }
