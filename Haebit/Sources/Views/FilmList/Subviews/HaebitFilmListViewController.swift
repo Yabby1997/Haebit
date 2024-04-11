@@ -124,6 +124,19 @@ final class HaebitFilmListViewController: UIViewController {
     }
 }
 
+// MARK: - UIScrollViewDelegate
+
+extension HaebitFilmListViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
+        if scrollSpeed < -1500 {
+            self.tabBarController?.setTabBarHidden(false, animated: true)
+        } else if scrollSpeed > 1500 {
+            self.tabBarController?.setTabBarHidden(true, animated: true)
+        }
+    }
+}
+
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension HaebitFilmListViewController: UICollectionViewDelegateFlowLayout {
