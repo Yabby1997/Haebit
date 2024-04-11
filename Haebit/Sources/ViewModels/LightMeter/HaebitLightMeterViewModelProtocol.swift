@@ -42,5 +42,5 @@ protocol HaebitLightMeterViewModelProtocol: ObservableObject {
     func didTapDoNotAskGPSAccess()
     func didTapLogger()
     func didCloseLogger()
-    func filmListViewModel() -> HaebitFilmListViewModel
+    func filmLogViewModel() -> HaebitFilmLogViewModel
 }

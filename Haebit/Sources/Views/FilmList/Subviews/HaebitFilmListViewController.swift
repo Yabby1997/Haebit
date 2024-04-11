@@ -7,31 +7,7 @@
 //
 
 import Combine
-import SwiftUI
-
-struct HaebitFilmListView: UIViewControllerRepresentable {
-    @StateObject var viewModel: HaebitFilmListViewModel
-    
-    func makeUIViewController(context: Context) -> some UIViewController {
-        HaebitFilmListNavigationController(viewModel: viewModel)
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-    }
-}
-
-final class HaebitFilmListNavigationController: UINavigationController {
-    private let animator = HaebitNavigationAnimator()
-    
-    init(viewModel: HaebitFilmListViewModel) {
-        super.init(rootViewController: HaebitFilmListViewController(viewModel: viewModel))
-        delegate = animator
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
+import UIKit
 
 final class HaebitFilmListViewController: UIViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Film>
@@ -69,7 +45,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: HaebitFilmListViewModel
+    private let viewModel: HaebitFilmLogViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -82,7 +58,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmListViewModel) {
+    init(viewModel: HaebitFilmLogViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

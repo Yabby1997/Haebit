@@ -50,13 +50,13 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Properties
     
     private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
-    private var viewModel: HaebitFilmListViewModel
+    private var viewModel: HaebitFilmLogViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmListViewModel, delegate: HaebitFilmCarouselViewControllerDelegate) {
+    init(viewModel: HaebitFilmLogViewModel, delegate: HaebitFilmCarouselViewControllerDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)

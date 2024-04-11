@@ -45,3 +45,4 @@ struct HaebitCameraView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
+

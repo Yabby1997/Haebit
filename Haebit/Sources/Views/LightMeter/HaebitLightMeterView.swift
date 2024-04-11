@@ -43,7 +43,7 @@ struct HaebitLightMeterView<ViewModel>: View where ViewModel: HaebitLightMeterVi
             Button(action: viewModel.didTapDoNotAskGPSAccess) { Text(.lightMeterViewAccessAlertDoNotAskButton) }
         } message :{ Text(.lightMeterViewGPSAccessAlertMessage) }
         .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
-            HaebitFilmListView(viewModel: viewModel.filmListViewModel())
+            HaebitFilmLogView(viewModel: viewModel.filmLogViewModel())
                 .persistentSystemOverlays(.hidden)
                 .statusBarHidden()
                 .ignoresSafeArea()
