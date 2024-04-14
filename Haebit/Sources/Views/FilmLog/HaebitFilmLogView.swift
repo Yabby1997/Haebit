@@ -21,8 +21,7 @@ struct HaebitFilmLogView: UIViewControllerRepresentable {
         let list = HaebitFilmLogNavigationController(rootViewController: listViewController)
         list.tabBarItem = UITabBarItem(title: nil, image: .init(systemName: "photo.stack"), tag: 0)
         
-        let mapViewController = UIViewController()
-        mapViewController.view.backgroundColor = .red
+        let mapViewController = HaebitFilmMapViewController()
         let map = HaebitFilmLogNavigationController(rootViewController: mapViewController)
         map.tabBarItem = UITabBarItem(title: nil, image: .init(systemName: "map.fill"), tag: 0)
         
