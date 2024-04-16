@@ -9,13 +9,13 @@
 import MapKit
 
 class FilmAnnotation: NSObject, MKAnnotation {
-    var coordinate: CLLocationCoordinate2D
-    var image: URL
+    let coordinate: CLLocationCoordinate2D
+    let film: Film
     
     init?(film: Film) {
         guard let coordinate = film.coordinate?.clLocationCoordinate2D else { return nil }
         self.coordinate = coordinate
-        self.image = film.image
+        self.film = film
     }
 }
 

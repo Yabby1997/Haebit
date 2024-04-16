@@ -7,14 +7,18 @@
 //
 
 import MapKit
+import SnapKit
 
 final class FilmClusterAnnotationView: MKAnnotationView {
     private let frameView = UIImageView()
     private let imageView = UIImageView()
     private let label = UILabel()
     
-    private var filmAnnotations: [FilmAnnotation] {
-        (annotation as? MKClusterAnnotation)?.memberAnnotations.compactMap { $0 as? FilmAnnotation } ?? []
+    var films: [Film] {
+        ((annotation as? MKClusterAnnotation)?.memberAnnotations ?? [])
+            .compactMap { $0 as? FilmAnnotation }
+            .map { $0.film }
+            .sorted { $0.date > $1.date }
     }
     
     static let reuseIdentifier: String = "FilmClusterAnnotationViewReuseIdentifier"
@@ -62,8 +66,8 @@ final class FilmClusterAnnotationView: MKAnnotationView {
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
-        guard let first = filmAnnotations.first else { return }
-        imageView.setDownSampledImage(at: first.image)
-        label.text = "\(filmAnnotations.count)"
+        guard let firstFilm = films.first else { return }
+        imageView.setDownSampledImage(at: firstFilm.image)
+        label.text = "\(films.count)"
     }
 }

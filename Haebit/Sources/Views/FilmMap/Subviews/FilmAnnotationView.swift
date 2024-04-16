@@ -13,7 +13,9 @@ final class FilmAnnotationView: MKAnnotationView {
     private let frameView = UIImageView()
     private let imageView = UIImageView()
     
-    private var filmAnnotation: FilmAnnotation? { annotation as? FilmAnnotation }
+    var film: Film? {
+        (annotation as? FilmAnnotation)?.film
+    }
     
     static let reuseIdentifier = "FilmAnnotationViewReuseIdentifier"
     static let clusteringIdentifier = "FilmAnnotationViewClusteringIdentifier"
@@ -53,7 +55,7 @@ final class FilmAnnotationView: MKAnnotationView {
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
-        guard let filmAnnotation else { return }
-        imageView.setDownSampledImage(at: filmAnnotation.image)
+        guard let film else { return }
+        imageView.setDownSampledImage(at: film.image)
     }
 }

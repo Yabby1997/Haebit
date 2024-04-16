@@ -18,7 +18,6 @@ final class HaebitFilmMapViewController: UIViewController {
         mapView.delegate = self
         mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmAnnotationView.reuseIdentifier)
         mapView.register(FilmClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmClusterAnnotationView.reuseIdentifier)
-        mapView.showsScale = true
         return mapView
     }()
     
@@ -69,5 +68,14 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
             return annotationView
         }
         return nil
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let films = (view as? FilmClusterAnnotationView)?.films {
+            print(films.count)
+        } else if let film = (view as? FilmAnnotationView)?.film {
+            print(film.id)
+        }
+        mapView.deselectAnnotation(view.annotation, animated: false)
     }
 }
