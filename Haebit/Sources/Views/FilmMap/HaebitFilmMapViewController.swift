@@ -16,6 +16,9 @@ final class HaebitFilmMapViewController: UIViewController {
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.delegate = self
+        mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmAnnotationView.reuseIdentifier)
+        mapView.register(FilmClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmClusterAnnotationView.reuseIdentifier)
+        mapView.showsScale = true
         return mapView
     }()
     
@@ -45,14 +48,7 @@ final class HaebitFilmMapViewController: UIViewController {
     
     private func bind() {
         viewModel.$films
-            .map { films in
-                films.compactMap { film -> MKPointAnnotation? in
-                    guard let coordinate = film.coordinate?.clLocationCoordinate2D else { return nil }
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    return annotation
-                }
-            }
+            .map { $0.compactMap { FilmAnnotation(film: $0) } }
             .sink { [weak self] annotations in
                 self?.mapView.addAnnotations(annotations)
             }
@@ -61,10 +57,17 @@ final class HaebitFilmMapViewController: UIViewController {
 }
 
 extension HaebitFilmMapViewController: MKMapViewDelegate {
-}
-
-extension Coordinate {
-    var clLocationCoordinate2D: CLLocationCoordinate2D {
-        .init(latitude: self.latitude, longitude: self.longitude)
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let clusterAnnotation = annotation as? MKClusterAnnotation {
+            let clusterView = mapView.dequeueReusableAnnotationView(withIdentifier: FilmClusterAnnotationView.reuseIdentifier)
+            clusterView?.annotation = clusterAnnotation
+            return clusterView
+        } else if let annotation = annotation as? FilmAnnotation {
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: FilmAnnotationView.reuseIdentifier) as? FilmAnnotationView
+            annotationView?.clusteringIdentifier = FilmAnnotationView.clusteringIdentifier
+            annotationView?.annotation = annotation
+            return annotationView
+        }
+        return nil
     }
 }
