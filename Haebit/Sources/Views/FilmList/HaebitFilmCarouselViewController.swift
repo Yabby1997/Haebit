@@ -123,20 +123,22 @@ final class HaebitFilmCarouselViewController: UIViewController {
 
 extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let index = viewModel.currentIndex < viewModel.films.count - 1
+        let nextIndex = viewModel.currentIndex < viewModel.films.count - 1
             ? viewModel.currentIndex + 1
             : .zero
-        let film = viewModel.films[index]
-        let viewController = HaebitFilmViewController(film: film, index: index)
+        guard viewModel.currentIndex != nextIndex else { return nil }
+        let film = viewModel.films[nextIndex]
+        let viewController = HaebitFilmViewController(film: film, index: nextIndex)
         return viewController
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        let index = viewModel.currentIndex > .zero
+        let nextIndex = viewModel.currentIndex > .zero
             ? viewModel.currentIndex - 1
             : viewModel.films.count - 1
-        let film = viewModel.films[index]
-        let viewController = HaebitFilmViewController(film: film, index: index)
+        guard viewModel.currentIndex != nextIndex else { return nil }
+        let film = viewModel.films[nextIndex]
+        let viewController = HaebitFilmViewController(film: film, index: nextIndex)
         return viewController
     }
     
