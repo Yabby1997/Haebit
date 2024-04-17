@@ -86,7 +86,7 @@ class HaebitNavigationAnimator: NSObject {
             UIView.animate(
                 withDuration: interactionSuccessDuration,
                 delay: .zero,
-                options: []
+                options: .curveEaseIn
             ) { [weak self] in
                 self?.snapshot?.frame = baseTargetFrame
                 pushed.view.alpha = .zero
@@ -105,7 +105,7 @@ class HaebitNavigationAnimator: NSObject {
                 delay: .zero,
                 usingSpringWithDamping: interactionCancelSpringDamping,
                 initialSpringVelocity: .zero,
-                options: []
+                options: .curveEaseIn
             ) { [weak self] in
                 self?.snapshot?.frame = pushedTargetFrame
                 pushed.view.alpha = 1.0
@@ -147,7 +147,7 @@ class HaebitNavigationAnimator: NSObject {
             delay: .zero,
             usingSpringWithDamping: pushPopSpringDamping,
             initialSpringVelocity: .zero,
-            options: .transitionCrossDissolve
+            options: .curveEaseIn
         ) {
             snapshot.frame = pushedTargetFrame
             pushed.view.alpha = 1.0
@@ -181,7 +181,7 @@ class HaebitNavigationAnimator: NSObject {
             delay: .zero,
             usingSpringWithDamping: pushPopSpringDamping,
             initialSpringVelocity: .zero,
-            options: .transitionCrossDissolve
+            options: .curveEaseIn
         ) {
             snapshot.frame = baseTargetFrame
             pushed.view.alpha = .zero
