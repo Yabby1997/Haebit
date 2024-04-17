@@ -45,7 +45,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: HaebitFilmLogViewModel
+    private let viewModel: any HaebitFilmLogViewModelProtocol
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -58,7 +58,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmLogViewModel) {
+    init(viewModel: any HaebitFilmLogViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -95,7 +95,7 @@ final class HaebitFilmListViewController: UIViewController {
     }
     
     private func bindUI() {
-        viewModel.$films
+        viewModel.filmsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] logs in
                 self?.applySnapshot(films: logs)

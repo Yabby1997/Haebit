@@ -50,13 +50,13 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Properties
     
     private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
-    private var viewModel: HaebitFilmLogViewModel
+    private var viewModel: any HaebitFilmLogViewModelProtocol
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmLogViewModel, delegate: HaebitFilmCarouselViewControllerDelegate) {
+    init(viewModel: any HaebitFilmLogViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate? = nil) {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -89,7 +89,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        viewModel.$mainTitle.zip(viewModel.$subTitle)
+        viewModel.mainTitlePublisher.zip(viewModel.subTitlePublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] mainTitle, subTitle in
                 self?.updateTitle(main: mainTitle, sub: subTitle)
