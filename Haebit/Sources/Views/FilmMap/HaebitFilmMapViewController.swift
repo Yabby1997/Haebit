@@ -17,9 +17,10 @@ final class HaebitFilmMapViewController: UIViewController {
         let mapView = MKMapView()
         mapView.delegate = self
         mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmAnnotationView.reuseIdentifier)
-        mapView.register(FilmClusterAnnotationView.self, forAnnotationViewWithReuseIdentifier: FilmClusterAnnotationView.reuseIdentifier)
         return mapView
     }()
+
+    private var snapshotAnnotationView: FilmAnnotationView?
     
     private let viewModel: HaebitFilmLogViewModel
     
@@ -57,25 +58,44 @@ final class HaebitFilmMapViewController: UIViewController {
 
 extension HaebitFilmMapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let clusterAnnotation = annotation as? MKClusterAnnotation {
-            let clusterView = mapView.dequeueReusableAnnotationView(withIdentifier: FilmClusterAnnotationView.reuseIdentifier)
-            clusterView?.annotation = clusterAnnotation
-            return clusterView
-        } else if let annotation = annotation as? FilmAnnotation {
-            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: FilmAnnotationView.reuseIdentifier) as? FilmAnnotationView
-            annotationView?.clusteringIdentifier = FilmAnnotationView.clusteringIdentifier
-            annotationView?.annotation = annotation
-            return annotationView
+        guard let filmAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: FilmAnnotationView.reuseIdentifier) as? FilmAnnotationView else {
+            return nil
         }
-        return nil
+        if let clusterAnnotation = annotation as? MKClusterAnnotation {
+            filmAnnotationView.viewModel = HaebitFilmLogPassiveViewModel(films: clusterAnnotation.memberAnnotations.compactMap { $0 as? FilmAnnotation }.map { $0.film } )
+        } else if let annotation = annotation as? FilmAnnotation {
+            filmAnnotationView.viewModel = HaebitFilmLogPassiveViewModel(films: [annotation.film])
+            filmAnnotationView.clusteringIdentifier = FilmAnnotationView.clusteringIdentifier
+        }
+        return filmAnnotationView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let films = (view as? FilmClusterAnnotationView)?.films {
-            print(films.count)
-        } else if let film = (view as? FilmAnnotationView)?.film {
-            print(film.id)
-        }
+        guard let filmAnnotationView = (view as? FilmAnnotationView),
+              let viewModel = filmAnnotationView.viewModel else { return }
+        snapshotAnnotationView = filmAnnotationView
+        let carouselViewController = HaebitFilmCarouselViewController(viewModel: viewModel)
+        navigationController?.pushViewController(carouselViewController, animated: true)
         mapView.deselectAnnotation(view.annotation, animated: false)
+    }
+}
+
+extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidable {
+    func viewForTransition() -> UIView? {
+        snapshotAnnotationView?.imageView
+    }
+
+    func regionForTransition() -> CGRect? {
+        guard let snapshotAnnotationView else { return nil }
+        return mapView.convert(
+            snapshotAnnotationView.convert(
+                snapshotAnnotationView.frameView.convert(
+                    snapshotAnnotationView.imageView.frame,
+                    to: snapshotAnnotationView
+                ),
+                to: mapView
+            ),
+            to: view
+        )
     }
 }
