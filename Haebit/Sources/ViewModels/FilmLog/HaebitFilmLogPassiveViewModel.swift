@@ -1,8 +1,8 @@
 //
-//  HaebitFilmLogViewModel.swift
+//  HaebitFilmLogPassiveViewModel.swift
 //  HaebitDev
 //
-//  Created by Seunghun on 2/6/24.
+//  Created by Seunghun on 4/16/24.
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
-final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
+final class HaebitFilmLogPassiveViewModel: HaebitFilmLogViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
@@ -23,8 +23,9 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(logger: HaebitLogger) {
-        self.logger = logger
+    init(films: [Film]) {
+        self.logger = HaebitLogger(repository: MockHaebitLogRepository())
+        self.films = films.sorted { $0.date > $1.date }
         bind()
     }
     
@@ -39,22 +40,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    func onAppear() {
-        reload()
-    }
-    
-    private func reload() {
-        Task {
-            do {
-                let logs = try await logger.logs().sorted { $0.date > $1.date }.map { $0.film }
-                Task { @MainActor [weak self] in
-                    self?.films = logs.sorted { $0.date > $1.date }
-                }
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
+    func onAppear() {}
     
     private func updateTitle(for film: Film) {
         Task { @MainActor in
@@ -73,39 +59,5 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
                 subTitle = formattedTime
             }
         }
-    }
-}
-
-extension HaebitLog {
-    var film: Film {
-        .init(
-            id: id,
-            date: date,
-            coordinate: coordinate?.coordinate,
-            image: URL.homeDirectory.appending(path: image),
-            focalLength: FocalLengthValue(value: Int(focalLength)),
-            iso: IsoValue(iso: Int(iso)),
-            shutterSpeed: ShutterSpeedValue(denominator: shutterSpeed),
-            aperture: ApertureValue(value: aperture),
-            memo: memo
-        )
-    }
-}
-
-extension HaebitCoordinate {
-    var coordinate: Coordinate {
-        .init(latitude: latitude, longitude: longitude)
-    }
-}
-
-extension Array {
-    subscript (safe index: Int) -> Element? {
-        indices ~= index ? self[index] : nil
-    }
-}
-
-extension Coordinate {
-    var portolanCoordinate: PortolanCoordinate {
-        .init(latitude: latitude, longitude: longitude)
     }
 }
