@@ -13,12 +13,10 @@ import SnapKit
 final class FilmAnnotationView: MKAnnotationView {
     static let reuseIdentifier = "FilmAnnotationViewReuseIdentifier"
     static let clusteringIdentifier = "FilmAnnotationViewClusteringIdentifier"
-    
-    private let label = UILabel()
 
     var frameView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = HaebitDevAsset.Assets.ektachromeFrame.image
+        imageView.image = HaebitDevAsset.Assets.frameBH.image
         return imageView
     }()
     
@@ -28,6 +26,8 @@ final class FilmAnnotationView: MKAnnotationView {
         imageView.clipsToBounds = true
         return imageView
     }()
+    
+    private let countBadge = CountBadge()
     
     var viewModel: (any HaebitFilmLogViewModelProtocol)? {
         didSet {
@@ -50,7 +50,7 @@ final class FilmAnnotationView: MKAnnotationView {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
-        label.text = ""
+        countBadge.count = .zero
     }
     
     override func prepareForDisplay() {
@@ -61,28 +61,31 @@ final class FilmAnnotationView: MKAnnotationView {
     private func refresh() {
         guard let viewModel, let film = viewModel.films[safe: viewModel.currentIndex] else { return }
         imageView.setDownSampledImage(at: film.image)
-        label.text = "\(viewModel.films.count)"
+        countBadge.count = UInt(viewModel.films.count)
     }
     
     private func setupViews() {
         centerOffset = CGPoint(x: 0, y: -10)
-        frame = CGRect(x: 0, y: 0, width: 80, height: 424.0 * 80.0 / 390.0)
+        frame = CGRect(x: 0, y: 0, width: 70, height: 76)
         
         addSubview(frameView)
-        frameView.snp.makeConstraints { $0.center.width.height.equalToSuperview() }
+        frameView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(70)
+            make.height.equalTo(76)
+        }
         
         frameView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.top.bottom.equalToSuperview().inset(2)
-            make.width.equalTo(imageView.snp.height).multipliedBy(24.0 / 36.0)
+            make.height.equalTo(72)
+            make.width.equalTo(48)
         }
         
-        label.font = .systemFont(ofSize: 14, weight: .bold)
-        label.textColor = .red
-        frameView.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        frameView.addSubview(countBadge)
+        countBadge.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(countBadge.minimumSize / 2.0)
+            make.centerY.equalTo(frameView.snp.top)
         }
     }
     
