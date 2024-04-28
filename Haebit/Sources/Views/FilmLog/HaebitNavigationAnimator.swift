@@ -8,11 +8,13 @@
 
 import UIKit
 
+@MainActor
 protocol HaebitNavigationAnimatorSnapshotProvidable: UIViewController {
     func viewForTransition() -> UIView?
     func regionForTransition() -> CGRect?
 }
 
+@MainActor
 class HaebitNavigationAnimator: NSObject {
     private var isDismissingWithGesture = false
     private var isPresenting = true

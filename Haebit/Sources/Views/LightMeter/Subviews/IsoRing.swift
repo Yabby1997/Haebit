@@ -14,7 +14,7 @@ struct IsoRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtoc
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.iso, entries: viewModel.isoValues) { iso in
+        HaebitApertureRing(selection: $viewModel.iso, entries: $viewModel.isoValues) { iso in
             Text(iso.title)
                 .foregroundStyle(
                     viewModel.isoMode

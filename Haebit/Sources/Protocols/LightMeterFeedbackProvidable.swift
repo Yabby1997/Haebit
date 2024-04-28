@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol LightMeterFeedbackProvidable {
     func generateInteractionFeedback()
     func generateCompletionFeedback()

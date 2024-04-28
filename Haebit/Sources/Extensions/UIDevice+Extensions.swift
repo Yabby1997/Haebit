@@ -9,7 +9,7 @@
 import UIKit
 
 public extension UIDevice {
-    static var focalLength: CGFloat {
+    nonisolated static var focalLength: CGFloat {
         var systemInfo = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)

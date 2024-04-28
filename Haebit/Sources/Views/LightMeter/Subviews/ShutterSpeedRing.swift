@@ -14,7 +14,7 @@ struct ShutterSpeedRing<ViewModel>: View where ViewModel: HaebitLightMeterViewMo
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.shutterSpeed, entries: viewModel.shutterSpeedValues) { shutterSpeed in
+        HaebitApertureRing(selection: $viewModel.shutterSpeed, entries: $viewModel.shutterSpeedValues) { shutterSpeed in
             Text(shutterSpeed.title)
                 .foregroundStyle(
                     viewModel.shutterSpeedMode

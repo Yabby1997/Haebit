@@ -10,6 +10,7 @@ import HaebitUI
 import UIKit
 import AVFAudio
 
+@MainActor
 final class ExposureFeedbackProvider: HaebitApertureRingFeedbackProvidable {
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     

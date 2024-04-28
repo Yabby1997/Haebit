@@ -33,6 +33,15 @@ let dependencies: [TargetDependency] = [
     .project(target: "HaebitUtil", path: "../../Feature/HaebitUtil"),
 ]
 
+let settings: Settings = .settings(
+    base: [
+        "DEVELOPMENT_TEAM": "5HZQ3M82FA",
+        "SWIFT_STRICT_CONCURRENCY": "complete"
+    ],
+    configurations: [],
+    defaultSettings: .recommended
+)
+
 let targets: [Target] = [
     Target(
         name: "HaebitDev",
@@ -47,11 +56,7 @@ let targets: [Target] = [
             "Haebit/Resources/Dev/**"
         ],
         dependencies: dependencies,
-        settings: .settings(
-            base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
-            configurations: [],
-            defaultSettings: .recommended
-        )
+        settings: settings
     ),
     Target(
         name: "Haebit",
@@ -66,11 +71,7 @@ let targets: [Target] = [
             "Haebit/Resources/Real/**"
         ],
         dependencies: dependencies,
-        settings: .settings(
-            base: ["DEVELOPMENT_TEAM": "5HZQ3M82FA"],
-            configurations: [],
-            defaultSettings: .recommended
-        )
+        settings: settings
     )
 ]
 

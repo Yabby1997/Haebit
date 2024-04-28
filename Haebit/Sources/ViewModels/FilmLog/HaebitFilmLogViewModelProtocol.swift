@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+@MainActor
 protocol HaebitFilmLogViewModelProtocol: ObservableObject {
     var mainTitle: String { get set }
     var subTitle: String { get set }

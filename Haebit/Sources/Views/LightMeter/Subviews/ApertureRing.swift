@@ -14,7 +14,7 @@ struct ApertureRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelP
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
 
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.aperture, entries: viewModel.apertureValues) {
+        HaebitApertureRing(selection: $viewModel.aperture, entries: $viewModel.apertureValues) {
             Circle()
                 .foregroundColor(.red)
                 .frame(width: 5, height: 5)

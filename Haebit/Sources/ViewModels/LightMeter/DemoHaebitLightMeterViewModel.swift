@@ -22,10 +22,6 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 200]
     
     var previewLayer: CALayer { CALayer() }
-    var apertureValues: [ApertureValue] { availableApertureValues.map { ApertureValue(value: $0) } }
-    var shutterSpeedValues: [ShutterSpeedValue] { availableShutterSpeedDenominators.map { ShutterSpeedValue(denominator: $0) } }
-    var isoValues: [IsoValue] { availableIsoValues.map { IsoValue(iso: $0) } }
-    var focalLengths: [FocalLengthValue] { availableFocalLengths.map { FocalLengthValue(value: $0) } }
     var resultDescription: String {
         switch lightMeterMode {
         case .aperture: return aperture.description
@@ -42,6 +38,10 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     var shouldRequestGPSAccess: Bool = false
     @Published var lightMeterMode: LightMeterMode
     @Published var shutterSpeedInNanoSeconds: UInt64 = 1_000_000_000
+    @Published var apertureValues: [ApertureValue] = []
+    @Published var shutterSpeedValues: [ShutterSpeedValue] = []
+    @Published var isoValues: [IsoValue] = []
+    @Published var focalLengthValues: [FocalLengthValue] = []
     @Published var aperture: ApertureValue
     @Published var shutterSpeed: ShutterSpeedValue
     @Published var iso: IsoValue
@@ -71,6 +71,10 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         self.focalLength = focalLength
         self.lockPoint = lockPoint
         self.isLocked = isLocked
+        apertureValues = availableApertureValues.map { ApertureValue(value: $0) }
+        shutterSpeedValues = availableShutterSpeedDenominators.map { ShutterSpeedValue(denominator: $0) }
+        isoValues = availableIsoValues.map { IsoValue(iso: $0) }
+        focalLengthValues = availableFocalLengths.map { FocalLengthValue(value: $0) }
         bind()
     }
     

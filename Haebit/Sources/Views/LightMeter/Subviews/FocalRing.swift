@@ -14,7 +14,7 @@ struct FocalRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProt
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.focalLength, entries: viewModel.focalLengths) {
+        HaebitApertureRing(selection: $viewModel.focalLength, entries: $viewModel.focalLengthValues) {
             Rectangle()
                 .foregroundStyle(.white)
                 .frame(width: 2, height: 6)

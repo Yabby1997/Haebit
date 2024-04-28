@@ -9,6 +9,7 @@
 import Combine
 import UIKit
 
+@MainActor
 protocol HaebitFilmCarouselViewControllerDelegate: AnyObject {
     func carouselDidScroll(_ haebitFilmCarouselViewController: HaebitFilmCarouselViewController, toIndex index: Int)
 }
