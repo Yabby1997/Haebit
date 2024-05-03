@@ -9,7 +9,7 @@
 import MapKit
 
 class FilmAnnotation: NSObject, MKAnnotation {
-    let coordinate: CLLocationCoordinate2D
+    @objc dynamic let coordinate: CLLocationCoordinate2D
     let film: Film
     
     init?(film: Film) {

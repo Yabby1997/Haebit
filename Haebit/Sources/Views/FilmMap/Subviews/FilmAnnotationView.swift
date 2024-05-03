@@ -11,9 +11,6 @@ import MapKit
 import SnapKit
 
 final class FilmAnnotationView: MKAnnotationView {
-    static let reuseIdentifier = "FilmAnnotationViewReuseIdentifier"
-    static let clusteringIdentifier = "FilmAnnotationViewClusteringIdentifier"
-
     var frameView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = HaebitDevAsset.Assets.frameBH.image
