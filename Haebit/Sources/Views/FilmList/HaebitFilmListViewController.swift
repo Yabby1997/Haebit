@@ -69,6 +69,11 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Callbacks
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.setTitlePosition(.left)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -80,11 +85,6 @@ final class HaebitFilmListViewController: UIViewController {
     // MARK: - Helpers
     
     private func setupViews() {
-        view.backgroundColor = .white
-        
-        view.addSubview(photoListCollectionView)
-        photoListCollectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.shadowColor = .clear
@@ -92,6 +92,10 @@ final class HaebitFilmListViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        
+        view.backgroundColor = .white
+        view.addSubview(photoListCollectionView)
+        photoListCollectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     private func bindUI() {

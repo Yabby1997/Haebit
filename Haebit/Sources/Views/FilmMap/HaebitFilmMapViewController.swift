@@ -64,6 +64,7 @@ final class HaebitFilmMapViewController: UIViewController {
     private func setupViews() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         
+        view.backgroundColor = .black
         view.addSubview(mapView)
         mapView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
@@ -73,6 +74,13 @@ final class HaebitFilmMapViewController: UIViewController {
             .map { $0.compactMap { FilmAnnotation(film: $0) } }
             .sink { [weak self] annotations in
                 self?.mapView.addAnnotations(annotations)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$mainTitle
+            .sink { [weak self] title in
+                print(title)
+                self?.navigationItem.title = title
             }
             .store(in: &cancellables)
     }
@@ -108,6 +116,10 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
         navigationController?.pushViewController(carouselViewController, animated: true)
         mapView.deselectAnnotation(view.annotation, animated: false)
     }
+    
+    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        viewModel.currentLocation = mapView.region.center.coordinate
+    }
 }
 
 extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidable {
@@ -127,5 +139,11 @@ extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidabl
             ),
             to: view
         )
+    }
+}
+
+extension CLLocationCoordinate2D {
+    var coordinate: Coordinate {
+        .init(latitude: self.latitude, longitude: self.longitude)
     }
 }

@@ -20,6 +20,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     @Published var subTitle: String = ""
     @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
+    @Published var currentLocation: Coordinate?
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -35,6 +36,14 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
             }
             .sink { [weak self] film in
                 self?.updateTitle(for: film)
+            }
+            .store(in: &cancellables)
+        
+        $currentLocation
+            .compactMap { $0 }
+            .debounce(for: 1.5, scheduler: DispatchQueue.main)
+            .sink { [weak self] coordinate in
+                self?.updateTitle(for: coordinate)
             }
             .store(in: &cancellables)
     }
@@ -70,6 +79,15 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
                 mainTitle = formattedDate
                 subTitle = formattedTime
             }
+        }
+    }
+    
+    private func updateTitle(for coordinate: Coordinate) {
+        Task {
+            guard let representation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate) else {
+                return
+            }
+            mainTitle = representation
         }
     }
 }
