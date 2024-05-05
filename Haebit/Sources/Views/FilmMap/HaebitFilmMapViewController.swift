@@ -15,6 +15,18 @@ final class HaebitFilmMapViewController: UIViewController {
     private let annotationID = "FilmAnnotationViewAnnotationIdentifier"
     private let clusterID = "FilmAnnotationViewClusterIdentifier"
     
+    private lazy var closeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .white
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = .zero
+        button.layer.shadowOpacity = 1
+        button.layer.shadowRadius = 10
+        button.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.delegate = self
@@ -45,6 +57,8 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func setupViews() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        
         view.addSubview(mapView)
         mapView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
@@ -56,6 +70,10 @@ final class HaebitFilmMapViewController: UIViewController {
                 self?.mapView.addAnnotations(annotations)
             }
             .store(in: &cancellables)
+    }
+    
+    @objc private func didTapClose(_ sender: UIButton) {
+        dismiss(animated: true)
     }
 }
 
