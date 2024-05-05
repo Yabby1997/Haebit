@@ -50,6 +50,11 @@ final class HaebitFilmMapViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.setTitlePosition(.left)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
