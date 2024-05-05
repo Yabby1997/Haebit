@@ -65,7 +65,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var lockPoint: CGPoint? = nil
     @Published var isLocked: Bool = false
     @Published private(set) var isCapturing = false
-    @Published private var location: PortolanCoordinate? = nil
+    @Published private var location: Coordinate? = nil
     @Published private var isCameraRunning = false
     
     private var cancellables: Set<AnyCancellable> = []
@@ -189,6 +189,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         
         portolan.currentLocationPublisher
             .receive(on: DispatchQueue.main)
+            .map { $0?.coordinate }
             .assign(to: &$location)
         
         Task {
@@ -325,13 +326,9 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                         memo: ""
                     )
                 )
-                Task { @MainActor [weak self] in
-                    self?.isCapturing = false
-                }
+                isCapturing = false
             } catch {
-                Task { @MainActor [weak self] in
-                    self?.isCapturing = false
-                }
+                isCapturing = false
             }
         }
     }
@@ -358,11 +355,17 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     }
     
     func filmLogViewModel() -> HaebitFilmLogViewModel {
-        .init(logger: logger)
+        .init(logger: logger, currentLocation: location)
     }
 }
 
 extension PortolanCoordinate {
+    var coordinate: Coordinate {
+        .init(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension Coordinate {
     var haebitCoordinate: HaebitCoordinate {
         .init(latitude: latitude, longitude: longitude)
     }

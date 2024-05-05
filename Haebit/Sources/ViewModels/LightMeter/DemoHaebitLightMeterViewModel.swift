@@ -143,6 +143,6 @@ final class DemoHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     func didTapLogger() {}
     func didCloseLogger() {}
     func filmLogViewModel() -> HaebitFilmLogViewModel {
-        .init(logger: HaebitLogger(repository: MockHaebitLogRepository()))
+        .init(logger: HaebitLogger(repository: MockHaebitLogRepository()), currentLocation: nil)
     }
 }

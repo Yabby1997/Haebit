@@ -32,9 +32,10 @@ final class HaebitFilmMapViewController: UIViewController {
         mapView.delegate = self
         mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: annotationID)
         mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: clusterID)
+        mapView.showsUserLocation = true
         return mapView
     }()
-
+    
     private var snapshotAnnotationView: FilmAnnotationView?
     
     private let viewModel: HaebitFilmLogViewModel
@@ -52,6 +53,7 @@ final class HaebitFilmMapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        viewModel.onAppear()
         navigationController?.setTitlePosition(.left)
     }
     
@@ -67,6 +69,8 @@ final class HaebitFilmMapViewController: UIViewController {
         view.backgroundColor = .black
         view.addSubview(mapView)
         mapView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        setInitialRegionIfNeeded()
     }
     
     private func bind() {
@@ -78,11 +82,25 @@ final class HaebitFilmMapViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.$mainTitle
+            .removeDuplicates()
             .sink { [weak self] title in
-                print(title)
                 self?.navigationItem.title = title
             }
             .store(in: &cancellables)
+    }
+    
+    private func setInitialRegionIfNeeded() {
+        guard let initialLocation = viewModel.currentLocation else { return }
+        mapView.setRegion(
+            MKCoordinateRegion(
+                center: .init(
+                    latitude: initialLocation.latitude,
+                    longitude: initialLocation.longitude
+                ),
+                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            ),
+            animated: true
+        )
     }
     
     @objc private func didTapClose(_ sender: UIButton) {
@@ -99,7 +117,7 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
             view.clusteringIdentifier = clusterID
             return view
         } else if let cluster = annotation as? MKClusterAnnotation,
-           let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? FilmAnnotationView {
+                  let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? FilmAnnotationView {
             let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film })
             view.viewModel = HaebitFilmLogPassiveViewModel(films: films)
             view.clusteringIdentifier = nil
@@ -126,7 +144,7 @@ extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidabl
     func viewForTransition() -> UIView? {
         snapshotAnnotationView?.imageView
     }
-
+    
     func regionForTransition() -> CGRect? {
         guard let snapshotAnnotationView else { return nil }
         return mapView.convert(

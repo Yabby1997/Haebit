@@ -24,9 +24,11 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(logger: HaebitLogger) {
+    init(logger: HaebitLogger, currentLocation: Coordinate?) {
         self.logger = logger
+        self.currentLocation = currentLocation
         bind()
+        reload()
     }
     
     private func bind() {
@@ -41,6 +43,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         
         $currentLocation
             .compactMap { $0 }
+            .removeDuplicates()
             .debounce(for: 1.5, scheduler: DispatchQueue.main)
             .sink { [weak self] coordinate in
                 self?.updateTitle(for: coordinate)
@@ -49,7 +52,9 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     }
     
     func onAppear() {
-        reload()
+        if let currentLocation {
+            updateTitle(for: currentLocation)
+        }
     }
     
     private func reload() {
