@@ -47,9 +47,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         Task {
             do {
                 let logs = try await logger.logs().sorted { $0.date > $1.date }.map { $0.film }
-                Task { @MainActor [weak self] in
-                    self?.films = logs.sorted { $0.date > $1.date }
-                }
+                films = logs.sorted { $0.date > $1.date }
             } catch {
                 print(error.localizedDescription)
             }
@@ -57,7 +55,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     }
     
     private func updateTitle(for film: Film) {
-        Task { @MainActor in
+        Task {
             var coordinateRepresentation: String?
             if let coordinate = film.coordinate {
                 coordinateRepresentation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
