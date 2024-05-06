@@ -64,14 +64,4 @@ final class HaebitFilmListCell: UICollectionViewCell {
             make.height.equalTo(contentView.snp.width).multipliedBy(36.0 / 35.0)
         }
     }
-    
-    func setImage(_ image: UIImage?) {
-        guard let image = image else { return }
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            UIView.transition(with: photoView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
-                self?.photoView.image = image
-            }
-        }
-    }
 }

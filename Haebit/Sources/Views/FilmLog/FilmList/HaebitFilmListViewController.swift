@@ -146,7 +146,7 @@ final class HaebitFilmListViewController: UIViewController {
         dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
             cell.transform = .init(scaleX: 1, y: -1)
-            cell.setImage(UIImage(url: film.image))
+            cell.photoView.setDownSampledImage(at: film.image)
             return cell
         }
     }
@@ -175,16 +175,13 @@ final class HaebitFilmListViewController: UIViewController {
 
 extension HaebitFilmListViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateCurrentIndexIfNeeded()
         let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
         if scrollSpeed < .zero {
             self.tabBarController?.setTabBarHidden(false, animated: true)
         } else if scrollSpeed > .zero {
             self.tabBarController?.setTabBarHidden(true, animated: true)
         }
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateCurrentIndexIfNeeded()
     }
 }
 
