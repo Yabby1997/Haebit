@@ -31,7 +31,7 @@ struct LoadingView: View {
                 ZStack {
                     ForEach(Range(0...count - 1), id: \.self) { index in
                         Circle()
-                            .fill(Color.gray)
+                            .fill(Color(uiColor: .white))
                             .frame(width: circleSize(with: proxy), height: circleSize(with: proxy))
                             .offset(x: from)
                             .opacity(0.7)

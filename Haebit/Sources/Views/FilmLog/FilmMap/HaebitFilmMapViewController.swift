@@ -15,6 +15,7 @@ final class HaebitFilmMapViewController: UIViewController {
     private let annotationID = "FilmAnnotationViewAnnotationIdentifier"
     private let clusterID = "FilmAnnotationViewClusterIdentifier"
     
+    private let titleLabel = TitleLabel()
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -36,8 +37,19 @@ final class HaebitFilmMapViewController: UIViewController {
         return mapView
     }()
     
-    private let titleLabel = TitleLabel()
-    
+    private lazy var shadowLayer: CAGradientLayer = {
+        let gradientLayer: CAGradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor.black.withAlphaComponent(0.5).cgColor,
+            UIColor.clear.cgColor
+        ]
+        gradientLayer.locations = [0.0, 0.2]
+        gradientLayer.startPoint = .zero
+        gradientLayer.endPoint = CGPoint(x: .zero, y: 1.0)
+        gradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: view.frame.height)
+        return gradientLayer
+    }()
+
     private var snapshotAnnotationView: FilmAnnotationView?
     
     private let viewModel: HaebitFilmLogViewModel
@@ -78,6 +90,7 @@ final class HaebitFilmMapViewController: UIViewController {
         view.backgroundColor = .black
         view.addSubview(mapView)
         mapView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        mapView.layer.addSublayer(shadowLayer)
         
         setInitialRegionIfNeeded()
     }

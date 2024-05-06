@@ -38,7 +38,6 @@ final class TitleLabel: UIView {
         didSet {
             UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
                 self.loadingView.alpha = self.isLoading ? 1.0 : .zero
-                self.titleLabel.textColor = self.isLoading ? .gray : .white
             }
         }
     }
