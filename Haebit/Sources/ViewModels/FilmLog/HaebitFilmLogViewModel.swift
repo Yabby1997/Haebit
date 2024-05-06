@@ -21,6 +21,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
     @Published var currentLocation: Coordinate?
+    @Published var isTitleUpdating = false
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -47,6 +48,13 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
             .debounce(for: 1.5, scheduler: DispatchQueue.main)
             .sink { [weak self] coordinate in
                 self?.updateTitle(for: coordinate)
+            }
+            .store(in: &cancellables)
+        
+        $currentLocation
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.isTitleUpdating = true
             }
             .store(in: &cancellables)
     }
@@ -93,6 +101,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
                 return
             }
             mainTitle = representation
+            isTitleUpdating = false
         }
     }
 }

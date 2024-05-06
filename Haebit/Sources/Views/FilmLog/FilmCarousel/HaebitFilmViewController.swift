@@ -54,11 +54,6 @@ final class HaebitFilmViewController: UIViewController {
     
     // MARK: - Callbacks
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setTitlePosition(.center)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()

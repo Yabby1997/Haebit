@@ -71,8 +71,13 @@ final class HaebitFilmListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        navigationController?.setTitlePosition(.left)
         viewModel.onAppear()
+        navigationController?.setTitlePosition(.left)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setTitlePosition(.center)
     }
     
     override func viewDidLoad() {

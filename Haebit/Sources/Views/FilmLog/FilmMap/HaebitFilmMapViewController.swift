@@ -36,6 +36,8 @@ final class HaebitFilmMapViewController: UIViewController {
         return mapView
     }()
     
+    private let titleLabel = TitleLabel()
+    
     private var snapshotAnnotationView: FilmAnnotationView?
     
     private let viewModel: HaebitFilmLogViewModel
@@ -55,6 +57,13 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewWillAppear(true)
         viewModel.onAppear()
         navigationController?.setTitlePosition(.left)
+        navigationItem.titleView = titleLabel
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setTitlePosition(.center)
+        navigationItem.titleView = nil
     }
     
     override func viewDidLoad() {
@@ -84,7 +93,13 @@ final class HaebitFilmMapViewController: UIViewController {
         viewModel.$mainTitle
             .removeDuplicates()
             .sink { [weak self] title in
-                self?.navigationItem.title = title
+                self?.titleLabel.title = title
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isTitleUpdating
+            .sink { [weak self] isUpdating in
+                self?.titleLabel.isLoading = isUpdating
             }
             .store(in: &cancellables)
     }
