@@ -19,6 +19,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Subviews
     
+    private let titleLabel = TitleLabel()
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -43,9 +44,22 @@ final class HaebitFilmListViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var shadowLayer: CAGradientLayer = {
+        let gradientLayer: CAGradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor.black.withAlphaComponent(0.5).cgColor,
+            UIColor.clear.cgColor
+        ]
+        gradientLayer.locations = [0.0, 0.2]
+        gradientLayer.startPoint = .zero
+        gradientLayer.endPoint = CGPoint(x: .zero, y: 1.0)
+        gradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: view.frame.height)
+        return gradientLayer
+    }()
+    
     // MARK: - Properties
     
-    private let viewModel: any HaebitFilmLogViewModelProtocol
+    private let viewModel: HaebitFilmLogViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -58,7 +72,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: any HaebitFilmLogViewModelProtocol) {
+    init(viewModel: HaebitFilmLogViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -71,13 +85,15 @@ final class HaebitFilmListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        viewModel.onAppear()
         navigationController?.setTitlePosition(.left)
+        navigationItem.titleView = titleLabel
+        updateCurrentIndex()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setTitlePosition(.center)
+        navigationItem.titleView = nil
     }
     
     override func viewDidLoad() {
@@ -85,9 +101,8 @@ final class HaebitFilmListViewController: UIViewController {
         setupViews()
         bindUI()
         configureDataSource()
-        viewModel.onAppear()
     }
-
+    
     // MARK: - Helpers
     
     private func setupViews() {
@@ -102,6 +117,8 @@ final class HaebitFilmListViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(photoListCollectionView)
         photoListCollectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        view.layer.addSublayer(shadowLayer)
     }
     
     private func bindUI() {
@@ -109,6 +126,19 @@ final class HaebitFilmListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] logs in
                 self?.applySnapshot(films: logs)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.mainTitlePublisher
+            .removeDuplicates()
+            .sink { [weak self] title in
+                self?.titleLabel.title = title
+            }
+            .store(in: &cancellables)
+        
+        viewModel.isTitleUpdatingPublisher
+            .sink { [weak self] isUpdating in
+                self?.titleLabel.isLoading = isUpdating
             }
             .store(in: &cancellables)
     }
@@ -126,11 +156,19 @@ final class HaebitFilmListViewController: UIViewController {
         dataSourceSnapshot = DataSourceSnapshot()
         dataSourceSnapshot.appendSections([Section.List])
         dataSourceSnapshot.appendItems(films)
-        dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation)
+        dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation) { [weak self] in
+            self?.updateCurrentIndex()
+        }
     }
     
     @objc private func didTapClose(_ sender: UIButton) {
         dismiss(animated: true)
+    }
+    
+    private func updateCurrentIndex() {
+        let center = view.convert(photoListCollectionView.center, to: photoListCollectionView)
+        let indexPath = photoListCollectionView.indexPathForItem(at: center)
+        viewModel.currentIndex = indexPath?.item ?? .zero
     }
 }
 
@@ -138,6 +176,7 @@ final class HaebitFilmListViewController: UIViewController {
 
 extension HaebitFilmListViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateCurrentIndex()
         let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
         if scrollSpeed < -1500 {
             self.tabBarController?.setTabBarHidden(false, animated: true)
@@ -157,7 +196,7 @@ extension HaebitFilmListViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGFloat {
         .zero
     }
-     
+    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -199,7 +238,7 @@ extension HaebitFilmListViewController: HaebitNavigationAnimatorSnapshotProvidab
     func viewForTransition() -> UIView? {
         let visibleCells = photoListCollectionView.indexPathsForVisibleItems
         let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
-
+        
         if !visibleCells.contains(indexPath) {
             photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
             photoListCollectionView.layoutIfNeeded()
@@ -208,17 +247,17 @@ extension HaebitFilmListViewController: HaebitNavigationAnimatorSnapshotProvidab
         guard let cell = photoListCollectionView.cellForItem(at: indexPath) as? HaebitFilmListCell else { return nil }
         return cell.photoView
     }
-
+    
     func regionForTransition() -> CGRect? {
         view.layoutIfNeeded()
         let visibleCells = photoListCollectionView.indexPathsForVisibleItems
         let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
-
+        
         if !visibleCells.contains(indexPath) {
             photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
             photoListCollectionView.layoutIfNeeded()
         }
-
+        
         guard let cell = photoListCollectionView.cellForItem(at: indexPath) as? HaebitFilmListCell else { return nil }
         return photoListCollectionView.convert(cell.convert(cell.photoView.frame, to: photoListCollectionView), to: view)
     }

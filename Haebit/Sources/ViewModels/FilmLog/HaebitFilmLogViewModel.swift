@@ -22,12 +22,12 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     @Published var currentIndex: Int = .zero
     @Published var currentLocation: Coordinate?
     @Published var isTitleUpdating = false
+    @Published private var currentFilm: Film?
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(logger: HaebitLogger, currentLocation: Coordinate?) {
+    init(logger: HaebitLogger) {
         self.logger = logger
-        self.currentLocation = currentLocation
         bind()
         reload()
     }
@@ -38,7 +38,24 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
                 self?.films[safe: index]
             }
             .sink { [weak self] film in
-                self?.updateTitle(for: film)
+                self?.updateSubtitle(for: film)
+            }
+            .store(in: &cancellables)
+        
+        $currentIndex
+            .map { [weak self] index in
+                self?.films[safe: index]
+            }
+            .assign(to: &$currentFilm)
+        
+        $currentFilm
+            .compactMap { $0?.coordinate }
+            .assign(to: &$currentLocation)
+        
+        $currentLocation
+            .filter { $0 == nil }
+            .sink { [weak self] _ in
+                self?.mainTitle = ""
             }
             .store(in: &cancellables)
         
@@ -47,7 +64,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
             .removeDuplicates()
             .debounce(for: 1.5, scheduler: DispatchQueue.main)
             .sink { [weak self] coordinate in
-                self?.updateTitle(for: coordinate)
+                self?.updateMainTitle(for: coordinate)
             }
             .store(in: &cancellables)
         
@@ -57,12 +74,6 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
                 self?.isTitleUpdating = true
             }
             .store(in: &cancellables)
-    }
-    
-    func onAppear() {
-        if let currentLocation {
-            updateTitle(for: currentLocation)
-        }
     }
     
     private func reload() {
@@ -76,26 +87,13 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         }
     }
     
-    private func updateTitle(for film: Film) {
-        Task {
-            var coordinateRepresentation: String?
-            if let coordinate = film.coordinate {
-                coordinateRepresentation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
-            }
-            
-            let formattedDate = dateFormatter.formatDate(from: film.date)
-            let formattedTime = dateFormatter.formatTime(from: film.date)
-            if let coordinateRepresentation {
-                mainTitle = coordinateRepresentation
-                subTitle = formattedDate + " " + formattedTime
-            } else {
-                mainTitle = formattedDate
-                subTitle = formattedTime
-            }
-        }
+    private func updateSubtitle(for film: Film) {
+        let formattedDate = dateFormatter.formatDate(from: film.date)
+        let formattedTime = dateFormatter.formatTime(from: film.date)
+        subTitle = formattedDate + " " + formattedTime
     }
     
-    private func updateTitle(for coordinate: Coordinate) {
+    private func updateMainTitle(for coordinate: Coordinate) {
         Task {
             guard let representation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate) else {
                 return

@@ -52,11 +52,11 @@ final class HaebitFilmMapViewController: UIViewController {
 
     private var snapshotAnnotationView: FilmAnnotationView?
     
-    private let viewModel: HaebitFilmLogViewModel
+    private let viewModel: any HaebitFilmLogViewModelProtocol
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(viewModel: HaebitFilmLogViewModel) {
+    init(viewModel: any HaebitFilmLogViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +67,6 @@ final class HaebitFilmMapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        viewModel.onAppear()
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleLabel
     }
@@ -85,45 +84,44 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func setupViews() {
+        tabBarController?.delegate = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         
         view.backgroundColor = .black
         view.addSubview(mapView)
         mapView.snp.makeConstraints { $0.edges.equalToSuperview() }
         mapView.layer.addSublayer(shadowLayer)
-        
-        setInitialRegionIfNeeded()
     }
     
     private func bind() {
-        viewModel.$films
+        viewModel.filmsPublisher
             .map { $0.compactMap { FilmAnnotation(film: $0) } }
             .sink { [weak self] annotations in
                 self?.mapView.addAnnotations(annotations)
             }
             .store(in: &cancellables)
         
-        viewModel.$mainTitle
+        viewModel.mainTitlePublisher
             .removeDuplicates()
             .sink { [weak self] title in
                 self?.titleLabel.title = title
             }
             .store(in: &cancellables)
         
-        viewModel.$isTitleUpdating
+        viewModel.isTitleUpdatingPublisher
             .sink { [weak self] isUpdating in
                 self?.titleLabel.isLoading = isUpdating
             }
             .store(in: &cancellables)
     }
     
-    private func setInitialRegionIfNeeded() {
-        guard let initialLocation = viewModel.currentLocation else { return }
+    private func setRegionIfNeeded() {
+        guard let currentLocation = viewModel.currentLocation else { return }
         mapView.setRegion(
             MKCoordinateRegion(
                 center: .init(
-                    latitude: initialLocation.latitude,
-                    longitude: initialLocation.longitude
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude
                 ),
                 span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
             ),
@@ -133,6 +131,16 @@ final class HaebitFilmMapViewController: UIViewController {
     
     @objc private func didTapClose(_ sender: UIButton) {
         dismiss(animated: true)
+    }
+}
+
+extension HaebitFilmMapViewController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        guard viewController == navigationController else {
+            viewModel.currentLocation = nil
+            return
+        }
+        setRegionIfNeeded()
     }
 }
 

@@ -20,6 +20,8 @@ final class HaebitFilmLogPassiveViewModel: HaebitFilmLogViewModelProtocol {
     @Published var subTitle: String = ""
     @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
+    @Published var currentLocation: Coordinate?
+    @Published var isTitleUpdating = false
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -39,8 +41,6 @@ final class HaebitFilmLogPassiveViewModel: HaebitFilmLogViewModelProtocol {
             }
             .store(in: &cancellables)
     }
-    
-    func onAppear() {}
     
     private func updateTitle(for film: Film) {
         Task { @MainActor in

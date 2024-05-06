@@ -355,7 +355,7 @@ final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     }
     
     func filmLogViewModel() -> HaebitFilmLogViewModel {
-        .init(logger: logger, currentLocation: location)
+        .init(logger: logger)
     }
 }
 

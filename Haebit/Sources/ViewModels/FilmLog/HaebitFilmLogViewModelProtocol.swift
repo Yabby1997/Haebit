@@ -15,7 +15,8 @@ protocol HaebitFilmLogViewModelProtocol: ObservableObject {
     var subTitle: String { get set }
     var films: [Film] { get set }
     var currentIndex: Int { get set }
-    func onAppear()
+    var currentLocation: Coordinate? { get set }
+    var isTitleUpdating: Bool  { get set }
 }
 
 extension HaebitFilmLogViewModelProtocol {
@@ -47,6 +48,22 @@ extension HaebitFilmLogViewModelProtocol {
         objectWillChange
             .receive(on: DispatchQueue.main)
             .compactMap { [weak self] _ in self?.currentIndex }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    var currentLocationPublisher: AnyPublisher<Coordinate, Never> {
+        objectWillChange
+            .receive(on: DispatchQueue.main)
+            .compactMap { [weak self] _ in self?.currentLocation }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> {
+        objectWillChange
+            .receive(on: DispatchQueue.main)
+            .compactMap { [weak self] _ in self?.isTitleUpdating }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
