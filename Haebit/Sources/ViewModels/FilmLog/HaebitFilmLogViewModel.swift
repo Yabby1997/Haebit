@@ -12,6 +12,7 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
+@MainActor
 final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
@@ -62,7 +63,7 @@ final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         $currentLocation
             .compactMap { $0 }
             .removeDuplicates()
-            .debounce(for: 1.5, scheduler: DispatchQueue.main)
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink { [weak self] coordinate in
                 self?.updateMainTitle(for: coordinate)
             }

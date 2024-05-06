@@ -59,7 +59,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: HaebitFilmLogViewModel
+    private let viewModel: any HaebitFilmLogViewModelProtocol
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -72,7 +72,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: HaebitFilmLogViewModel) {
+    init(viewModel: any HaebitFilmLogViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -87,7 +87,6 @@ final class HaebitFilmListViewController: UIViewController {
         super.viewWillAppear(true)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleLabel
-        updateCurrentIndex()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -157,7 +156,7 @@ final class HaebitFilmListViewController: UIViewController {
         dataSourceSnapshot.appendSections([Section.List])
         dataSourceSnapshot.appendItems(films)
         dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation) { [weak self] in
-            self?.updateCurrentIndex()
+            self?.updateCurrentIndexIfNeeded()
         }
     }
     
@@ -165,7 +164,7 @@ final class HaebitFilmListViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    private func updateCurrentIndex() {
+    func updateCurrentIndexIfNeeded() {
         let center = view.convert(photoListCollectionView.center, to: photoListCollectionView)
         let indexPath = photoListCollectionView.indexPathForItem(at: center)
         viewModel.currentIndex = indexPath?.item ?? .zero
@@ -176,13 +175,16 @@ final class HaebitFilmListViewController: UIViewController {
 
 extension HaebitFilmListViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateCurrentIndex()
         let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
-        if scrollSpeed < -1500 {
+        if scrollSpeed < .zero {
             self.tabBarController?.setTabBarHidden(false, animated: true)
-        } else if scrollSpeed > 1500 {
+        } else if scrollSpeed > .zero {
             self.tabBarController?.setTabBarHidden(true, animated: true)
         }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateCurrentIndexIfNeeded()
     }
 }
 

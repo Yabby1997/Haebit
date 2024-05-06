@@ -84,7 +84,6 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func setupViews() {
-        tabBarController?.delegate = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         
         view.backgroundColor = .black
@@ -115,7 +114,7 @@ final class HaebitFilmMapViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    private func setRegionIfNeeded() {
+    func setRegionIfNeeded() {
         guard let currentLocation = viewModel.currentLocation else { return }
         mapView.setRegion(
             MKCoordinateRegion(
@@ -131,16 +130,6 @@ final class HaebitFilmMapViewController: UIViewController {
     
     @objc private func didTapClose(_ sender: UIButton) {
         dismiss(animated: true)
-    }
-}
-
-extension HaebitFilmMapViewController: UITabBarControllerDelegate {
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        guard viewController == navigationController else {
-            viewModel.currentLocation = nil
-            return
-        }
-        setRegionIfNeeded()
     }
 }
 
