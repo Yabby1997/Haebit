@@ -8,8 +8,9 @@
 
 import Combine
 import Foundation
+import LightMeterFeature
 
-class DefaultGPSAccessValidator: GPSAccessValidatable {
+final class DefaultGPSAccessValidator: GPSAccessValidatable {
     @UserDefault(key: "DefaultGPSAccessValidator.userRequestedDoNotAsk", defaultValue: false)
     private var userRequestedDoNotAsk: Bool
     @UserDefault(key: "DefaultGPSAccessValidator.isAccessAuthorized", defaultValue: false)

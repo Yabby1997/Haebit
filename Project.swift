@@ -19,18 +19,9 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let remotePackages: [Package] = [
-    .remote(url: "https://github.com/SnapKit/SnapKit", requirement: .upToNextMajor(from: "5.7.1")),
-]
-
 let dependencies: [TargetDependency] = [
-    .package(product: "SnapKit", type: .runtime),
-    .project(target: "HaebitUI", path: "../../Feature/HaebitUI"),
-    .project(target: "Obscura", path: "../../Feature/Obscura"),
-    .project(target: "LightMeter", path: "../../Feature/LightMeter"),
-    .project(target: "Portolan", path: "../../Feature/Portolan"),
-    .project(target: "HaebitLogger", path: "../../Feature/HaebitLogger"),
-    .project(target: "HaebitUtil", path: "../../Feature/HaebitUtil"),
+    .project(target: "LightMeterFeature", path: "LightMeterFeature"),
+    .project(target: "FilmLogFeature", path: "FilmLogFeature"),
 ]
 
 let settings: Settings = .settings(
@@ -78,6 +69,5 @@ let targets: [Target] = [
 let project = Project(
     name: "Haebit",
     organizationName: "seunghun",
-    packages: remotePackages,
     targets: targets
 )

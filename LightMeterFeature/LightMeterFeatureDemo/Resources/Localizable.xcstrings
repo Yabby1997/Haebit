@@ -1,0 +1,128 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "lightMeterControlViewUnlockButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock"
+          }
+        }
+      }
+    },
+    "lightMeterViewAccessAlertDoNotAskButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do not ask again"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 묻지 않기"
+          }
+        }
+      }
+    },
+    "lightMeterViewAccessAlertOpenSettingsButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정 열기"
+          }
+        }
+      }
+    },
+    "lightMeterViewCameraAccessAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "illumeter uses the camera to measure the exposure value and log it. Please allow camera access in Settings."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "해빛은 노출값(EV) 측정 및 로그 기록을 위해 카메라를 사용합니다. 설정을 열어 카메라 권한을 허용해주세요."
+          }
+        }
+      }
+    },
+    "lightMeterViewCameraAccessAlertTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera Access"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라 권한"
+          }
+        }
+      }
+    },
+    "lightMeterViewGPSAccessAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "illumeter uses GPS for logging purposes. Please allow location access in Settings. If you prefer to log it without location, please select \"Do not ask again\"."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "해빛은 로그 기록을 위해 GPS를 사용합니다. 설정을 열어 위치 권한을 허용해주세요. 위치 기록없이 사용을 원하시면 \"다시 묻지 않기\"를 선택해주세요."
+          }
+        }
+      }
+    },
+    "lightMeterViewGPSAccessAlertTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location Access"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 권한"
+          }
+        }
+      }
+    },
+    "This is placeholder for log view.\nTap here to dismiss." : {
+
+    }
+  },
+  "version" : "1.0"
+}

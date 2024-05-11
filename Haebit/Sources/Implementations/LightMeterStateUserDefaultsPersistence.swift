@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import HaebitCommonModels
+import LightMeterFeature
 
 final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistenceProtocol {
     @UserDefault(key: "LightMeterStateUserDefaultsPersistence.mode", defaultValue: .shutterSpeed)
@@ -15,7 +17,7 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
     @UserDefault(key: "LightMeterStateUserDefaultsPersistence.aperture", defaultValue: ApertureValue(value: 1.4))
     var aperture: ApertureValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.shutterSpeed", defaultValue: ShutterSpeedValue(denominator: 60))
+    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.shutterSpeed", defaultValue: ShutterSpeedValue(denominator: 60)!)
     var shutterSpeed: ShutterSpeedValue
     
     @UserDefault(key: "LightMeterStateUserDefaultsPersistence.iso", defaultValue: IsoValue(iso: 200))

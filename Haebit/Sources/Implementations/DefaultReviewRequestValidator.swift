@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import LightMeterFeature
 
 final class DefaultReviewRequestValidator: ReviewRequestValidatable {
     // MARK: - Public Properties
