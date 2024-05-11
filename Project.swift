@@ -19,7 +19,8 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let dependencies: [TargetDependency] = [
+let targetDependencies: [TargetDependency] = [
+    .external(name: "SnapKit"),
     .project(target: "LightMeterFeature", path: "LightMeterFeature"),
     .project(target: "FilmLogFeature", path: "FilmLogFeature"),
 ]
@@ -46,7 +47,7 @@ let targets: [Target] = [
             "Haebit/Resources/Common/**",
             "Haebit/Resources/Dev/**"
         ],
-        dependencies: dependencies,
+        dependencies: targetDependencies,
         settings: settings
     ),
     Target(
@@ -61,7 +62,7 @@ let targets: [Target] = [
             "Haebit/Resources/Common/**",
             "Haebit/Resources/Real/**"
         ],
-        dependencies: dependencies,
+        dependencies: targetDependencies,
         settings: settings
     )
 ]

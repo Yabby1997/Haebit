@@ -12,12 +12,8 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let remotePackages: [Package] = [
-    .remote(url: "https://github.com/SnapKit/SnapKit", requirement: .upToNextMajor(from: "5.7.1")),
-]
-
-let dependencies: [TargetDependency] = [
-    .package(product: "SnapKit", type: .runtime),
+let targetDependencies: [TargetDependency] = [
+    .external(name: "SnapKit"),
     .project(target: "Portolan", path: "../../../Modules/Portolan"),
     .project(target: "HaebitLogger", path: "../../../Modules/HaebitLogger"),
     .project(target: "HaebitUtil", path: "../../../Modules/HaebitUtil"),
@@ -33,7 +29,7 @@ let targets: [Target] = [
         deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         sources: ["FilmLogFeature/Sources/**"],
         resources: ["FilmLogFeature/Resources/**"],
-        dependencies: dependencies,
+        dependencies: targetDependencies,
         settings: .settings(base: ["SWIFT_STRICT_CONCURRENCY": "complete"])
     ),
     Target(
@@ -62,6 +58,5 @@ let targets: [Target] = [
 let project = Project(
     name: "FilmLogFeature",
     organizationName: "seunghun",
-    packages: remotePackages,
     targets: targets
 )
