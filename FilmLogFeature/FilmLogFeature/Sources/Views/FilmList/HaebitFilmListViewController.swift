@@ -146,7 +146,7 @@ final class HaebitFilmListViewController: UIViewController {
         dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
             cell.transform = .init(scaleX: 1, y: -1)
-            cell.photoView.setDownSampledImage(at: film.image)
+            cell.photoView.setImage(UIImage(url: film.image))
             return cell
         }
     }
