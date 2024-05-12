@@ -1,6 +1,21 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Aperture" : {
+
+    },
+    "FocalLength" : {
+
+    },
+    "Image selected!" : {
+
+    },
+    "ISO" : {
+
+    },
+    "Latitude" : {
+
+    },
     "lightMeterControlViewUnlockButton" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -119,6 +134,21 @@
           }
         }
       }
+    },
+    "Longitude" : {
+
+    },
+    "Memo" : {
+
+    },
+    "Register" : {
+
+    },
+    "Select image" : {
+
+    },
+    "ShutterSpeed" : {
+
     }
   },
   "version" : "1.0"
