@@ -18,7 +18,7 @@ extension UIImageView {
                 url as CFURL,
                 [kCGImageSourceShouldCache: false] as CFDictionary
             ) else {
-                await self?.setImage(nil, withAnimation: 0.3)
+                await self?.setImage(nil)
                 return
             }
             
@@ -31,15 +31,15 @@ extension UIImageView {
             ] as CFDictionary
 
             guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)else {
-                await self?.setImage(nil, withAnimation: 0.3)
+                await self?.setImage(nil)
                 return
             }
             
-            await self?.setImage(UIImage(cgImage: cgImage), withAnimation: 0.3)
+            await self?.setImage(UIImage(cgImage: cgImage))
         }
     }
     
-    func setImage(_ image: UIImage?, withAnimation duration: TimeInterval) {
+    func setImage(_ image: UIImage?, withAnimation duration: TimeInterval = 0.3) {
         UIView.transition(with: self, duration: duration, options: .transitionCrossDissolve) {
             self.image = image
         }
