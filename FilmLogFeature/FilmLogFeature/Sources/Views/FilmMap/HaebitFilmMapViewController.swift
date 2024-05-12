@@ -96,8 +96,10 @@ final class HaebitFilmMapViewController: UIViewController {
     private func bind() {
         viewModel.filmsPublisher
             .map { $0.compactMap { FilmAnnotation(film: $0) } }
-            .sink { [weak self] annotations in
-                self?.mapView.addAnnotations(annotations)
+            .sink { [weak mapView] newAnnotations in
+                guard let mapView else { return }
+                mapView.removeAnnotations(mapView.annotations)
+                mapView.addAnnotations(newAnnotations)
             }
             .store(in: &cancellables)
         
