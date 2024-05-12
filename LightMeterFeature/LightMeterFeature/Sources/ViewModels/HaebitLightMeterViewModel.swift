@@ -17,7 +17,7 @@ import Portolan
 public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Dependencies
     
-    private let camera = ObscuraCamera()
+    private let camera: HaebitLightMeterCameraProtocol
     private let lightMeter = LightMeterService()
     private let logger: HaebitLightMeterLoggable
     private let portolan = PortolanLocationManager()
@@ -73,12 +73,14 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     // MARK: - Initializers
     
     public init(
+        camera: HaebitLightMeterCameraProtocol = HaebitLightMeterDefaultCamera(),
         logger: HaebitLightMeterLoggable,
         statePersistence: LightMeterStatePersistenceProtocol,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
         feedbackProvider: LightMeterFeedbackProvidable
     ) {
+        self.camera = camera
         self.logger = logger
         self.statePersistence = statePersistence
         self.reviewRequestValidator = reviewRequestValidator
@@ -220,20 +222,16 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$exposureValue)
             
-            await camera.isExposureLocked.combineLatest(await camera.isFocusLocked)
-                .map { $0 == $1 && $0 }
+            await camera.isLocked
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$isLocked)
             
-            await camera.exposureLockPoint.combineLatest(await camera.focusLockPoint)
-                .filter { $0 == $1 }
-                .map { $0.0 }
+            await camera.lockPoint
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$lockPoint)
             
-            await camera.isExposureLocked.combineLatest(camera.isFocusLocked)
+            await camera.isLocked
                 .debounce(for: .seconds(1.5), scheduler: debounceQueue)
-                .filter { $0 == $1 && $0 }
                 .map { _ in nil }
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$lockPoint)
@@ -264,10 +262,9 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
         Task {
             do {
                 try await camera.setup()
-                try? await camera.setHDRMode(isEnabled: false)
                 bind()
             } catch {
-                if case .notAuthorized = error as? ObscuraCamera.Errors {
+                if case .notAuthorized = error as? HaebitLightMeterCameraError {
                     shouldRequestCameraAccess = true
                 }
             }
@@ -297,16 +294,14 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     
     public func didTap(point: CGPoint) {
         Task {
-            try await camera.lockExposure(on: point)
-            try await camera.lockFocus(on: point)
+            try await camera.lock(on: point)
             feedbackProvider.generateInteractionFeedback()
         }
     }
     
     public func didTapUnlock() {
         Task {
-            try await camera.unlockExposure()
-            try await camera.unlockFocus()
+            try await camera.unlock()
             feedbackProvider.generateInteractionFeedback()
         }
     }
@@ -314,13 +309,13 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     public func didTapShutter() {
         isCapturing = true
         Task {
-            guard let captured = try? await camera.capturePhoto() else { return }
+            guard let capturedImagePath = try? await camera.capture() else { return }
             do {
                 try await logger.save(
                     date: Date(),
                     latitude: location?.latitude,
                     longitude: location?.longitude,
-                    image: captured.imagePath,
+                    image: capturedImagePath,
                     focalLength: UInt16(focalLength.value),
                     iso: UInt16(iso.iso),
                     shutterSpeed: shutterSpeed.denominator,
