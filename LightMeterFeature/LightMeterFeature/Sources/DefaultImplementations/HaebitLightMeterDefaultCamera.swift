@@ -8,6 +8,7 @@
 
 @preconcurrency import Combine
 import Foundation
+import LightMeter
 import Obscura
 @preconcurrency import QuartzCore
 
@@ -17,17 +18,13 @@ public actor HaebitLightMeterDefaultCamera: HaebitLightMeterCameraProtocol {
     nonisolated public let previewLayer: CALayer
     public var isRunning: AnyPublisher<Bool, Never> { $_isRunning.eraseToAnyPublisher() }
     public var maxZoomFactor: AnyPublisher<CGFloat, Never> { $_maxZoomFactor.eraseToAnyPublisher() }
-    public var iso: AnyPublisher<Float, Never> { $_iso.eraseToAnyPublisher() }
-    public var shutterSpeed: AnyPublisher<Float, Never> { $_shutterSpeed.eraseToAnyPublisher() }
-    public var aperture: AnyPublisher<Float, Never> { $_aperture.eraseToAnyPublisher() }
+    public var exposureValue: AnyPublisher<Float, Never> { $_exposureValue.eraseToAnyPublisher() }
     public var lockPoint: AnyPublisher<CGPoint?, Never> { $_lockPoint.eraseToAnyPublisher() }
     public var isLocked: AnyPublisher<Bool, Never> { $_isLocked.eraseToAnyPublisher() }
     
     @Published private var _isRunning = false
     @Published private var _maxZoomFactor: CGFloat = .infinity
-    @Published private var _iso: Float = .zero
-    @Published private var _shutterSpeed: Float = .zero
-    @Published private var _aperture: Float = .zero
+    @Published private var _exposureValue: Float = .zero
     @Published private var _lockPoint: CGPoint?
     @Published private var _isLocked: Bool = false
     
@@ -39,9 +36,6 @@ public actor HaebitLightMeterDefaultCamera: HaebitLightMeterCameraProtocol {
         Task {
             await camera.isRunning.assign(to: &$_isRunning)
             await camera.maxZoomFactor.assign(to: &$_maxZoomFactor)
-            await camera.iso.assign(to: &$_iso)
-            await camera.shutterSpeed.assign(to: &$_shutterSpeed)
-            await camera.aperture.assign(to: &$_aperture)
             await camera.focusLockPoint.combineLatest(await camera.exposureLockPoint)
                 .filter { $0 == $1 }
                 .map { $0.0 }
@@ -49,6 +43,16 @@ public actor HaebitLightMeterDefaultCamera: HaebitLightMeterCameraProtocol {
             await camera.isFocusLocked.combineLatest(await camera.isExposureLocked)
                 .map { $0 == $1 && $0 }
                 .assign(to: &$_isLocked)
+            await camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
+                .removeDuplicates { $0 == $1 }
+                .compactMap { iso, shutterSpeed, aperture in
+                    try? LightMeterService.getExposureValue(
+                        iso: iso,
+                        shutterSpeed: shutterSpeed,
+                        aperture: aperture
+                    )
+                }
+                .assign(to: &$_exposureValue)
         }
     }
     

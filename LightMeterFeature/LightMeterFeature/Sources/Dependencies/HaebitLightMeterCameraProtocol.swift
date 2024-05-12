@@ -18,9 +18,7 @@ public protocol HaebitLightMeterCameraProtocol: Actor {
     nonisolated var previewLayer: CALayer { get }
     var isRunning: AnyPublisher<Bool, Never> { get }
     var maxZoomFactor: AnyPublisher<CGFloat, Never> { get }
-    var iso: AnyPublisher<Float, Never> { get }
-    var shutterSpeed: AnyPublisher<Float, Never> { get }
-    var aperture: AnyPublisher<Float, Never> { get }
+    var exposureValue: AnyPublisher<Float, Never> { get }
     var lockPoint: AnyPublisher<CGPoint?, Never> { get }
     var isLocked: AnyPublisher<Bool, Never> { get }
     

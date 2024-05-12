@@ -13,9 +13,7 @@ import LightMeter
 import QuartzCore
 
 public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
-    private let lightMeter = LightMeterService()
-    
-    // MARK: - Constants
+   // MARK: - Constants
     
     private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
     private let availableShutterSpeedDenominators: [Float] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
@@ -88,7 +86,7 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
-                let iso = try? lightMeter.getIsoValue(
+                let iso = try? LightMeterService.getIsoValue(
                     ev: ev,
                     shutterSpeed: shutterSpeed.value,
                     aperture: aperture.value
@@ -106,7 +104,7 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
             }
             .compactMap { [weak self] ev, iso, aperture in
                 guard let self else { return nil }
-                let value = try? lightMeter.getShutterSpeedValue(
+                let value = try? LightMeterService.getShutterSpeedValue(
                     ev: ev,
                     iso: iso.value,
                     aperture: aperture.value
@@ -124,7 +122,7 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
                 guard let self else { return nil }
-                let aperture = try? lightMeter.getApertureValue(
+                let aperture = try? LightMeterService.getApertureValue(
                     ev: ev,
                     iso: iso.value,
                     shutterSpeed: shutterSpeed.value

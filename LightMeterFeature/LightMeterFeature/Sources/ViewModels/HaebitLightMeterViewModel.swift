@@ -18,7 +18,6 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     // MARK: - Dependencies
     
     private let camera: HaebitLightMeterCameraProtocol
-    private let lightMeter = LightMeterService()
     private let logger: HaebitLightMeterLoggable
     private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
@@ -127,7 +126,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
-                let iso = try? lightMeter.getIsoValue(
+                let iso = try? LightMeterService.getIsoValue(
                     ev: ev,
                     shutterSpeed: shutterSpeed.value,
                     aperture: aperture.value
@@ -149,7 +148,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             }
             .compactMap { [weak self] ev, iso, aperture in
                 guard let self else { return nil }
-                let value = try? lightMeter.getShutterSpeedValue(
+                let value = try? LightMeterService.getShutterSpeedValue(
                     ev: ev,
                     iso: iso.value,
                     aperture: aperture.value
@@ -171,7 +170,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
                 guard let self else { return nil }
-                let aperture = try? lightMeter.getApertureValue(
+                let aperture = try? LightMeterService.getApertureValue(
                     ev: ev,
                     iso: iso.value,
                     shutterSpeed: shutterSpeed.value
@@ -208,16 +207,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 }
                 .assign(to: &$focalLengthValues)
             
-            await camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
-                .removeDuplicates { $0 == $1 }
-                .debounce(for: .seconds(0.1), scheduler: debounceQueue)
-                .compactMap { [weak self] iso, shutterSpeed, aperture in
-                    try? self?.lightMeter.getExposureValue(
-                        iso: iso,
-                        shutterSpeed: shutterSpeed,
-                        aperture: aperture
-                    )
-                }
+            await camera.exposureValue
                 .removeDuplicates()
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$exposureValue)
@@ -232,6 +222,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             
             await camera.isLocked
                 .debounce(for: .seconds(1.5), scheduler: debounceQueue)
+                .filter { $0 }
                 .map { _ in nil }
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$lockPoint)
