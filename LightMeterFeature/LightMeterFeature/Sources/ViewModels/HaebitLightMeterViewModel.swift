@@ -17,7 +17,7 @@ import Portolan
 public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     // MARK: - Dependencies
     
-    private let camera: HaebitLightMeterCameraProtocol
+    private let camera = ObscuraCamera()
     private let logger: HaebitLightMeterLoggable
     private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
@@ -72,14 +72,12 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     // MARK: - Initializers
     
     public init(
-        camera: HaebitLightMeterCameraProtocol = HaebitLightMeterDefaultCamera(),
         logger: HaebitLightMeterLoggable,
         statePersistence: LightMeterStatePersistenceProtocol,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
         feedbackProvider: LightMeterFeedbackProvidable
     ) {
-        self.camera = camera
         self.logger = logger
         self.statePersistence = statePersistence
         self.reviewRequestValidator = reviewRequestValidator
@@ -120,7 +118,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             .removeDuplicates { $0 == $1 }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .iso 
+                self?.lightMeterMode == .iso
                 && self?.isCapturing == false
                 && self?.isPresentingLogger == false
             }
@@ -207,22 +205,34 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 }
                 .assign(to: &$focalLengthValues)
             
-            await camera.exposureValue
+            await camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
+                .removeDuplicates { $0 == $1 }
+                .debounce(for: .seconds(0.1), scheduler: debounceQueue)
+                .compactMap { iso, shutterSpeed, aperture in
+                    try? LightMeterService.getExposureValue(
+                        iso: iso,
+                        shutterSpeed: shutterSpeed,
+                        aperture: aperture
+                    )
+                }
                 .removeDuplicates()
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$exposureValue)
             
-            await camera.isLocked
+            await camera.isExposureLocked.combineLatest(await camera.isFocusLocked)
+                .map { $0 == $1 && $0 }
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$isLocked)
             
-            await camera.lockPoint
+            await camera.exposureLockPoint.combineLatest(await camera.focusLockPoint)
+                .filter { $0 == $1 }
+                .map { $0.0 }
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$lockPoint)
             
-            await camera.isLocked
+            await camera.isExposureLocked.combineLatest(camera.isFocusLocked)
                 .debounce(for: .seconds(1.5), scheduler: debounceQueue)
-                .filter { $0 }
+                .filter { $0 == $1 && $0 }
                 .map { _ in nil }
                 .receive(on: DispatchQueue.main)
                 .assign(to: &$lockPoint)
@@ -253,9 +263,10 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
         Task {
             do {
                 try await camera.setup()
+                try? await camera.setHDRMode(isEnabled: false)
                 bind()
             } catch {
-                if case .notAuthorized = error as? HaebitLightMeterCameraError {
+                if case .notAuthorized = error as? ObscuraCamera.Errors {
                     shouldRequestCameraAccess = true
                 }
             }
@@ -285,14 +296,16 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     
     public func didTap(point: CGPoint) {
         Task {
-            try await camera.lock(on: point)
+            try await camera.lockExposure(on: point)
+            try await camera.lockFocus(on: point)
             feedbackProvider.generateInteractionFeedback()
         }
     }
     
     public func didTapUnlock() {
         Task {
-            try await camera.unlock()
+            try await camera.unlockExposure()
+            try await camera.unlockFocus()
             feedbackProvider.generateInteractionFeedback()
         }
     }
@@ -300,13 +313,13 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     public func didTapShutter() {
         isCapturing = true
         Task {
-            guard let capturedImagePath = try? await camera.capture() else { return }
+            guard let captured = try? await camera.capturePhoto() else { return }
             do {
                 try await logger.save(
                     date: Date(),
                     latitude: location?.latitude,
                     longitude: location?.longitude,
-                    image: capturedImagePath,
+                    image: captured.imagePath,
                     focalLength: UInt16(focalLength.value),
                     iso: UInt16(iso.iso),
                     shutterSpeed: shutterSpeed.denominator,

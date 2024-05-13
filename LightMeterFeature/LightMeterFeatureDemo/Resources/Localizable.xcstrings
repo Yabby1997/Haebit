@@ -120,7 +120,13 @@
         }
       }
     },
-    "This is placeholder for log view.\nTap here to dismiss." : {
+    "Photo selected!" : {
+
+    },
+    "Reset" : {
+
+    },
+    "Select photo" : {
 
     }
   },

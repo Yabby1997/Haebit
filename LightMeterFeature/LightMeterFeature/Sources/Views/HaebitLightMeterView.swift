@@ -79,14 +79,3 @@ public struct HaebitLightMeterView<ViewModel, LogView: View>: View where ViewMod
         openURL(settingsUrl)
     }
 }
-
-#Preview {
-    HaebitLightMeterView(viewModel: MockHaebitLightMeterViewModel(), logView: EmptyView())
-        .environmentObject(
-            LightMeterControlViewDependencies(
-                exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
-                shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
-            )
-        )
-}

@@ -4,18 +4,21 @@ import SwiftUI
 
 @main
 struct HaebitLightMeterDemoApp: App {
+    @State var isPresentingDemoSettingSheet = false
+    @StateObject var viewModel = DemoLightMeterViewModel()
+    
     var body: some Scene {
         WindowGroup {
             HaebitLightMeterView(
-                viewModel: HaebitLightMeterViewModel(
-                    logger: MockLightMeterLogger(),
-                    statePersistence: MockStatePersistence(),
-                    reviewRequestValidator: MockReviewRequestValidator(),
-                    gpsAccessValidator: MockGPSAccessValidator(),
-                    feedbackProvider: LightMeterHapticFeedbackProvider()
-                ),
-                logView: MockLogView()
+                viewModel: viewModel,
+                logView: EmptyView()
             )
+            .onTapGesture(count: 2) {
+                isPresentingDemoSettingSheet = true
+            }
+            .sheet(isPresented: $isPresentingDemoSettingSheet) {
+                DemoLightMeterConfigView(viewModel: viewModel)
+            }
             .environmentObject(
                 LightMeterControlViewDependencies(
                     exposureControlDependency: HaebitApertureRingDependencies(

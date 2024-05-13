@@ -1,5 +1,5 @@
 //
-//  MockHaebitLightMeterViewModel.swift
+//  DemoLightMeterViewModel.swift
 //  Haebit
 //
 //  Created by Seunghun on 12/10/23.
@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import LightMeterFeature
 import HaebitCommonModels
 import HaebitLogger
 import LightMeter
 import QuartzCore
+import UIKit
 
-public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
+final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
    // MARK: - Constants
     
     private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
@@ -21,8 +23,8 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
     private let availableIsoValues: [Int] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
     private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 200]
     
-    public var previewLayer: CALayer { CALayer() }
-    public var resultDescription: String {
+    nonisolated let previewLayer: CALayer
+    var resultDescription: String {
         switch lightMeterMode {
         case .aperture: return aperture.description
         case .shutterSpeed: return shutterSpeed.description
@@ -30,47 +32,32 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
         }
     }
     
-    public var apertureMode: Bool { lightMeterMode == .aperture }
-    public var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
-    public var isoMode: Bool { lightMeterMode == .iso }
-    @Published public var exposureValue: Float = 11
-    public var shouldRequestCameraAccess: Bool = false
-    public var shouldRequestGPSAccess: Bool = false
-    @Published public var lightMeterMode: LightMeterMode
+    var apertureMode: Bool { lightMeterMode == .aperture }
+    var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
+    var isoMode: Bool { lightMeterMode == .iso }
+    @Published var exposureValue: Float = 11
+    var shouldRequestCameraAccess: Bool = false
+    var shouldRequestGPSAccess: Bool = false
+    @Published var lightMeterMode: LightMeterMode = .shutterSpeed
     @Published var shutterSpeedInNanoSeconds: UInt64 = 1_000_000_000
-    @Published public var apertureValues: [ApertureValue] = []
-    @Published public var shutterSpeedValues: [ShutterSpeedValue] = []
-    @Published public var isoValues: [IsoValue] = []
-    @Published public var focalLengthValues: [FocalLengthValue] = []
-    @Published public var aperture: ApertureValue
-    @Published public var shutterSpeed: ShutterSpeedValue
-    @Published public var iso: IsoValue
-    @Published public var focalLength: FocalLengthValue = FocalLengthValue(value: 50)
-    public var isCapturing: Bool { true }
-    public var lockPoint: CGPoint? = nil
-    public var isLocked: Bool = false
-    public var shouldRequestReview: Bool { false }
-    public var isPresentingLogger = false
+    @Published var apertureValues: [ApertureValue] = []
+    @Published var shutterSpeedValues: [ShutterSpeedValue] = []
+    @Published var isoValues: [IsoValue] = []
+    @Published var focalLengthValues: [FocalLengthValue] = []
+    @Published var aperture = ApertureValue(value: 1.4)
+    @Published var shutterSpeed = ShutterSpeedValue(denominator: 60)!
+    @Published var iso = IsoValue(iso: 400)
+    @Published var focalLength = FocalLengthValue(value: 50)
+    @Published var lockPointX: Float?
+    @Published var lockPointY: Float?
+    var isCapturing: Bool { false }
+    @Published var lockPoint: CGPoint? = nil
+    var isLocked: Bool = false
+    var shouldRequestReview: Bool { false }
+    var isPresentingLogger = false
     
-    public init(
-        exposureValue: Float = 11,
-        lightMeterMode: LightMeterMode = .shutterSpeed,
-        aperture: ApertureValue = ApertureValue(value: 1.4),
-        shutterSpeed: ShutterSpeedValue = ShutterSpeedValue(denominator: 60)!,
-        iso: IsoValue = IsoValue(iso: 400),
-        focalLength: FocalLengthValue = FocalLengthValue(value: 50),
-        lockPoint: CGPoint? = nil,
-        isLocked: Bool = false
-    ) {
-        
-        self.exposureValue = exposureValue
-        self.lightMeterMode = lightMeterMode
-        self.aperture = aperture
-        self.shutterSpeed = shutterSpeed
-        self.iso = iso
-        self.focalLength = focalLength
-        self.lockPoint = lockPoint
-        self.isLocked = isLocked
+    init() {
+        previewLayer = CALayer()
         apertureValues = availableApertureValues.map { ApertureValue(value: $0) }
         shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) }
             + availableShutterSpeedSeconds.compactMap { ShutterSpeedValue(seconds: $0) }
@@ -80,6 +67,13 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
     }
     
     private func bind() {
+        $lockPointX.combineLatest($lockPointY)
+            .map { x, y in
+                guard let x, let y else { return nil }
+                return CGPoint(x: CGFloat(x), y: CGFloat(y))
+            }
+            .assign(to: &$lockPoint)
+        
         $exposureValue.combineLatest($shutterSpeed, $aperture)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .iso
@@ -135,12 +129,28 @@ public final class MockHaebitLightMeterViewModel: HaebitLightMeterViewModelProto
             .assign(to: &$aperture)
     }
     
-    public func setupIfNeeded() {}
-    public func prepareInactive() {}
-    public func didTap(point: CGPoint) {}
-    public func didTapUnlock() {}
-    public func didTapShutter() {}
-    public func didTapDoNotAskGPSAccess() {}
-    public func didTapLogger() {}
-    public func didCloseLogger() {}
+    func setImage(_ image: CGImage?) {
+        let scale = UIScreen.main.scale
+        CATransaction.begin()
+        previewLayer.contents = image
+        previewLayer.contentsGravity = .resizeAspectFill
+        previewLayer.contentsScale = scale
+        previewLayer.displayIfNeeded()
+        CATransaction.commit()
+    }
+    
+    func resetLock() {
+        lockPointX = nil
+        lockPointY = nil
+        isLocked = false
+    }
+    
+    func didTapUnlock() {}
+    func setupIfNeeded() {}
+    func prepareInactive() {}
+    func didTap(point: CGPoint) {}
+    func didTapShutter() {}
+    func didTapDoNotAskGPSAccess() {}
+    func didTapLogger() {}
+    func didCloseLogger() {}
 }
