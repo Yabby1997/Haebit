@@ -32,12 +32,8 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         }
     }
     
-    var apertureMode: Bool { lightMeterMode == .aperture }
-    var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
-    var isoMode: Bool { lightMeterMode == .iso }
+    @Published var previewImage: CGImage?
     @Published var exposureValue: Float = 11
-    var shouldRequestCameraAccess: Bool = false
-    var shouldRequestGPSAccess: Bool = false
     @Published var lightMeterMode: LightMeterMode = .shutterSpeed
     @Published var shutterSpeedInNanoSeconds: UInt64 = 1_000_000_000
     @Published var apertureValues: [ApertureValue] = []
@@ -50,9 +46,15 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var focalLength = FocalLengthValue(value: 50)
     @Published var lockPointX: Float?
     @Published var lockPointY: Float?
-    var isCapturing: Bool { false }
     @Published var lockPoint: CGPoint? = nil
-    var isLocked: Bool = false
+    @Published var isLocked: Bool = false
+    
+    var apertureMode: Bool { lightMeterMode == .aperture }
+    var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
+    var isoMode: Bool { lightMeterMode == .iso }
+    var shouldRequestCameraAccess: Bool = false
+    var shouldRequestGPSAccess: Bool = false
+    var isCapturing: Bool { false }
     var shouldRequestReview: Bool { false }
     var isPresentingLogger = false
     
@@ -129,7 +131,7 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             .assign(to: &$aperture)
     }
     
-    func setImage(_ image: CGImage?) {
+    func setPreview(_ image: CGImage?) {
         let scale = UIScreen.main.scale
         CATransaction.begin()
         previewLayer.contents = image
@@ -137,6 +139,7 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
         previewLayer.contentsScale = scale
         previewLayer.displayIfNeeded()
         CATransaction.commit()
+        previewImage = image
     }
     
     func resetLock() {

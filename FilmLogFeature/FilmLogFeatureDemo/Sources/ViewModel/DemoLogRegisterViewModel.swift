@@ -15,8 +15,8 @@ class DemoLogRegisterViewModel: ObservableObject {
     private let imageDirectory = URL.homeDirectory.appending(path: "Documents/FilmLogFeatureDemo/Images")
     @Published var imageData: Data?
     @Published var date: Date = .now
-    @Published var latitude: Double?
-    @Published var longitude: Double?
+    @Published var latitude: Float?
+    @Published var longitude: Float?
     @Published var focalLength: UInt16?
     @Published var iso: UInt16?
     @Published var shutterSpeed: Float?
@@ -41,7 +41,7 @@ class DemoLogRegisterViewModel: ObservableObject {
         
         var coordinate: HaebitCoordinate?
         if let latitude, let longitude {
-            coordinate = HaebitCoordinate(latitude: latitude, longitude: longitude)
+            coordinate = HaebitCoordinate(latitude: Double(latitude), longitude: Double(longitude))
         }
         
         Task {

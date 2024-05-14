@@ -9,45 +9,62 @@
 import PhotosUI
 import SwiftUI
 
+@MainActor
 struct DemoLightMeterConfigView: View {
-    @State var item: PhotosPickerItem?
+    @Environment(\.dismiss) var dismiss
+    @State var selectedItem: PhotosPickerItem?
     @StateObject var viewModel: DemoLightMeterViewModel
     
+    @State var exposureValueString = ""
+    
     var body: some View {
-        List {
-            Section("Fake Preview") {
-                PhotosPicker(selection: $item) {
-                    if item != nil {
-                        Text("Photo selected!")
-                    } else {
-                        Text("Select photo")
+        NavigationStack {
+            List {
+                Section("Fake Preview") {
+                    PhotosPicker(selection: $selectedItem, preferredItemEncoding: .compatible) {
+                        if let cgimage = viewModel.previewImage {
+                            Image(uiImage: UIImage(cgImage: cgimage))
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else {
+                            Text("Select photo")
+                        }
+                    }
+                }
+                Section("Exposure Value") {
+                    FloatField("EV", float: $viewModel.exposureValue)
+                }
+                Section("Exposure Lock") {
+                    HStack {
+                        FloatField("X", float: $viewModel.lockPointX)
+                        FloatField("Y", float: $viewModel.lockPointY)
+                    }
+                    Toggle("Lock", isOn: $viewModel.isLocked)
+                    Button(action: viewModel.resetLock) {
+                        Text("Reset")
+                            .foregroundStyle(.red)
                     }
                 }
             }
-            Section("Exposure Value") {
-                TextField("EV", value: $viewModel.exposureValue, format: .number)
-                    .keyboardType(.decimalPad)
-            }
-            Section("Lock") {
-                HStack {
-                    TextField("X", value: $viewModel.lockPointX, format: .number)
-                        .keyboardType(.decimalPad)
-                    TextField("Y", value: $viewModel.lockPointY, format: .number)
-                        .keyboardType(.decimalPad)
-                }
-                Toggle("Lock", isOn: $viewModel.isLocked)
-                Button(action: viewModel.resetLock) {
-                    Text("Reset")
+            .navigationTitle("Register")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss.callAsFunction()
+                    } label: {
+                        Text("Done")
+                    }
                 }
             }
-        }
-        .onChange(of: item) { value in
-            Task {
-                guard let imageData = try? await item?.loadTransferable(type: Data.self) else {
-                    return
+            .onChange(of: selectedItem) { value in
+                guard let selectedItem else { return }
+                Task {
+                    guard let data = try? await selectedItem.loadTransferable(type: Data.self) else { return }
+                    viewModel.setPreview(UIImage(data: data)?.cgImage)
                 }
-                await viewModel.setImage(UIImage(data: imageData)?.cgImage)
             }
         }
     }
 }
+
+extension PhotosPickerItem: @unchecked Sendable {}

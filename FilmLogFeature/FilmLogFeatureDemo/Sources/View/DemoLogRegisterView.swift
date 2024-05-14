@@ -38,24 +38,22 @@ struct DemoLogRegisterView: View {
                     }
                     Section("Coordinate") {
                         HStack {
-                            TextField("Latitude", value: $viewModel.latitude, format: .number)
-                            TextField("Longitude", value: $viewModel.longitude, format: .number)
+                            FloatField("Latitude", float: $viewModel.latitude)
+                            FloatField("Longitude", float: $viewModel.longitude)
                         }
-                        .keyboardType(.decimalPad)
                     }
                     Section("Lens") {
                         HStack {
                             TextField("Focal length", value: $viewModel.focalLength, format: .number)
-                                .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
                     }
                     Section("Exposure Settings") {
-                        TextField("Aperture", value: $viewModel.aperture, format: .number)
-                        TextField("ShutterSpeed", value: $viewModel.shutterSpeed, format: .number)
+                        FloatField("Aperture", float: $viewModel.aperture)
+                        FloatField("ShutterSpeed", float: $viewModel.shutterSpeed)
                         TextField("ISO", value: $viewModel.iso, format: .number)
+                            .keyboardType(.decimalPad)
                     }
-                    .keyboardType(.decimalPad)
                     Section("Memo") {
                         TextEditor(text: $viewModel.memo)
                     }

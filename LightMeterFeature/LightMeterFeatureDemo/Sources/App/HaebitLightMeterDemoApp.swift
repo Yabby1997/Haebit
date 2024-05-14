@@ -16,7 +16,7 @@ struct HaebitLightMeterDemoApp: App {
             .onTapGesture(count: 2) {
                 isPresentingDemoSettingSheet = true
             }
-            .sheet(isPresented: $isPresentingDemoSettingSheet) {
+            .fullScreenCover(isPresented: $isPresentingDemoSettingSheet) {
                 DemoLightMeterConfigView(viewModel: viewModel)
             }
             .environmentObject(
