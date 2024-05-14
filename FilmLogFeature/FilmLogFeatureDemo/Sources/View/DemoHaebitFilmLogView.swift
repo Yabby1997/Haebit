@@ -26,13 +26,12 @@ struct DemoHaebitFilmLogView: View {
         .onTapGesture(count: 2) {
             isPresentingRegisterView = true
         }
-        .sheet(isPresented: $isPresentingRegisterView) {
+        .fullScreenCover(isPresented: $isPresentingRegisterView) {
             viewModel.onAppear()
         } content: {
             DemoLogRegisterView(
-                viewModel: DemoLogRegisterViewModel(
-                    logger: logger
-                )
+                viewModel: DemoLogRegisterViewModel(logger: logger),
+                isPresented: $isPresentingRegisterView
             )
         }
     }

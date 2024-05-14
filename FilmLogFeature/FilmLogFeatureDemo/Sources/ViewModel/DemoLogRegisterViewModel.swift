@@ -15,14 +15,19 @@ class DemoLogRegisterViewModel: ObservableObject {
     private let imageDirectory = URL.homeDirectory.appending(path: "Documents/FilmLogFeatureDemo/Images")
     @Published var imageData: Data?
     @Published var date: Date = .now
-    @Published var latitude: Double = .zero
-    @Published var longitude: Double = .zero
-    @Published var focalLength: UInt16 = 50
-    @Published var iso: UInt16 = 400
-    @Published var shutterSpeed: Float = 2000
-    @Published var aperture: Float = 1.4
+    @Published var latitude: Double?
+    @Published var longitude: Double?
+    @Published var focalLength: UInt16?
+    @Published var iso: UInt16?
+    @Published var shutterSpeed: Float?
+    @Published var aperture: Float?
     @Published var memo: String = ""
     @Published var isLoading = false
+    @Published var isCompleted = false
+    
+    var isRegisterable: Bool {
+        imageData != nil && focalLength != nil && iso != nil && shutterSpeed != nil && aperture != nil
+    }
     
     init(logger: HaebitLogger) {
         self.logger = logger
@@ -30,16 +35,22 @@ class DemoLogRegisterViewModel: ObservableObject {
     }
     
     func register() {
-        guard let imageData else { return }
+        guard let imageData, let focalLength, let iso, let shutterSpeed, let aperture else { return }
         isLoading = true
         let outputFileURL = imageDirectory.appending(path: UUID().uuidString + ".jpeg")
+        
+        var coordinate: HaebitCoordinate?
+        if let latitude, let longitude {
+            coordinate = HaebitCoordinate(latitude: latitude, longitude: longitude)
+        }
+        
         Task {
             do {
                 try imageData.write(to: outputFileURL, options: [.atomic, .completeFileProtection])
                 try await logger.save(
                     log: HaebitLog(
                         date: date,
-                        coordinate: HaebitCoordinate(latitude: latitude, longitude: longitude),
+                        coordinate: coordinate,
                         image: outputFileURL.relativePath,
                         focalLength: focalLength,
                         iso: iso,
@@ -49,7 +60,7 @@ class DemoLogRegisterViewModel: ObservableObject {
                     )
                 )
                 isLoading = false
-                print("Register Success!")
+                isCompleted = true
             } catch {
                 isLoading = false
                 print("Error Occurred!: \(error.localizedDescription)")

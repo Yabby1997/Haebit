@@ -1,19 +1,10 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Aperture" : {
+    "Cancel" : {
 
     },
-    "FocalLength" : {
-
-    },
-    "Image selected!" : {
-
-    },
-    "ISO" : {
-
-    },
-    "Latitude" : {
+    "Done" : {
 
     },
     "lightMeterControlViewUnlockButton" : {
@@ -135,19 +126,7 @@
         }
       }
     },
-    "Longitude" : {
-
-    },
-    "Memo" : {
-
-    },
-    "Register" : {
-
-    },
     "Select image" : {
-
-    },
-    "ShutterSpeed" : {
 
     }
   },
