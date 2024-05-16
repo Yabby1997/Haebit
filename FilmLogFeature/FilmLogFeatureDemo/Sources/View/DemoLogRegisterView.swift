@@ -6,9 +6,10 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
+@MainActor
 struct DemoLogRegisterView: View {
     @StateObject var viewModel: DemoLogRegisterViewModel
     @Binding var isPresented: Bool
@@ -66,6 +67,7 @@ struct DemoLogRegisterView: View {
                     .ignoresSafeArea()
                 }
             }
+            .autocorrectionDisabled()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: viewModel.register) {

@@ -1,26 +1,22 @@
 //
 //  FloatField.swift
-//  LightMeterFeature
+//  FilmLogFeatureDemo
 //
-//  Created by Seunghun on 5/14/24.
+//  Created by Seunghun on 5/15/24.
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
 import SwiftUI
 
 struct FloatField: View {
-    let titleKey: LocalizedStringKey
-    @Binding var float: Float?
-    @State var displayString: String
+    private let titleKey: LocalizedStringKey
+    @Binding private var float: Float?
+    @State private var internalString: String
     
     init(_ titleKey: LocalizedStringKey, float: Binding<Float?>) {
         self.titleKey = titleKey
         self._float = float
-        if let initialValue = float.wrappedValue {
-            self._displayString = State(initialValue: String(initialValue))
-        } else {
-            self._displayString = State(initialValue: "")
-        }
+        self._internalString = State(initialValue: float.wrappedValue.map { String($0) } ?? "")
     }
     
     init(_ titleKey: LocalizedStringKey, float: Binding<Float>) {
@@ -34,21 +30,22 @@ struct FloatField: View {
             }
         )
         self._float = optionalFloat
-        self._displayString = State(initialValue: String(float.wrappedValue))
+        self._internalString = State(initialValue: String(float.wrappedValue))
     }
     
     var body: some View {
-        TextField(titleKey, text: $displayString)
+        TextField(titleKey, text: $internalString)
+            .autocorrectionDisabled()
             .keyboardType(.decimalPad)
-            .onChange(of: displayString) { _ in
-                let filtered = displayString.filter { "0123456789.".contains($0) }
-                let splitted = filtered.split(separator: ".")
-                if splitted.count == 2 {
-                    let preDecimal = String(splitted[0])
-                    let afterDecimal = String(splitted[1])
-                    displayString = "\(preDecimal).\(afterDecimal)"
-                }
-                float = Float(displayString) ?? .zero
+            .onChange(of: internalString) { newValue in
+                let filtered = newValue.reduce(into: "") { if $1.isNumber || ($1 == "." && !$0.contains(".")) || ($1 == "-" && $0.isEmpty) { $0.append($1) } }
+                let result = filtered == "." ? "0." : filtered
+                internalString = result
+                float = Float(result)
+            }
+            .onChange(of: float) { newValue in
+                guard newValue == nil else { return }
+                internalString = ""
             }
     }
 }
