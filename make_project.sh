@@ -18,10 +18,12 @@ fetch_dependencies() {
 
 cache_all() {
     execute_command "Caching xcframeworks..." "tuist cache warm -x"
+    execute_command "Cleaining old caches..." "clean_old_cache"
 }
 
 cache_except() {
     execute_command "Caching xcframeworks..." "tuist cache warm -x --dependencies-only $1"
+    execute_command "Cleaining old caches..." "clean_old_cache"
 }
 
 generate_target() {
@@ -43,6 +45,38 @@ disable_cache() {
 
 restore_cache() {
     execute_command "Restoring $1..." "mv $disabled_cache_folder $original_cache_folder"
+}
+
+clean_old_cache() {
+    find "$cache_directory" -type d -name "*.xcframework" | while read -r framework; do
+        base_name=$(basename "$framework")
+        duplicates=($(find "$cache_directory" -type d -name "$base_name"))
+
+        if [ ${#duplicates[@]} -gt 1 ]; then
+            latest_file=""
+            latest_time=0
+
+            for file in "${duplicates[@]}"; do
+                parent_dir=$(dirname "$file")
+                file_time=$(stat -f "%m" "$parent_dir")
+
+                if [ "$file_time" -gt "$latest_time" ]; then
+                    latest_time=$file_time
+                    latest_file=$parent_dir
+                fi
+            done
+
+            for file in "${duplicates[@]}"; do
+                parent_dir=$(dirname "$file")
+                if [ "$parent_dir" != "$latest_file" ]; then
+                    echo "Deleting old cache: $file"
+                    rm -rf "$parent_dir"
+                else
+                    echo "Keeping latest cache: $file"
+                fi
+            done
+        fi
+    done
 }
 
 execute_option() {
