@@ -16,7 +16,12 @@ final class HaebitFilmMapViewController: UIViewController {
     private let annotationID = "FilmAnnotationViewAnnotationIdentifier"
     private let clusterID = "FilmAnnotationViewClusterIdentifier"
     
-    private let titleLabel = LoadingLabel()
+    private let titleLabel: LoadingLabel = {
+        let label = LoadingLabel()
+        label.font = .systemFont(ofSize: 22, weight: .bold)
+        return label
+    }()
+    
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)

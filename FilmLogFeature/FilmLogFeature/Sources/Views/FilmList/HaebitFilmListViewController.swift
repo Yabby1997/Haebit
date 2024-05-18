@@ -19,7 +19,29 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Subviews
     
-    private let titleLabel = TitleLabel()
+    private lazy var titleStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 6
+        stack.addArrangedSubview(mainTitleLabel)
+        stack.addArrangedSubview(subtitleLabel)
+        return stack
+    }()
+    
+    private let mainTitleLabel: LoadingLabel = {
+        let label = LoadingLabel()
+        label.font = .systemFont(ofSize: 22, weight: .bold)
+        return label
+    }()
+    
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
+        return label
+    }()
+    
+
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -86,7 +108,7 @@ final class HaebitFilmListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.setTitlePosition(.left)
-        navigationItem.titleView = titleLabel
+        navigationItem.titleView = titleStackView
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -131,13 +153,22 @@ final class HaebitFilmListViewController: UIViewController {
         viewModel.mainTitlePublisher
             .removeDuplicates()
             .sink { [weak self] title in
-                self?.titleLabel.title = title
+                self?.mainTitleLabel.text = title
             }
             .store(in: &cancellables)
         
         viewModel.isTitleUpdatingPublisher
             .sink { [weak self] isUpdating in
-                self?.titleLabel.isLoading = isUpdating
+                self?.mainTitleLabel.isLoading = isUpdating
+            }
+            .store(in: &cancellables)
+        
+        viewModel.subTitlePublisher
+            .sink { [weak self] title in
+                guard let self else { return }
+                UIView.transition(with: subtitleLabel, duration: 0.3, options: .transitionCrossDissolve) {
+                    self.subtitleLabel.text = title
+                }
             }
             .store(in: &cancellables)
     }
