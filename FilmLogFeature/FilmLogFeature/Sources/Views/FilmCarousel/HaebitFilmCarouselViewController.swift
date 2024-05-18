@@ -61,6 +61,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
+        setupViews()
         bind()
     }
     
@@ -70,16 +71,13 @@ final class HaebitFilmCarouselViewController: UIViewController {
     
     // MARK: - Callbacks
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupViews()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        navigationController?.setTitlePosition(.center)
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.titleView = titleStack
+        mainTitleLabel.text = viewModel.mainTitle
+        subTitleLabel.text = viewModel.subTitle
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -90,7 +88,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        viewModel.mainTitlePublisher.zip(viewModel.subTitlePublisher)
+        viewModel.mainTitlePublisher.combineLatest(viewModel.subTitlePublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] mainTitle, subTitle in
                 self?.updateTitle(main: mainTitle, sub: subTitle)

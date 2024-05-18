@@ -62,7 +62,6 @@ public final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         
         $currentLocation
             .compactMap { $0 }
-            .removeDuplicates()
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink { [weak self] coordinate in
                 self?.updateMainTitle(for: coordinate)

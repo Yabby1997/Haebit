@@ -106,14 +106,13 @@ final class HaebitFilmListViewController: UIViewController {
     // MARK: - Callbacks
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
+        super.viewWillAppear(animated)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleStackView
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setTitlePosition(.center)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         navigationItem.titleView = nil
     }
     
