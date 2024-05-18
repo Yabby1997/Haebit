@@ -1,5 +1,5 @@
 //
-//  TitleLabel.swift
+//  LoadingLabel.swift
 //  HaebitDev
 //
 //  Created by Seunghun on 5/6/24.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-final class TitleLabel: UIView {
+final class LoadingLabel: UIView {
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -29,7 +29,7 @@ final class TitleLabel: UIView {
         return view
     }()
     
-    var title: String? {
+    var text: String? {
         get { titleLabel.text }
         set { titleLabel.text = newValue }
     }
@@ -39,6 +39,14 @@ final class TitleLabel: UIView {
             UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
                 self.loadingView.alpha = self.isLoading ? 1.0 : .zero
             }
+        }
+    }
+    
+    var font: UIFont {
+        get { titleLabel.font }
+        set {
+            titleLabel.font = newValue
+            updateLoadingView()
         }
     }
     
@@ -62,8 +70,18 @@ final class TitleLabel: UIView {
         stackView.addArrangedSubview(titleLabel)
         
         stackView.addArrangedSubview(loadingView)
-        loadingView.snp.makeConstraints { $0.width.equalTo(40) }
+        loadingView.snp.makeConstraints { make in
+            make.width.equalTo(40)
+            make.height.equalTo(20)
+        }
         
         stackView.addArrangedSubview(UIView())
+    }
+    
+    private func updateLoadingView() {
+        loadingView.snp.remakeConstraints { make in
+            make.width.equalTo(font.pointSize * 2)
+            make.height.equalTo(font.pointSize)
+        }
     }
 }

@@ -16,7 +16,7 @@ final class HaebitFilmMapViewController: UIViewController {
     private let annotationID = "FilmAnnotationViewAnnotationIdentifier"
     private let clusterID = "FilmAnnotationViewClusterIdentifier"
     
-    private let titleLabel = TitleLabel()
+    private let titleLabel = LoadingLabel()
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -106,7 +106,7 @@ final class HaebitFilmMapViewController: UIViewController {
         viewModel.mainTitlePublisher
             .removeDuplicates()
             .sink { [weak self] title in
-                self?.titleLabel.title = title
+                self?.titleLabel.text = title
             }
             .store(in: &cancellables)
         
