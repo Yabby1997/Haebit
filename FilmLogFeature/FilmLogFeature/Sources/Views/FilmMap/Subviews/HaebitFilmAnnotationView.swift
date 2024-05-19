@@ -26,12 +26,12 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     private let countBadge = CountBadge()
     
-    var viewModel: HaebitFilmAnnotationViewModel? {
-        didSet {
-            cancellables = []
-            bind()
-        }
+    var films: [Film] {
+        get { viewModel.films }
+        set { viewModel.films = newValue }
     }
+    
+    private(set) var viewModel = HaebitFilmAnnotationViewModel()
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -46,19 +46,30 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        cancellables = []
         imageView.image = nil
         countBadge.count = .zero
     }
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
-        refresh()
+        bind()
+    }
+    
+    private func bind() {
+        viewModel.currentFilmPublisher
+            .sink { [weak self] _ in
+                self?.refresh()
+            }
+            .store(in: &cancellables)
     }
     
     private func refresh() {
-        guard let viewModel, let film = viewModel.films[safe: viewModel.currentIndex] else { return }
-        imageView.setDownSampledImage(at: film.image)
+        guard let film = viewModel.films[safe: viewModel.currentIndex] else { return }
         countBadge.count = UInt(viewModel.films.count)
+        Task {
+            await imageView.setDownSampledImage(at: film.image)
+        }
     }
     
     private func setupViews() {
@@ -84,13 +95,5 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
             make.trailing.equalToSuperview().offset(countBadge.minimumSize / 2.0)
             make.centerY.equalTo(frameView.snp.top)
         }
-    }
-    
-    private func bind() {
-        viewModel?.currentFilmPublisher
-            .sink { [weak self] _ in
-                self?.refresh()
-            }
-            .store(in: &cancellables)
     }
 }

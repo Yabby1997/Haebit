@@ -147,14 +147,14 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? FilmAnnotation,
            let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID, for: annotation) as? HaebitFilmAnnotationView {
-            let films = [annotation.film]
-            view.viewModel = HaebitFilmAnnotationViewModel(films: films)
+            let films = [annotation.film].sorted { $0.date > $1.date }
+            view.films = films
             view.clusteringIdentifier = clusterID
             return view
         } else if let cluster = annotation as? MKClusterAnnotation,
                   let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? HaebitFilmAnnotationView {
-            let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film })
-            view.viewModel = HaebitFilmAnnotationViewModel(films: films)
+            let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film }).sorted { $0.date > $1.date }
+            view.films = films
             view.clusteringIdentifier = nil
             return view
         }
@@ -162,10 +162,9 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let filmAnnotationView = (view as? HaebitFilmAnnotationView),
-              let viewModel = filmAnnotationView.viewModel else { return }
+        guard let filmAnnotationView = (view as? HaebitFilmAnnotationView) else { return }
         snapshotAnnotationView = filmAnnotationView
-        let carouselViewController = HaebitFilmCarouselViewController(viewModel: viewModel)
+        let carouselViewController = HaebitFilmCarouselViewController(viewModel: filmAnnotationView.viewModel)
         navigationController?.pushViewController(carouselViewController, animated: true)
         mapView.deselectAnnotation(view.annotation, animated: false)
     }

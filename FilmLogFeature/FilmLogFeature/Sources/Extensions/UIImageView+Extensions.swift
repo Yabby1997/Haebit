@@ -9,34 +9,32 @@
 import UIKit
 
 extension UIImageView {
-    func setDownSampledImage(at url: URL) {
+    func setDownSampledImage(at url: URL) async {
         let size = frame.size
         let scale = window?.windowScene?.screen.scale ?? 3.0
         
-        Task.detached { [weak self] in
-            guard let imageSource = CGImageSourceCreateWithURL(
-                url as CFURL,
-                [kCGImageSourceShouldCache: false] as CFDictionary
-            ) else {
-                await self?.setImage(nil)
-                return
-            }
-            
-            let maxDimensionInPixels = max(size.width, size.height) * scale
-            let downsampleOptions = [
+        let cgImage: CGImage? = await Task.detached {
+            let createOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+            let thumbnailOptions = [
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
                 kCGImageSourceShouldCacheImmediately: true,
                 kCGImageSourceCreateThumbnailWithTransform: true,
-                kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+                kCGImageSourceThumbnailMaxPixelSize: max(size.width, size.height) * scale
             ] as CFDictionary
-
-            guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)else {
-                await self?.setImage(nil)
-                return
-            }
             
-            await self?.setImage(UIImage(cgImage: cgImage))
+            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, createOptions),
+                  let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, .zero, thumbnailOptions) else {
+                return nil
+            }
+            return cgImage
+        }.value
+        
+        guard let cgImage else {
+            setImage(nil)
+            return
         }
+        
+        setImage(UIImage(cgImage: cgImage))
     }
     
     func setImage(_ image: UIImage?, withAnimation duration: TimeInterval = 0.3) {

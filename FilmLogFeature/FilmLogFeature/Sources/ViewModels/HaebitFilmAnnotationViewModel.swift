@@ -21,7 +21,7 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     @Published private var currentLocation: Coordinate?
     @Published private var isTitleUpdating = false
     @Published private var currentFilm: Film?
-    @Published private(set) var films: [Film] = []
+    @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
     var currentFilmPublisher: AnyPublisher<Film?, Never> { $currentFilm.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
@@ -30,20 +30,19 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(films: [Film]) {
-        self.films = films.sorted { $0.date > $1.date }
+    init() {
         bind()
     }
     
     private func bind() {
-        $currentIndex
-            .map { [weak self] index in
-                self?.films[safe: index]
+        $films.combineLatest($currentIndex)
+            .map { films, index in
+                films[safe: index]
             }
+            .removeDuplicates()
             .assign(to: &$currentFilm)
         
         $currentFilm
-            .removeDuplicates()
             .sink { [weak self] film in
                 guard let self, let film else { return }
                 isTitleUpdating = true
@@ -58,7 +57,6 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
             .store(in: &cancellables)
         
         $currentFilm
-            .removeDuplicates()
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink { [weak self] film in
                 self?.updateTitle(for: film)
