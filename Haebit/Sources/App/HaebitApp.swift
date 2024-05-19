@@ -26,11 +26,7 @@ struct HaebitApp: App {
                     gpsAccessValidator: DefaultGPSAccessValidator(),
                     feedbackProvider: LightMeterHapticFeedbackProvider()
                 ),
-                logView: HaebitFilmLogView(
-                    viewModel: HaebitFilmLogViewModel(
-                        logger: logger
-                    )
-                )
+                logView: HaebitFilmLogView(logger: logger)
             )
             .environmentObject(
                 LightMeterControlViewDependencies(
