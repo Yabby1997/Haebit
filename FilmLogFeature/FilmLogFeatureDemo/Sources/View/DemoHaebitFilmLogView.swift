@@ -11,28 +11,31 @@ import HaebitLogger
 import SwiftUI
 
 struct DemoHaebitFilmLogView: View {
-    private var logger: HaebitLogger
-    @StateObject var viewModel: HaebitFilmLogViewModel
+    private var logger = HaebitLogger(repository: DefaultHaebitLogRepository())
     @State var isPresentingRegisterView = false
-    
-    init() {
-        let logger = HaebitLogger(repository: DefaultHaebitLogRepository())
-        self.logger = logger
-        self._viewModel = StateObject(wrappedValue: HaebitFilmLogViewModel(logger: logger))
-    }
+    @State var isPresentingLogView = false
     
     var body: some View {
-        HaebitFilmLogView(viewModel: viewModel)
-        .onTapGesture(count: 2) {
-            isPresentingRegisterView = true
+        VStack(spacing: 12) {
+            Button {
+                isPresentingRegisterView = true
+            } label: {
+                Text("Register New Logs")
+            }
+            Button {
+                isPresentingLogView = true
+            } label: {
+                Text("Open HaebitFilmLogView")
+            }
         }
         .fullScreenCover(isPresented: $isPresentingRegisterView) {
-            viewModel.onAppear()
-        } content: {
             DemoLogRegisterView(
                 viewModel: DemoLogRegisterViewModel(logger: logger),
                 isPresented: $isPresentingRegisterView
             )
+        }
+        .fullScreenCover(isPresented: $isPresentingLogView) {
+            HaebitFilmLogView(logger: logger)
         }
     }
 }

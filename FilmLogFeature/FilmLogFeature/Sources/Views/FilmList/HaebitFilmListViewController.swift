@@ -31,6 +31,7 @@ final class HaebitFilmListViewController: UIViewController {
     private let mainTitleLabel: LoadingLabel = {
         let label = LoadingLabel()
         label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.textAlignment = .left
         return label
     }()
     
@@ -38,6 +39,7 @@ final class HaebitFilmListViewController: UIViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .white
+        label.textAlignment = .left
         return label
     }()
     
@@ -81,7 +83,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: any HaebitFilmLogViewModelProtocol
+    private let viewModel: HaebitFilmListViewModel
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
@@ -94,7 +96,7 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: any HaebitFilmLogViewModelProtocol) {
+    init(viewModel: HaebitFilmListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -121,6 +123,7 @@ final class HaebitFilmListViewController: UIViewController {
         setupViews()
         bindUI()
         configureDataSource()
+        viewModel.onAppear()
     }
     
     // MARK: - Helpers
@@ -150,9 +153,11 @@ final class HaebitFilmListViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.mainTitlePublisher
-            .removeDuplicates()
             .sink { [weak self] title in
-                self?.mainTitleLabel.text = title
+                guard let self else { return }
+                UIView.transition(with: mainTitleLabel, duration: 0.3, options: .transitionCrossDissolve) {
+                    self.mainTitleLabel.text = title
+                }
             }
             .store(in: &cancellables)
         

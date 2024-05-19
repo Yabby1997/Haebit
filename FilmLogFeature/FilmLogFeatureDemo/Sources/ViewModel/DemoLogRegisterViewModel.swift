@@ -23,7 +23,6 @@ class DemoLogRegisterViewModel: ObservableObject {
     @Published var aperture: Float?
     @Published var memo: String = ""
     @Published var isLoading = false
-    @Published var isCompleted = false
     
     var isRegisterable: Bool {
         imageData != nil && focalLength != nil && iso != nil && shutterSpeed != nil && aperture != nil
@@ -60,12 +59,24 @@ class DemoLogRegisterViewModel: ObservableObject {
                     )
                 )
                 isLoading = false
-                isCompleted = true
+                clear()
             } catch {
                 isLoading = false
                 print("Error Occurred!: \(error.localizedDescription)")
             }
         }
+    }
+    
+    private func clear() {
+        imageData = nil
+        date = .now
+        latitude = nil
+        longitude = nil
+        focalLength = nil
+        iso = nil
+        shutterSpeed = nil
+        aperture = nil
+        memo = ""
     }
     
     private func createDirectoryIfNeeded(for path: String) throws {

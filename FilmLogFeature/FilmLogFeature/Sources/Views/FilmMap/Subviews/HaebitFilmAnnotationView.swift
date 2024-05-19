@@ -1,5 +1,5 @@
 //
-//  FilmAnnotationView.swift
+//  HaebitFilmAnnotationView.swift
 //  HaebitDev
 //
 //  Created by Seunghun on 4/14/24.
@@ -10,7 +10,7 @@ import Combine
 import MapKit
 import SnapKit
 
-final class FilmAnnotationView: MKAnnotationView {
+final class HaebitFilmAnnotationView: MKAnnotationView {
     var frameView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = FilmLogFeatureAsset.frameBH.image
@@ -26,7 +26,7 @@ final class FilmAnnotationView: MKAnnotationView {
     
     private let countBadge = CountBadge()
     
-    var viewModel: (any HaebitFilmLogViewModelProtocol)? {
+    var viewModel: HaebitFilmAnnotationViewModel? {
         didSet {
             cancellables = []
             bind()
@@ -87,7 +87,7 @@ final class FilmAnnotationView: MKAnnotationView {
     }
     
     private func bind() {
-        viewModel?.currentIndexPublisher
+        viewModel?.currentFilmPublisher
             .sink { [weak self] _ in
                 self?.refresh()
             }

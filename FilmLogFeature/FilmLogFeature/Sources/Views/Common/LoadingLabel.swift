@@ -9,17 +9,11 @@
 import SwiftUI
 
 final class LoadingLabel: UIView {
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 4
-        return stackView
-    }()
-    
-    private let titleLabel: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textColor = .white
+        label.textAlignment = .center
         return label
     }()
     
@@ -30,12 +24,26 @@ final class LoadingLabel: UIView {
     }()
     
     var text: String? {
-        get { titleLabel.text }
-        set { titleLabel.text = newValue }
+        get { label.text }
+        set { label.text = newValue }
+    }
+    
+    var textColor: UIColor? {
+        get { label.textColor }
+        set { label.textColor = newValue }
+    }
+    
+    var textAlignment: NSTextAlignment {
+        get { label.textAlignment }
+        set { 
+            label.textAlignment = newValue
+            updateLoadingView()
+        }
     }
 
     var isLoading = false {
         didSet {
+            label.isHidden = isLoading
             UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
                 self.loadingView.alpha = self.isLoading ? 1.0 : .zero
             }
@@ -43,9 +51,9 @@ final class LoadingLabel: UIView {
     }
     
     var font: UIFont {
-        get { titleLabel.font }
+        get { label.font }
         set {
-            titleLabel.font = newValue
+            label.font = newValue
             updateLoadingView()
         }
     }
@@ -64,23 +72,32 @@ final class LoadingLabel: UIView {
     }
     
     private func setupViews() {
-        addSubview(stackView)
-        stackView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        addSubview(label)
+        label.snp.makeConstraints { $0.edges.equalToSuperview() }
         
-        stackView.addArrangedSubview(titleLabel)
-        
-        stackView.addArrangedSubview(loadingView)
+        addSubview(loadingView)
         loadingView.snp.makeConstraints { make in
-            make.width.equalTo(40)
+            make.center.equalToSuperview()
+            make.width.equalTo(50)
             make.height.equalTo(20)
         }
-        
-        stackView.addArrangedSubview(UIView())
     }
     
     private func updateLoadingView() {
         loadingView.snp.remakeConstraints { make in
-            make.width.equalTo(font.pointSize * 2)
+            switch textAlignment {
+            case .left, .justified:
+                make.left.top.bottom.equalToSuperview()
+            case .right:
+                make.right.top.bottom.equalToSuperview()
+            case .center:
+                make.center.equalToSuperview()
+            case .natural:
+                make.leading.top.bottom.equalToSuperview()
+            @unknown default:
+                make.center.equalToSuperview()
+            }
+            make.width.equalTo(font.pointSize * 2.5)
             make.height.equalTo(font.pointSize)
         }
     }

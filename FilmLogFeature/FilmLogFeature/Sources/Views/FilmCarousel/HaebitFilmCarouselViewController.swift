@@ -25,19 +25,18 @@ final class HaebitFilmCarouselViewController: UIViewController {
         return pageViewController
     }()
     
-    private lazy var mainTitleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
+    private lazy var mainTitleLabel: LoadingLabel = {
+        let label = LoadingLabel()
         label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textAlignment = .center
         return label
     }()
     
     private lazy var subTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        label.textAlignment = .center
         label.font = .systemFont(ofSize: 12)
+        label.textAlignment = .center
         return label
     }()
     
@@ -51,13 +50,13 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Properties
     
     private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
-    private var viewModel: any HaebitFilmLogViewModelProtocol
+    private var viewModel: (any HaebitFilmCarouselViewModelProtocol)
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
     
     // MARK: - Initializers
     
-    init(viewModel: any HaebitFilmLogViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate? = nil) {
+    init(viewModel: any HaebitFilmCarouselViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate? = nil) {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -76,8 +75,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         navigationController?.setTitlePosition(.center)
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.titleView = titleStack
-        mainTitleLabel.text = viewModel.mainTitle
-        subTitleLabel.text = viewModel.subTitle
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -88,11 +85,26 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        viewModel.mainTitlePublisher.combineLatest(viewModel.subTitlePublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] mainTitle, subTitle in
-                self?.updateTitle(main: mainTitle, sub: subTitle)
+        viewModel.subTitlePublisher
+            .sink { [weak self] title in
+                guard let self else { return }
+                UIView.transition(with: subTitleLabel, duration: 0.3, options: .transitionCrossDissolve) { [weak self] in
+                    self?.subTitleLabel.text = title
+                }
             }
+            .store(in: &cancellables)
+        
+        viewModel.mainTitlePublisher
+            .sink { [weak self] title in
+                guard let self else { return }
+                UIView.transition(with: mainTitleLabel, duration: 0.3, options: .transitionCrossDissolve) { [weak self] in
+                    self?.mainTitleLabel.text = title
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.isTitleUpdatingPublisher
+            .assign(to: \.isLoading, on: mainTitleLabel)
             .store(in: &cancellables)
     }
     
@@ -108,13 +120,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         let film = viewModel.films[index]
         let viewController = HaebitFilmViewController(film: film, index: index)
         photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
-    }
-    
-    private func updateTitle(main: String, sub: String) {
-        UIView.transition(with: titleStack, duration: 0.2, options: .transitionCrossDissolve) { [weak self] in
-            self?.mainTitleLabel.text = main
-            self?.subTitleLabel.text = sub
-        }
     }
 }
 

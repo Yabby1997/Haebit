@@ -19,6 +19,7 @@ final class HaebitFilmMapViewController: UIViewController {
     private let titleLabel: LoadingLabel = {
         let label = LoadingLabel()
         label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.textAlignment = .left
         return label
     }()
     
@@ -37,8 +38,8 @@ final class HaebitFilmMapViewController: UIViewController {
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.delegate = self
-        mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: annotationID)
-        mapView.register(FilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: clusterID)
+        mapView.register(HaebitFilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: annotationID)
+        mapView.register(HaebitFilmAnnotationView.self, forAnnotationViewWithReuseIdentifier: clusterID)
         mapView.showsUserLocation = true
         return mapView
     }()
@@ -56,13 +57,13 @@ final class HaebitFilmMapViewController: UIViewController {
         return gradientLayer
     }()
 
-    private var snapshotAnnotationView: FilmAnnotationView?
+    private var snapshotAnnotationView: HaebitFilmAnnotationView?
     
-    private let viewModel: any HaebitFilmLogViewModelProtocol
+    private let viewModel: HaebitFilmMapViewModel
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(viewModel: any HaebitFilmLogViewModelProtocol) {
+    init(viewModel: HaebitFilmMapViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -87,6 +88,7 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         bind()
+        viewModel.onAppear()
     }
     
     private func setupViews() {
@@ -144,15 +146,15 @@ final class HaebitFilmMapViewController: UIViewController {
 extension HaebitFilmMapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? FilmAnnotation,
-           let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID, for: annotation) as? FilmAnnotationView {
+           let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID, for: annotation) as? HaebitFilmAnnotationView {
             let films = [annotation.film]
-            view.viewModel = HaebitFilmLogPassiveViewModel(films: films)
+            view.viewModel = HaebitFilmAnnotationViewModel(films: films)
             view.clusteringIdentifier = clusterID
             return view
         } else if let cluster = annotation as? MKClusterAnnotation,
-                  let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? FilmAnnotationView {
+                  let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? HaebitFilmAnnotationView {
             let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film })
-            view.viewModel = HaebitFilmLogPassiveViewModel(films: films)
+            view.viewModel = HaebitFilmAnnotationViewModel(films: films)
             view.clusteringIdentifier = nil
             return view
         }
@@ -160,7 +162,7 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let filmAnnotationView = (view as? FilmAnnotationView),
+        guard let filmAnnotationView = (view as? HaebitFilmAnnotationView),
               let viewModel = filmAnnotationView.viewModel else { return }
         snapshotAnnotationView = filmAnnotationView
         let carouselViewController = HaebitFilmCarouselViewController(viewModel: viewModel)

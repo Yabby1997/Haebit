@@ -1,10 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Cancel" : {
-
-    },
-    "Done" : {
+    "Add" : {
 
     },
     "lightMeterControlViewUnlockButton" : {
@@ -125,6 +122,12 @@
           }
         }
       }
+    },
+    "Open HaebitFilmLogView" : {
+
+    },
+    "Register New Logs" : {
+
     },
     "Select image" : {
 

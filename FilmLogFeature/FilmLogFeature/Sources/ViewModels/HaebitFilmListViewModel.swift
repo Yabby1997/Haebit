@@ -1,5 +1,5 @@
 //
-//  HaebitFilmLogViewModel.swift
+//  HaebitFilmListViewModel.swift
 //  HaebitDev
 //
 //  Created by Seunghun on 2/6/24.
@@ -13,18 +13,20 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
-@MainActor
-public final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
+public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
-    @Published public var mainTitle: String = ""
-    @Published public var subTitle: String = ""
-    @Published public var films: [Film] = []
-    @Published public var currentIndex: Int = .zero
-    @Published public var currentLocation: Coordinate?
-    @Published public var isTitleUpdating = false
+    @Published private var mainTitle: String = ""
+    @Published private var subTitle: String = ""
+    @Published private var isTitleUpdating = false
     @Published private var currentFilm: Film?
+    @Published private(set) var films: [Film] = []
+    @Published var currentIndex: Int = .zero
+    var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -35,43 +37,31 @@ public final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
     
     private func bind() {
         $currentIndex
-            .compactMap { [weak self] index in
-                self?.films[safe: index]
-            }
-            .sink { [weak self] film in
-                self?.updateSubtitle(for: film)
-            }
-            .store(in: &cancellables)
-        
-        $currentIndex
             .map { [weak self] index in
                 self?.films[safe: index]
             }
             .assign(to: &$currentFilm)
         
         $currentFilm
-            .compactMap { $0?.coordinate }
-            .assign(to: &$currentLocation)
-        
-        $currentLocation
-            .filter { $0 == nil }
-            .sink { [weak self] _ in
-                self?.mainTitle = ""
-            }
-            .store(in: &cancellables)
-        
-        $currentLocation
-            .compactMap { $0 }
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .sink { [weak self] coordinate in
-                self?.updateMainTitle(for: coordinate)
-            }
-            .store(in: &cancellables)
-        
-        $currentLocation
             .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.isTitleUpdating = true
+            .sink { [weak self] film in
+                guard let self, let film else { return }
+                isTitleUpdating = true
+                if film.coordinate == nil {
+                    mainTitle = dateFormatter.formatDate(from: film.date)
+                    subTitle = dateFormatter.formatTime(from: film.date)
+                    isTitleUpdating = false
+                } else {
+                    subTitle = dateFormatter.formatDate(from: film.date) + " " + dateFormatter.formatTime(from: film.date)
+                }
+            }
+            .store(in: &cancellables)
+        
+        $currentFilm
+            .removeDuplicates()
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .sink { [weak self] film in
+                self?.updateTitle(for: film)
             }
             .store(in: &cancellables)
     }
@@ -91,15 +81,14 @@ public final class HaebitFilmLogViewModel: HaebitFilmLogViewModelProtocol {
         }
     }
     
-    private func updateSubtitle(for film: Film) {
-        let formattedDate = dateFormatter.formatDate(from: film.date)
-        let formattedTime = dateFormatter.formatTime(from: film.date)
-        subTitle = formattedDate + " " + formattedTime
-    }
-    
-    private func updateMainTitle(for coordinate: Coordinate) {
+    private func updateTitle(for film: Film?) {
+        guard let film else { return }
         Task {
-            guard let representation = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate) else {
+            guard let coordinate = film.coordinate?.portolanCoordinate,
+                  let representation = await PortolanGeocoder.shared.represent(for: coordinate) else {
+                mainTitle = dateFormatter.formatDate(from: film.date)
+                subTitle = dateFormatter.formatTime(from: film.date)
+                isTitleUpdating = false
                 return
             }
             mainTitle = representation

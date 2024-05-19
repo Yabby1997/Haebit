@@ -51,7 +51,7 @@ struct LoadingView: View {
     }
     
     func circleSize(with proxy: GeometryProxy) -> CGFloat {
-        proxy.size.height / 3.0
+        proxy.size.height / 2.0
     }
 }
 

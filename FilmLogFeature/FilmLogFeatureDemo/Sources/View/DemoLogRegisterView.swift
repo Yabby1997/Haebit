@@ -71,7 +71,7 @@ struct DemoLogRegisterView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: viewModel.register) {
-                        Text("Done")
+                        Text("Add")
                     }
                     .disabled(!viewModel.isRegisterable)
                 }
@@ -79,8 +79,7 @@ struct DemoLogRegisterView: View {
                     Button {
                         isPresented = false
                     } label: {
-                        Text("Cancel")
-                            .foregroundStyle(.red)
+                        Image(systemName: "xmark")
                     }
                 }
             }
@@ -97,8 +96,9 @@ struct DemoLogRegisterView: View {
                     self.image = image
                 }
             }
-            .onChange(of: viewModel.isCompleted) { _ in
-                isPresented = false
+            .onChange(of: viewModel.imageData) { newValue in
+                guard newValue == nil else { return }
+                image = nil
             }
         }
     }
