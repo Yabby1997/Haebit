@@ -12,6 +12,11 @@ import UIKit
 protocol HaebitNavigationAnimatorSnapshotProvidable: UIViewController {
     func viewForTransition() -> UIView?
     func regionForTransition() -> CGRect?
+    func blurIntensityForSnapshot() -> CGFloat
+}
+
+extension HaebitNavigationAnimatorSnapshotProvidable {
+    fileprivate var useBlur: Bool { blurIntensityForSnapshot() != .zero }
 }
 
 @MainActor
@@ -21,6 +26,7 @@ class HaebitNavigationAnimator: NSObject {
     
     private let pushPopDuration: TimeInterval = 0.5
     private let pushPopSpringDamping: CGFloat = 0.8
+    private let blurDuration: TimeInterval = 0.2
     
     private let interactionSuccessDuration: TimeInterval = 0.25
     private let interactionCancelDuration: TimeInterval = 0.5
@@ -130,7 +136,10 @@ class HaebitNavigationAnimator: NSObject {
               let base = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let baseTargetView = base.viewForTransition(),
               let baseTargetFrame = base.regionForTransition(),
-              let snapshot = baseTargetView.snapshotView(afterScreenUpdates: false) else { return }
+              let snapshot = baseTargetView.bluredSnapshot(intensity: base.blurIntensityForSnapshot()) else {
+            transitionContext.completeTransition(false)
+            return
+        }
         
         navigationController = pushed.navigationController
         pushed.view.addGestureRecognizer(dismissGestureRecognizer)
@@ -157,8 +166,16 @@ class HaebitNavigationAnimator: NSObject {
         } completion: { _ in
             baseTargetView.isHidden = false
             pushedTargetView.isHidden = false
-            snapshot.removeFromSuperview()
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            UIView.animate(
+                withDuration: base.useBlur ? self.blurDuration : .zero,
+                delay: .zero,
+                options: .curveEaseInOut
+            ) {
+                snapshot.alpha = .zero
+            } completion: { _ in
+                snapshot.removeFromSuperview()
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
         }
     }
     
@@ -169,7 +186,10 @@ class HaebitNavigationAnimator: NSObject {
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
               let pushedTargetFrame = pushed.regionForTransition(),
-              let snapshot = pushedTargetView.snapshotView(afterScreenUpdates: false) else { return }
+              let snapshot = pushedTargetView.bluredSnapshot(intensity: pushed.blurIntensityForSnapshot()) else {
+            transitionContext.completeTransition(false)
+            return
+        }
         
         pushedTargetView.isHidden = true
         baseTargetView.isHidden = true
@@ -191,8 +211,16 @@ class HaebitNavigationAnimator: NSObject {
         } completion: { completed in
             pushedTargetView.isHidden = false
             baseTargetView.isHidden = false
-            snapshot.removeFromSuperview()
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            UIView.animate(
+                withDuration: pushed.useBlur ? self.blurDuration: .zero,
+                delay: .zero,
+                options: .curveEaseInOut
+            ) {
+                snapshot.alpha = .zero
+            } completion: { _ in
+                snapshot.removeFromSuperview()
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
         }
     }
 }
@@ -257,5 +285,32 @@ extension HaebitNavigationAnimator: UIViewControllerInteractiveTransitioning {
         
         transitionContext.containerView.insertSubview(base.view, belowSubview: pushed.view)
         transitionContext.containerView.addSubview(snapshot)
+    }
+}
+
+extension UIView {
+    fileprivate func bluredSnapshot(intensity: CGFloat) -> UIView? {
+        let snapshot = snapshotView(afterScreenUpdates: false)
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffectView = CustomIntensityVisualEffectView(effect: blurEffect, intensity: intensity)
+        snapshot?.addSubview(blurEffectView)
+        blurEffectView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        snapshot?.layoutIfNeeded()
+        return snapshot?.snapshotView(afterScreenUpdates: true)
+    }
+}
+
+fileprivate class CustomIntensityVisualEffectView: UIVisualEffectView {
+    private var animator: UIViewPropertyAnimator!
+    
+    init(effect: UIVisualEffect, intensity: CGFloat) {
+        super.init(effect: nil)
+        animator = UIViewPropertyAnimator(duration: 1, curve: .linear) { self.effect = effect }
+        animator.fractionComplete = intensity
+        animator.pausesOnCompletion = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
 }

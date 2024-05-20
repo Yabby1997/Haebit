@@ -179,4 +179,8 @@ extension HaebitFilmCarouselViewController: HaebitNavigationAnimatorSnapshotProv
         photoViewController.view.layoutIfNeeded()
         return photoViewController.photoView.frame
     }
+    
+    func blurIntensityForSnapshot() -> CGFloat {
+        .zero
+    }
 }

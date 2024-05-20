@@ -295,4 +295,8 @@ extension HaebitFilmListViewController: HaebitNavigationAnimatorSnapshotProvidab
         guard let cell = photoListCollectionView.cellForItem(at: indexPath) as? HaebitFilmListCell else { return nil }
         return photoListCollectionView.convert(cell.convert(cell.photoView.frame, to: photoListCollectionView), to: view)
     }
+    
+    func blurIntensityForSnapshot() -> CGFloat {
+        .zero
+    }
 }

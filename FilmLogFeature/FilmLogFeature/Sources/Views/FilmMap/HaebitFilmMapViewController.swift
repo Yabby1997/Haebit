@@ -192,6 +192,10 @@ extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidabl
             to: view
         )
     }
+    
+    func blurIntensityForSnapshot() -> CGFloat {
+        0.02
+    }
 }
 
 extension CLLocationCoordinate2D {
