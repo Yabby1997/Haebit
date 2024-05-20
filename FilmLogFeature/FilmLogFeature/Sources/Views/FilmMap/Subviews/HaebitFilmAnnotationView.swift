@@ -46,6 +46,7 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        viewModel.onDisappear()
         cancellables = []
         imageView.image = nil
         countBadge.count = .zero
@@ -53,6 +54,7 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
+        viewModel.onAppear()
         bind()
     }
     
