@@ -55,32 +55,12 @@ final class HaebitFilmCarouselViewController: UIViewController {
         return button
     }()
     
-    private lazy var deleteButton: UIButton = {
-        let button = UIButton()
-        button.snp.makeConstraints { $0.size.equalTo(50) }
-        button.layer.cornerRadius = 25
-        button.setImage(UIImage(systemName: "trash"), for: .normal)
-        button.tintColor = .red
-        button.backgroundColor = .white
-        return button
-    }()
-    
-    private lazy var buttonStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [deleteButton])
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.alpha = .zero
-        return stackView
-    }()
-    
     // MARK: - Properties
     
     private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
     private var viewModel: (any HaebitFilmCarouselViewModelProtocol)
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
-    
-    @Published private var isButtonStackHidden = true
     
     // MARK: - Initializers
     
@@ -105,16 +85,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         navigationItem.titleView = titleStack
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        isButtonStackHidden = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        isButtonStackHidden = true
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         navigationItem.titleView = nil
@@ -123,12 +93,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
     // MARK: - Helpers
     
     private func bind() {
-        $isButtonStackHidden
-            .sink { [weak self] isHidden in
-                self?.updateButtonStack(isHidden: isHidden)
-            }
-            .store(in: &cancellables)
-        
         viewModel.subTitlePublisher
             .sink { [weak self] title in
                 guard let self else { return }
@@ -157,7 +121,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: infoButton)
         
         view.backgroundColor = .black
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapView)))
         
         addChild(photoCarouselContainerViewController)
         view.addSubview(photoCarouselContainerViewController.view)
@@ -168,22 +131,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         let film = viewModel.films[index]
         let viewController = HaebitFilmViewController(film: film, index: index)
         photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
-        
-        view.addSubview(buttonStack)
-        buttonStack.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(12)
-            make.bottom.equalToSuperview().inset(40)
-        }
-    }
-    
-    private func updateButtonStack(isHidden: Bool) {
-        UIView.transition(with: view, duration: 0.3) {
-            self.buttonStack.alpha = isHidden ? .zero : 1.0
-        }
-    }
-    
-    @objc private func didTapView(_ sender: UITapGestureRecognizer) {
-        isButtonStackHidden.toggle()
     }
     
     @objc private func didTapInfoButton(_ sender: UIButton) {
