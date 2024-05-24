@@ -134,9 +134,10 @@ final class HaebitFilmCarouselViewController: UIViewController {
     }
     
     @objc private func didTapInfoButton(_ sender: UIButton) {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .red
-        present(vc, animated: true)
+        guard let film = viewModel.films[safe: viewModel.currentIndex] else { return }
+        let viewModel = HaebitFilmInfoViewModel(film: film)
+        let viewControllerc = HaebitFilmInfoViewController(viewModel: viewModel)
+        present(viewControllerc, animated: true)
     }
 }
 
