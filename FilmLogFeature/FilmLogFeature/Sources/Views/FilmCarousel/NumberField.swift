@@ -25,6 +25,7 @@ struct NumberField: UIViewRepresentable {
     @Binding var numberString: String
     @Binding var isEditing: Bool
     let format: Format
+    let maxDigitCount: Int?
     let prefix: String
     let suffix: String
     let placeholder: String
@@ -35,6 +36,7 @@ struct NumberField: UIViewRepresentable {
         numberString: Binding<String>,
         isEditing: Binding<Bool>,
         format: Format,
+        maxDigitCount: Int? = nil,
         prefix: String = "",
         suffix: String = "",
         placeholder: String = "",
@@ -44,6 +46,7 @@ struct NumberField: UIViewRepresentable {
         _numberString = numberString
         _isEditing = isEditing
         self.format = format
+        self.maxDigitCount = maxDigitCount
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
@@ -52,11 +55,20 @@ struct NumberField: UIViewRepresentable {
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-        uiView.intrinsicContentSize
+        let intrinsicSize = uiView.intrinsicContentSize
+        let proposedSize = CGSize(
+            width: proposal.width ?? .greatestFiniteMagnitude,
+            height: proposal.height ?? .greatestFiniteMagnitude
+        )
+        return CGSize(
+            width: min(intrinsicSize.width, proposedSize.width),
+            height: min(intrinsicSize.height, proposedSize.height)
+        )
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
         let textField = context.coordinator.textField
+        context.coordinator.maxDigitCount = maxDigitCount
         context.coordinator.prefix = prefix
         context.coordinator.suffix = suffix
         textField.keyboardAppearance = appearance
@@ -76,7 +88,12 @@ struct NumberField: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(numberString: $numberString, format: format, prefix: prefix, suffix: suffix)
+        Coordinator(
+            numberString: $numberString,
+            maxDigitCount: maxDigitCount,
+            prefix: prefix,
+            suffix: suffix
+        )
     }
 }
 
@@ -91,19 +108,14 @@ fileprivate class InternalTextField: UITextField {
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        switch action {
-        case #selector(UIResponderStandardEditActions.copy), #selector(UIResponderStandardEditActions.cut):
-            return super.canPerformAction(action, withSender: sender)
-        default:
-            return false
-        }
+        return false
     }
 }
 
 @MainActor
 class Coordinator: NSObject {
     @Binding var numberString: String
-    let format: NumberField.Format
+    var maxDigitCount: Int?
     var prefix: String
     var suffix: String
     
@@ -111,37 +123,36 @@ class Coordinator: NSObject {
         let textField = InternalTextField()
         textField.delegate = self
         textField.addTarget(self, action: #selector(didChangeText), for: .editingChanged)
+        textField.autocorrectionType = .no
+        textField.spellCheckingType = .no
         return textField
     }()
     
-    init(numberString: Binding<String>, format: NumberField.Format, prefix: String, suffix: String) {
+    init(
+        numberString: Binding<String>,
+        maxDigitCount: Int?,
+        prefix: String,
+        suffix: String
+    ) {
         _numberString = numberString
-        self.format = format
+        self.maxDigitCount = maxDigitCount
         self.prefix = prefix
         self.suffix = suffix
     }
     
     @objc func didChangeText(_ sender: UITextField) {
-        guard var newValue = textField.text else { return }
-        if newValue.hasPrefix(prefix) {
-            newValue = String(newValue.dropFirst(prefix.count))
-            if newValue.hasSuffix(suffix) {
-                newValue = String(newValue.dropLast(suffix.count))
-            }
-        }
-        numberString = newValue
+        numberString = textToNumberString()
     }
     
-    func updateCursor() {
-        guard let text = textField.text,
-              let startPosition = textField.selectedTextRange?.start,
-              let endPosition = textField.selectedTextRange?.end else { return }
-        let lastEditableOffset = text.count - suffix.count
-        let newStartOffsetFromBeginning = max(prefix.count, min(textField.offset(from: textField.beginningOfDocument, to: startPosition), lastEditableOffset))
-        let newEndOffsetFromBeginning = max(prefix.count, min(textField.offset(from: textField.beginningOfDocument, to: endPosition), lastEditableOffset))
-        guard let newStartPosition = textField.position(from: textField.beginningOfDocument, offset: newStartOffsetFromBeginning),
-              let newEndPosition = textField.position(from: textField.beginningOfDocument, offset: newEndOffsetFromBeginning) else { return }
-        textField.selectedTextRange = textField.textRange(from: newStartPosition, to: newEndPosition)
+    private func textToNumberString() -> String {
+        guard var text = textField.text else { return "" }
+        if text.hasPrefix(prefix) {
+            text = String(text.dropFirst(prefix.count))
+            if text.hasSuffix(suffix) {
+                text = String(text.dropLast(suffix.count))
+            }
+        }
+        return text
     }
 }
 
@@ -151,34 +162,48 @@ extension Coordinator: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        defer { updateCursor() }
-        
-        // Prevent prefix from being removed.
-        if range.location + range.length == prefix.count, string == "" {
-            return false
+        if string.isEmpty {
+            return true
         }
         
-        // Case where initial input is 0 or decimal point
-        if numberString.isEmpty, (string == "0" || string == ".") {
-            switch format {
-            case .integer:
+        if string == "." {
+            if textField.text == "" {
+                textField.text = "\(prefix)0.\(suffix)"
+                textField.sendActions(for: .editingChanged)
                 return false
-            case .decimal:
-                numberString = "0."
+            } else if textField.text == "\(prefix)0\(suffix)" {
+                return true
+            } else if textToNumberString().contains(".") {
+                return false
+            } else if let maxDigitCount {
+                return textToNumberString().count < maxDigitCount
+            }
+        }
+        
+        if string == "0" {
+            if textField.text == "\(prefix)0\(suffix)" {
+                return false
+            }
+        }
+        
+        if CharacterSet(charactersIn: string).isSubset(of: .decimalDigits) {
+            if textField.text == "\(prefix)0\(suffix)" {
+                textField.text = "\(prefix)\(string)\(suffix)"
+                textField.sendActions(for: .editingChanged)
+                return false
+            } else if let maxDigitCount {
+                return textToNumberString().replacingOccurrences(of: ".", with: "").count < maxDigitCount
+            } else { 
                 return true
             }
         }
         
-        // Case where already have decimal point
-        if numberString.contains("."), string == "." {
-            return false
-        }
-        
-        // Otherwise, unless it's number, it's alright
-        return CharacterSet(charactersIn: string).isSubset(of: CharacterSet(charactersIn: "0123456789"))
+        return false
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        updateCursor()
+        guard let text = textField.text,
+              let lastPosition = textField.position(from: textField.beginningOfDocument, offset: text.count - suffix.count) else { return }
+        textField.selectedTextRange = textField.textRange(from: lastPosition, to: lastPosition)
     }
 }
