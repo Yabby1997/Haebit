@@ -17,13 +17,15 @@ struct BottomSheet<SheetContent: View>: ViewModifier {
         content
             .sheet(isPresented: $isPresented) {
                 sheetContent()
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                    .highPriorityGesture(DragGesture())
+                    .presentationDetents([.height(detentHeight)])
                     .readHeight()
                     .onPreferenceChange(HeightPreferenceKey.self) { height in
                         guard let height else { return }
                         detentHeight = height
                     }
-                    .highPriorityGesture(DragGesture())
-                    .presentationDetents([.height(detentHeight)])
             }
     }
 }
