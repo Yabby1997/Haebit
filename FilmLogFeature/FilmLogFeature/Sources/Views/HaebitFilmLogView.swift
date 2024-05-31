@@ -45,5 +45,4 @@ struct HaebitFilmLogViewRepresentable: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-    func makeCoordinator() -> Coordinator {}
 }
