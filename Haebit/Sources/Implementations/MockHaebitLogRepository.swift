@@ -25,7 +25,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 100,
-            shutterSpeed: 30,
+            shutterSpeed: .init(numerator: 1, denominator: 30),
             aperture: 2,
             memo: "Spongebob"
         ),
@@ -36,7 +36,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 100,
-            shutterSpeed: 60,
+            shutterSpeed: .init(numerator: 1, denominator: 60),
             aperture: 1.4,
             memo: "Patrick"
         ),
@@ -47,7 +47,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 400,
-            shutterSpeed: 15,
+            shutterSpeed: .init(numerator: 1, denominator: 15),
             aperture: 11,
             memo: "Squidward"
         ),
@@ -58,7 +58,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 800,
-            shutterSpeed: 30,
+            shutterSpeed: .init(numerator: 1, denominator: 30),
             aperture: 16,
             memo: "Spongebob square pants"
         ),
@@ -69,7 +69,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 800,
-            shutterSpeed: 60,
+            shutterSpeed: .init(numerator: 1, denominator: 60),
             aperture: 2,
             memo: "Spongebob and Patrick"
         ),
@@ -80,7 +80,7 @@ actor MockHaebitLogRepository: HaebitLogRepository {
             image: "",
             focalLength: 50,
             iso: 800,
-            shutterSpeed: 8,
+            shutterSpeed: .init(numerator: 1, denominator: 8),
             aperture: 22,
             memo: "Squid"
         ),

@@ -48,12 +48,18 @@ struct DemoLogRegisterView: View {
                             TextField("Focal length", value: $viewModel.focalLength, format: .number)
                                 .keyboardType(.decimalPad)
                         }
+                        FloatField("Aperture", float: $viewModel.aperture)
                     }
                     Section("Exposure Settings") {
-                        FloatField("Aperture", float: $viewModel.aperture)
-                        FloatField("ShutterSpeed", float: $viewModel.shutterSpeed)
                         TextField("ISO", value: $viewModel.iso, format: .number)
                             .keyboardType(.decimalPad)
+                        HStack {
+                            TextField("1", value: $viewModel.shutterSpeedNumerator, format: .number)
+                            Text("/")
+                            TextField("60", value: $viewModel.shutterSpeedDenominator, format: .number)
+                            Text("s")
+                        }
+                        .keyboardType(.decimalPad)
                     }
                     Section("Memo") {
                         TextEditor(text: $viewModel.memo)

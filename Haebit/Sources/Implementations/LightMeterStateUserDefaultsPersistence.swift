@@ -14,15 +14,15 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
     @UserDefault(key: "LightMeterStateUserDefaultsPersistence.mode", defaultValue: .shutterSpeed)
     var mode: LightMeterMode
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.aperture", defaultValue: ApertureValue(value: 1.4))
+    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.aperture", defaultValue: ApertureValue(1.4)!)
     var aperture: ApertureValue
     
     @UserDefault(key: "LightMeterStateUserDefaultsPersistence.shutterSpeed", defaultValue: ShutterSpeedValue(denominator: 60)!)
     var shutterSpeed: ShutterSpeedValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.iso", defaultValue: IsoValue(iso: 200))
+    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.iso", defaultValue: IsoValue(200)!)
     var iso: IsoValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.focalLength", defaultValue: FocalLengthValue(value: 50))
+    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.focalLength", defaultValue: FocalLengthValue(50)!)
     var focalLength: FocalLengthValue
 }

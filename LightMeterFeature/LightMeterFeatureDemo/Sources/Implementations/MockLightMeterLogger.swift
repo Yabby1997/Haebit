@@ -7,10 +7,11 @@ actor MockLightMeterLogger: HaebitLightMeterLoggable {
         latitude: Double?,
         longitude: Double?,
         image: String,
-        focalLength: UInt16,
-        iso: UInt16,
-        shutterSpeed: Float,
+        focalLength: UInt32,
+        iso: UInt32,
+        shutterSpeedNumerator: UInt32,
+        shutterSpeedDenominator: UInt32,
         aperture: Float,
         memo: String
-    ) {}
+    ) async throws {}
 }

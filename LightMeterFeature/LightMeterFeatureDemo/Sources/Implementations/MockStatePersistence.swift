@@ -4,8 +4,8 @@ import LightMeterFeature
 
 class MockStatePersistence: LightMeterStatePersistenceProtocol {
     var mode: LightMeterMode = .shutterSpeed
-    var aperture: ApertureValue = .init(value: 11)
+    var aperture: ApertureValue = .init(11)!
     var shutterSpeed: ShutterSpeedValue = .init(denominator: 2000)!
-    var iso: IsoValue = .init(iso: 400)
-    var focalLength: FocalLengthValue = .init(value: 50)
+    var iso: IsoValue = .init(400)!
+    var focalLength: FocalLengthValue = .init(50)!
 }

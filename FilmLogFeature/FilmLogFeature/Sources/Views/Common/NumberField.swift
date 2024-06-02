@@ -56,13 +56,9 @@ struct NumberField: UIViewRepresentable {
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
         let intrinsicSize = uiView.intrinsicContentSize
-        let proposedSize = CGSize(
-            width: proposal.width ?? .greatestFiniteMagnitude,
-            height: proposal.height ?? .greatestFiniteMagnitude
-        )
         return CGSize(
-            width: min(intrinsicSize.width, proposedSize.width),
-            height: min(intrinsicSize.height, proposedSize.height)
+            width: min(intrinsicSize.width, proposal.width ?? .greatestFiniteMagnitude),
+            height: intrinsicSize.height
         )
     }
     
@@ -90,6 +86,7 @@ struct NumberField: UIViewRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(
             numberString: $numberString,
+            isEditing: $isEditing,
             maxDigitCount: maxDigitCount,
             prefix: prefix,
             suffix: suffix
@@ -115,6 +112,7 @@ fileprivate class InternalTextField: UITextField {
 @MainActor
 class Coordinator: NSObject {
     @Binding var numberString: String
+    @Binding var isEditing:    Bool
     var maxDigitCount: Int?
     var prefix: String
     var suffix: String
@@ -130,11 +128,13 @@ class Coordinator: NSObject {
     
     init(
         numberString: Binding<String>,
+        isEditing: Binding<Bool>,
         maxDigitCount: Int?,
         prefix: String,
         suffix: String
     ) {
         _numberString = numberString
+        _isEditing = isEditing
         self.maxDigitCount = maxDigitCount
         self.prefix = prefix
         self.suffix = suffix
@@ -205,5 +205,10 @@ extension Coordinator: UITextFieldDelegate {
         guard let text = textField.text,
               let lastPosition = textField.position(from: textField.beginningOfDocument, offset: text.count - suffix.count) else { return }
         textField.selectedTextRange = textField.textRange(from: lastPosition, to: lastPosition)
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        isEditing = false
+        return true
     }
 }

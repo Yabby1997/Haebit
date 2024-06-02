@@ -17,15 +17,16 @@ class DemoLogRegisterViewModel: ObservableObject {
     @Published var date: Date = .now
     @Published var latitude: Float?
     @Published var longitude: Float?
-    @Published var focalLength: UInt16?
-    @Published var iso: UInt16?
-    @Published var shutterSpeed: Float?
+    @Published var focalLength: UInt32?
+    @Published var iso: UInt32?
+    @Published var shutterSpeedNumerator: UInt32 = 1
+    @Published var shutterSpeedDenominator: UInt32 = 60
     @Published var aperture: Float?
     @Published var memo: String = ""
     @Published var isLoading = false
     
     var isRegisterable: Bool {
-        imageData != nil && focalLength != nil && iso != nil && shutterSpeed != nil && aperture != nil
+        imageData != nil && focalLength != nil && iso != nil && aperture != nil
     }
     
     init(logger: HaebitLogger) {
@@ -34,10 +35,11 @@ class DemoLogRegisterViewModel: ObservableObject {
     }
     
     func register() {
-        guard let imageData, let focalLength, let iso, let shutterSpeed, let aperture else { return }
+        guard let imageData, let focalLength, let iso, let aperture else { return }
         isLoading = true
         let outputFileURL = imageDirectory.appending(path: UUID().uuidString + ".jpeg")
         
+        let shutterSpeed = HaebitShutterSpeed(numerator: shutterSpeedNumerator, denominator: shutterSpeedDenominator)
         var coordinate: HaebitCoordinate?
         if let latitude, let longitude {
             coordinate = HaebitCoordinate(latitude: Double(latitude), longitude: Double(longitude))
@@ -74,7 +76,8 @@ class DemoLogRegisterViewModel: ObservableObject {
         longitude = nil
         focalLength = nil
         iso = nil
-        shutterSpeed = nil
+        shutterSpeedNumerator = 1
+        shutterSpeedDenominator = 60
         aperture = nil
         memo = ""
     }

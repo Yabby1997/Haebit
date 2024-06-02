@@ -18,10 +18,10 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
    // MARK: - Constants
     
     private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
-    private let availableShutterSpeedDenominators: [Float] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
-    private let availableShutterSpeedSeconds: [Int] = [1, 2, 4, 8, 16, 30, 60]
-    private let availableIsoValues: [Int] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
-    private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 200]
+    private let availableShutterSpeedDenominators: [UInt32] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
+    private let availableShutterSpeedNumerators: [UInt32] = [1, 2, 4, 8, 16, 30, 60]
+    private let availableIsoValues: [UInt32] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+    private let availableFocalLengths: [UInt32] = [28, 35, 40, 50, 70, 85, 100, 135, 200]
     
     nonisolated let previewLayer: CALayer
     var resultDescription: String {
@@ -40,10 +40,10 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     @Published var shutterSpeedValues: [ShutterSpeedValue] = []
     @Published var isoValues: [IsoValue] = []
     @Published var focalLengthValues: [FocalLengthValue] = []
-    @Published var aperture = ApertureValue(value: 1.4)
+    @Published var aperture = ApertureValue(1.4)!
     @Published var shutterSpeed = ShutterSpeedValue(denominator: 60)!
-    @Published var iso = IsoValue(iso: 400)
-    @Published var focalLength = FocalLengthValue(value: 50)
+    @Published var iso = IsoValue(400)!
+    @Published var focalLength = FocalLengthValue(50)!
     @Published var lockPointX: Float?
     @Published var lockPointY: Float?
     @Published var lockPoint: CGPoint? = nil
@@ -60,11 +60,10 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
     
     init() {
         previewLayer = CALayer()
-        apertureValues = availableApertureValues.map { ApertureValue(value: $0) }
-        shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) }
-            + availableShutterSpeedSeconds.compactMap { ShutterSpeedValue(seconds: $0) }
-        isoValues = availableIsoValues.map { IsoValue(iso: $0) }
-        focalLengthValues = availableFocalLengths.map { FocalLengthValue(value: $0) }
+        apertureValues = availableApertureValues.compactMap { ApertureValue($0) }
+        shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) } + availableShutterSpeedNumerators.compactMap { ShutterSpeedValue(numerator: $0) }
+        isoValues = availableIsoValues.compactMap { IsoValue($0) }
+        focalLengthValues = availableFocalLengths.compactMap { FocalLengthValue($0) }
         bind()
     }
     

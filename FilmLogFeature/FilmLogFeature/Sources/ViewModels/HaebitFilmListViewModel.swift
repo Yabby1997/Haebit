@@ -99,7 +99,10 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
 
 extension HaebitLog {
     var film: Film? {
-        guard let shutterSpeed = ShutterSpeedValue(denominator: shutterSpeed) else {
+        guard let focalLength = FocalLengthValue(focalLength),
+              let iso = IsoValue(iso),
+              let shutterSpeed = ShutterSpeedValue(numerator: shutterSpeed.numerator, denominator: shutterSpeed.denominator),
+              let aperture = ApertureValue(aperture) else {
             return nil
         }
         return .init(
@@ -107,17 +110,17 @@ extension HaebitLog {
             date: date,
             coordinate: coordinate?.coordinate,
             image: URL.homeDirectory.appending(path: image),
-            focalLength: FocalLengthValue(value: Int(focalLength)),
-            iso: IsoValue(iso: Int(iso)),
+            focalLength: focalLength,
+            iso: iso,
             shutterSpeed: shutterSpeed,
-            aperture: ApertureValue(value: aperture),
+            aperture: aperture,
             memo: memo
         )
     }
 }
 
 extension HaebitCoordinate {
-    var coordinate: Coordinate {
+    var coordinate: Coordinate? {
         .init(latitude: latitude, longitude: longitude)
     }
 }

@@ -30,9 +30,10 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     // MARK: - Constants
     
     nonisolated private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
-    nonisolated private let availableShutterSpeedDenominators: [Float] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2, 1, 0.5, 0.25, 0.125, 0.0625, 0.03333333, 0.01666666]
-    nonisolated private let availableIsoValues: [Int] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
-    nonisolated private let availableFocalLengths: [Int] = [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
+    nonisolated private let availableShutterSpeedDenominators: [UInt32] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
+    nonisolated private let availableShutterSpeedNumerators: [UInt32] = [1, 2, 4, 8, 16, 30, 60]
+    nonisolated private let availableIsoValues: [UInt32] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+    nonisolated private let availableFocalLengths: [UInt32] = [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
     
     // MARK: - Properties
     
@@ -89,9 +90,9 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
-        apertureValues = availableApertureValues.map { ApertureValue(value: $0) }
-        shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) }
-        isoValues = availableIsoValues.map { IsoValue(iso: $0) }
+        apertureValues = availableApertureValues.compactMap { ApertureValue($0) }
+        shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) } + availableShutterSpeedNumerators.compactMap { ShutterSpeedValue(numerator: $0) }
+        isoValues = availableIsoValues.compactMap { IsoValue($0) }
         focalLengthValues = filterFocalLengths(with: 10)
     }
     
@@ -246,7 +247,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     }
     
     private func filterFocalLengths(with maxZoomFactor: CGFloat) -> [FocalLengthValue] {
-        availableFocalLengths.map { FocalLengthValue(value: $0) }.filter { $0.zoomFactor <= maxZoomFactor }
+        availableFocalLengths.compactMap { FocalLengthValue($0) }.filter { $0.zoomFactor <= maxZoomFactor }
     }
     
     // MARK: - Internal Methods
@@ -320,9 +321,10 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                     latitude: location?.latitude,
                     longitude: location?.longitude,
                     image: captured.imagePath,
-                    focalLength: UInt16(focalLength.value),
-                    iso: UInt16(iso.iso),
-                    shutterSpeed: shutterSpeed.denominator,
+                    focalLength: focalLength.value,
+                    iso: iso.iso,
+                    shutterSpeedNumerator: shutterSpeed.numerator,
+                    shutterSpeedDenominator: shutterSpeed.denominator,
                     aperture: aperture.value,
                     memo: ""
                 )
@@ -356,7 +358,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
 }
 
 extension PortolanCoordinate {
-    var coordinate: Coordinate {
+    var coordinate: Coordinate? {
         .init(latitude: latitude, longitude: longitude)
     }
 }

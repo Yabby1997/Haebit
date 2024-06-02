@@ -199,7 +199,7 @@ extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidabl
 }
 
 extension CLLocationCoordinate2D {
-    var coordinate: Coordinate {
+    var coordinate: Coordinate? {
         .init(latitude: self.latitude, longitude: self.longitude)
     }
 }
