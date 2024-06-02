@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "/" : {
+
+    },
     "Add" : {
 
     },
@@ -127,6 +130,9 @@
 
     },
     "Register New Logs" : {
+
+    },
+    "s" : {
 
     },
     "Select image" : {

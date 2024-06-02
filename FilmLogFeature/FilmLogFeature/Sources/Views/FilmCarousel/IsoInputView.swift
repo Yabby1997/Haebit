@@ -10,40 +10,37 @@ import SwiftUI
 import HaebitCommonModels
 
 struct IsoInputView: View {
-    let text: String
-    @State var internalValue: String = ""
+    private let placeholder: String
+    @State var numberString: String = ""
+    @State var isEditing: Bool = false
     @Binding var value: IsoValue
-    @FocusState var isFocused: Bool
     
     init(value: Binding<IsoValue>) {
-        text = value.wrappedValue.title
+        placeholder = value.wrappedValue.title
         self._value = value
     }
     
     var body: some View {
-        TextField(text, text: $internalValue)
-            .font(.system(size: 40, weight: .bold, design: .serif))
-            .multilineTextAlignment(.center)
-            .autocorrectionDisabled()
-            .keyboardType(.decimalPad)
-            .focused($isFocused)
-            .preferredColorScheme(.dark)
-            .padding()
-            .onAppear { isFocused = true }
-            .onDisappear {
-                if let iso = Int(internalValue) {
-                    value = IsoValue(iso: iso)
-                }
-                internalValue = ""
-            }
-            .onChange(of: internalValue) { value in
-                internalValue = value.filter { $0.isNumber }
-            }
+        VStack(alignment: .center, spacing: 8) {
+            Text("감도").font(.system(size: 18, weight: .bold))
+            NumberField(
+                numberString: $numberString,
+                isEditing: $isEditing,
+                format: .integer,
+                maxDigitCount: 5,
+                placeholder: placeholder,
+                font: .systemFont(ofSize: 40, weight: .bold, design: .serif),
+                appearance: .dark
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .onAppear { isEditing = true }
+        .onDisappear {
+            guard let integerValue = UInt32(numberString),
+                  let isoValue = IsoValue(integerValue) else { return }
+            value = isoValue
+        }
+        .preferredColorScheme(.dark)
     }
-}
-
-
-#Preview {
-    @State var iso = IsoValue(iso: 400)
-    return IsoInputView(value: $iso)
 }

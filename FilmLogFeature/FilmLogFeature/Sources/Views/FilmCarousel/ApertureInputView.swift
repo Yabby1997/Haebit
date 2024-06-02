@@ -10,45 +10,38 @@ import SwiftUI
 import HaebitCommonModels
 
 struct ApertureInputView: View {
-    let text: String
-    @State var internalValue: String = ""
+    private let placeholder: String
+    @State var numberString: String = ""
+    @State var isEditing: Bool = false
     @Binding var value: ApertureValue
-    @FocusState var isFocused: Bool
     
     init(value: Binding<ApertureValue>) {
-        text = value.wrappedValue.title
+        placeholder = value.wrappedValue.title
         self._value = value
     }
     
     var body: some View {
-        TextField(text, text: $internalValue)
-            .font(.system(size: 40, weight: .bold, design: .monospaced))
-            .multilineTextAlignment(.center)
-            .autocorrectionDisabled()
-            .keyboardType(.decimalPad)
-            .focused($isFocused)
-            .preferredColorScheme(.dark)
-            .padding()
-            .onAppear { isFocused = true }
-            .onDisappear {
-                if let float = Float(internalValue.trimmingCharacters(in: ["ƒ"])) {
-                    value = ApertureValue(value: float)
-                }
-                internalValue = ""
-            }
-            .onChange(of: internalValue) { value in
-                guard value.isEmpty == false else { return }
-                internalValue = value.reduce(into: "ƒ") {
-                    if $1.isNumber || ($1 == "." && !$0.contains(".")) || ($1 == "-" && $0.isEmpty) {
-                        $0.append($1)
-                    }
-                }
-            }
+        VStack(alignment: .center, spacing: 8) {
+            Text("조리개").font(.system(size: 18, weight: .bold))
+            NumberField(
+                numberString: $numberString,
+                isEditing: $isEditing,
+                format: .decimal,
+                maxDigitCount: 3,
+                prefix: "ƒ",
+                placeholder: placeholder,
+                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced),
+                appearance: .dark
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .preferredColorScheme(.dark)
+        .onAppear { isEditing = true }
+        .onDisappear {
+            guard let decimalValue = Float(numberString),
+                  let apertureValue = ApertureValue(decimalValue) else { return }
+            value = apertureValue
+        }
     }
-}
-
-
-#Preview {
-    @State var aperture = ApertureValue(value: 1.4)
-    return ApertureInputView(value: $aperture)
 }

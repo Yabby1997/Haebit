@@ -10,42 +10,38 @@ import SwiftUI
 import HaebitCommonModels
 
 struct FocalLengthInputView: View {
-    let text: String
-    @State var internalValue: String = ""
+    private let placeholder: String
+    @State var numberString: String = ""
+    @State var isEditing: Bool = false
     @Binding var value: FocalLengthValue
-    @FocusState var isFocused: Bool
     
     init(value: Binding<FocalLengthValue>) {
-        text = value.wrappedValue.title
+        placeholder = value.wrappedValue.title
         self._value = value
     }
     
     var body: some View {
-        TextField(text, text: $internalValue)
-            .font(.system(size: 40, weight: .bold, design: .monospaced))
-            .multilineTextAlignment(.center)
-            .autocorrectionDisabled()
-            .keyboardType(.decimalPad)
-            .focused($isFocused)
-            .preferredColorScheme(.dark)
-            .padding()
-            .onAppear { isFocused = true }
-            .onDisappear {
-                if let length = Int(internalValue.trimmingCharacters(in: ["m"])) {
-                    value = FocalLengthValue(value: length)
-                }
-                internalValue = ""
-            }
-            .onChange(of: internalValue) { value in
-                guard value.isEmpty == false else { return }
-                let numbers = value.filter { $0.isNumber }
-                internalValue = "\(numbers)mm"
-            }
+        VStack(alignment: .center, spacing: 8) {
+            Text("초점거리").font(.system(size: 18, weight: .bold))
+            NumberField(
+                numberString: $numberString,
+                isEditing: $isEditing,
+                format: .integer,
+                maxDigitCount: 5,
+                suffix: "mm",
+                placeholder: placeholder,
+                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced),
+                appearance: .dark
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .onAppear { isEditing = true }
+        .onDisappear {
+            guard let integerValue = UInt32(numberString),
+                  let focalLength = FocalLengthValue(integerValue) else { return }
+            value = focalLength
+        }
+        .preferredColorScheme(.dark)
     }
-}
-
-
-#Preview {
-    @State var focalLength = FocalLengthValue(value: 200)
-    return FocalLengthInputView(value: $focalLength)
 }

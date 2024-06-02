@@ -128,11 +128,9 @@ final class HaebitFilmMapViewController: UIViewController {
         guard let currentLocation = viewModel.currentLocation else { return }
         mapView.setRegion(
             MKCoordinateRegion(
-                center: .init(
-                    latitude: currentLocation.latitude,
-                    longitude: currentLocation.longitude
-                ),
-                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                center: currentLocation.clLocationCoordinate2D,
+                latitudinalMeters: 100_000,
+                longitudinalMeters: 100_000
             ),
             animated: true
         )
