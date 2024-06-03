@@ -77,3 +77,14 @@ final class HaebitFilmMapViewModel {
         }
     }
 }
+
+extension HaebitFilmMapViewModel: HaebitFilmAnnotationViewDelegate {
+    func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToDeleteFilm film: Film) async throws {
+        // TODO: Remove actual image from filesystem.
+        try await logger.remove(log: film.id)
+    }
+    
+    func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToUpdateFilm film: Film) async throws {
+        try await logger.save(log: film.haebitLog)
+    }
+}

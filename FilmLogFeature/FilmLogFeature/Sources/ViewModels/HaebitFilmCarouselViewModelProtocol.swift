@@ -10,10 +10,11 @@ import Combine
 import Foundation
 
 @MainActor
-protocol HaebitFilmCarouselViewModelProtocol {
+protocol HaebitFilmCarouselViewModelProtocol: HaebitFilmInfoViewModelDelegate {
     var films: [Film] { get }
     var currentIndex: Int { get set }
     var mainTitlePublisher: AnyPublisher<String, Never> { get }
     var subTitlePublisher: AnyPublisher<String, Never> { get }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { get }
+    var reloadCurrentIndexSignalPublisher: AnyPublisher<Void, Never> { get }
 }

@@ -20,6 +20,8 @@ struct HaebitFilmInfoView: View {
     @State var isDatePickerPresented = false
     @FocusState var isMemoFocused: Bool
     
+    @State var isDeleteConfirmationDialogPresented = false
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
@@ -130,13 +132,31 @@ struct HaebitFilmInfoView: View {
             .scrollIndicators(.hidden)
             .navigationTitle("Info")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        isDeleteConfirmationDialogPresented = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
-                        Text("닫기")
+                        Image(systemName: "xmark")
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+            .confirmationDialog("", isPresented: $isDeleteConfirmationDialogPresented, titleVisibility: .hidden) {
+                Button("삭제하기", role: .destructive) {
+                    Task {
+                        try? await viewModel.delete()
+                        dismiss()
                     }
                 }
+                .preferredColorScheme(.dark)
             }
         }
     }

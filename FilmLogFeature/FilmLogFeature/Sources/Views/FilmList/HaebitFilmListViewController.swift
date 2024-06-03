@@ -175,6 +175,13 @@ final class HaebitFilmListViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.reloadCurrentIndexSignalPublisher
+            .sink { [weak self] _ in
+                guard let self else { return }
+                scrollToItemAt(index: viewModel.currentIndex)
+            }
+            .store(in: &cancellables)
     }
     
     private func configureDataSource() {
@@ -203,6 +210,13 @@ final class HaebitFilmListViewController: UIViewController {
         let center = view.convert(photoListCollectionView.center, to: photoListCollectionView)
         let indexPath = photoListCollectionView.indexPathForItem(at: center)
         viewModel.currentIndex = indexPath?.item ?? .zero
+    }
+    
+    private func scrollToItemAt(index: Int) {
+        guard (.zero..<viewModel.films.count).contains(index) else { return }
+        let indexPath = IndexPath(item: index, section: 0)
+        photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+        photoListCollectionView.layoutIfNeeded()
     }
 }
 
@@ -260,9 +274,7 @@ extension HaebitFilmListViewController: UICollectionViewDelegate {
 
 extension HaebitFilmListViewController: HaebitFilmCarouselViewControllerDelegate {
     func carouselDidScroll(_ containerViewController: HaebitFilmCarouselViewController, toIndex currentIndex: Int) {
-        let indexPath = IndexPath(item: currentIndex, section: 0)
-        photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
-        photoListCollectionView.layoutIfNeeded()
+        scrollToItemAt(index: currentIndex)
     }
 }
 

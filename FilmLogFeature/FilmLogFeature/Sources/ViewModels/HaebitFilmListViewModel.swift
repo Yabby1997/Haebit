@@ -17,6 +17,7 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
+    @Published private var reloadCurrentIndexSignal: Void?
     @Published private var mainTitle: String = ""
     @Published private var subTitle: String = ""
     @Published private var isTitleUpdating = false
@@ -27,6 +28,12 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var reloadCurrentIndexSignalPublisher: AnyPublisher<Void, Never> {
+        $reloadCurrentIndexSignal
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -45,14 +52,20 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
         $currentFilm
             .removeDuplicates()
             .sink { [weak self] film in
-                guard let self, let film else { return }
-                isTitleUpdating = true
-                if film.coordinate == nil {
-                    mainTitle = dateFormatter.formatDate(from: film.date)
-                    subTitle = dateFormatter.formatTime(from: film.date)
-                    isTitleUpdating = false
+                guard let self else { return }
+                if let film {
+                    isTitleUpdating = true
+                    if film.coordinate == nil {
+                        mainTitle = dateFormatter.formatDate(from: film.date)
+                        subTitle = dateFormatter.formatTime(from: film.date)
+                        isTitleUpdating = false
+                    } else {
+                        subTitle = dateFormatter.formatDate(from: film.date) + " " + dateFormatter.formatTime(from: film.date)
+                    }
                 } else {
-                    subTitle = dateFormatter.formatDate(from: film.date) + " " + dateFormatter.formatTime(from: film.date)
+                    isTitleUpdating = false
+                    mainTitle = ""
+                    subTitle = ""
                 }
             }
             .store(in: &cancellables)
@@ -67,17 +80,17 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
     }
     
     public func onAppear() {
-        reload()
+        Task {
+            await reload()
+        }
     }
     
-    private func reload() {
-        Task {
-            do {
-                let logs = try await logger.logs().sorted { $0.date > $1.date }.compactMap { $0.film }
-                films = logs.sorted { $0.date > $1.date }
-            } catch {
-                print(error.localizedDescription)
-            }
+    private func reload() async {
+        do {
+            let logs = try await logger.logs().sorted { $0.date > $1.date }.compactMap { $0.film }
+            films = logs.sorted { $0.date > $1.date }
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -94,6 +107,47 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
             mainTitle = representation
             isTitleUpdating = false
         }
+    }
+    
+    // TODO: Remove actual image from filesystem.
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws {
+        try await logger.remove(log: film.id)
+        await reload()
+        currentIndex = currentIndex < films.count ? currentIndex : .zero
+        reloadCurrentIndexSignal = ()
+        reloadCurrentIndexSignal = nil
+    }
+    
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws {
+        try await logger.save(log: film.haebitLog)
+        await reload()
+        reloadCurrentIndexSignal = ()
+        reloadCurrentIndexSignal = nil
+    }
+}
+
+extension Film {
+    var haebitLog: HaebitLog {
+        var haebitCoordinate: HaebitCoordinate?
+        if let coordinate {
+            haebitCoordinate = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        }
+        
+        // TODO: Check if path logic is valid.
+        return .init(
+            id: id,
+            date: date,
+            coordinate: haebitCoordinate,
+            image: image.path.replacingOccurrences(of: URL.homeDirectory.path + "/", with: ""),
+            focalLength: focalLength.value,
+            iso: iso.iso,
+            shutterSpeed: HaebitShutterSpeed(
+                numerator: shutterSpeed.numerator,
+                denominator: shutterSpeed.denominator
+            ),
+            aperture: aperture.value,
+            memo: memo
+        )
     }
 }
 

@@ -9,6 +9,11 @@
 import Foundation
 import HaebitCommonModels
 
+protocol HaebitFilmInfoViewModelDelegate: AnyObject {
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws
+}
+
 @MainActor
 final class HaebitFilmInfoViewModel: ObservableObject {
     private let film: Film
@@ -42,6 +47,10 @@ final class HaebitFilmInfoViewModel: ObservableObject {
             memo: memo
         )
         // TODO: Save updated film using logger
+    }
+    
+    func delete() async throws {
+        try await delegate?.haebitFilmInfoViewModel(self, requestToDeleteFilm: film)
     }
 }
 

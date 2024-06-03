@@ -13,9 +13,16 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
+protocol HaebitFilmAnnotationViewModelDelegate: AnyObject {
+    func haebitFilmAnnotationViewModel(_ viewModel: HaebitFilmAnnotationViewModel, requestToDeleteFilm film: Film) async throws
+    func haebitFilmAnnotationViewModel(_ viewModel: HaebitFilmAnnotationViewModel, requestToUpdateFilm film: Film) async throws
+}
+
+@MainActor
 final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     private let dateFormatter = HaebitDateFormatter()
     
+    @Published private var reloadCurrentIndexSignal: Void?
     @Published private var mainTitle: String = ""
     @Published private var subTitle: String = ""
     @Published private var currentLocation: Coordinate?
@@ -27,8 +34,16 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var reloadCurrentIndexSignalPublisher: AnyPublisher<Void, Never> {
+        $reloadCurrentIndexSignal
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
     
     private var cancellables: Set<AnyCancellable> = []
+    
+    weak var delegate: HaebitFilmAnnotationViewModelDelegate?
     
     func onAppear() {
         bind()
@@ -54,14 +69,20 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
         
         $currentFilm
             .sink { [weak self] film in
-                guard let self, let film else { return }
-                isTitleUpdating = true
-                if film.coordinate == nil {
-                    mainTitle = dateFormatter.formatDate(from: film.date)
-                    subTitle = dateFormatter.formatTime(from: film.date)
-                    isTitleUpdating = false
+                guard let self else { return }
+                if let film {
+                    isTitleUpdating = true
+                    if film.coordinate == nil {
+                        mainTitle = dateFormatter.formatDate(from: film.date)
+                        subTitle = dateFormatter.formatTime(from: film.date)
+                        isTitleUpdating = false
+                    } else {
+                        subTitle = dateFormatter.formatDate(from: film.date) + " " + dateFormatter.formatTime(from: film.date)
+                    }
                 } else {
-                    subTitle = dateFormatter.formatDate(from: film.date) + " " + dateFormatter.formatTime(from: film.date)
+                    isTitleUpdating = false
+                    mainTitle = ""
+                    subTitle = ""
                 }
             }
             .store(in: &cancellables)
@@ -87,5 +108,22 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
             mainTitle = representation
             isTitleUpdating = false
         }
+    }
+    
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws {
+        try await delegate?.haebitFilmAnnotationViewModel(self, requestToDeleteFilm: film)
+        films.removeAll { $0.id == film.id }
+        currentIndex = currentIndex < films.count ? currentIndex : .zero
+        reloadCurrentIndexSignal = ()
+        reloadCurrentIndexSignal = nil
+    }
+    
+    func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws {
+        try await delegate?.haebitFilmAnnotationViewModel(self, requestToUpdateFilm: film)
+        if let index = (films.firstIndex { $0.id == film.id }) {
+            films[index] = film
+        }
+        reloadCurrentIndexSignal = ()
+        reloadCurrentIndexSignal = nil
     }
 }

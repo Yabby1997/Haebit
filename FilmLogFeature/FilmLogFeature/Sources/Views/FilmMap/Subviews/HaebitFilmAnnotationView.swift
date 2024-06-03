@@ -10,6 +10,12 @@ import Combine
 import MapKit
 import SnapKit
 
+protocol HaebitFilmAnnotationViewDelegate: AnyObject {
+    func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToDeleteFilm film: Film) async throws
+    func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToUpdateFilm film: Film) async throws
+}
+
+@MainActor
 final class HaebitFilmAnnotationView: MKAnnotationView {
     var frameView: UIImageView = {
         let imageView = UIImageView()
@@ -35,8 +41,11 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     private var cancellables: Set<AnyCancellable> = []
     
+    weak var delegate: HaebitFilmAnnotationViewDelegate?
+    
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        viewModel.delegate = self
         setupViews()
     }
     
@@ -97,5 +106,15 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
             make.trailing.equalToSuperview().offset(countBadge.minimumSize / 2.0)
             make.centerY.equalTo(frameView.snp.top)
         }
+    }
+}
+
+extension HaebitFilmAnnotationView: HaebitFilmAnnotationViewModelDelegate {
+    func haebitFilmAnnotationViewModel(_ viewModel: HaebitFilmAnnotationViewModel, requestToDeleteFilm film: Film) async throws {
+        try await delegate?.haebitFilmAnnotationView(self, requestToDeleteFilm: film)
+    }
+    
+    func haebitFilmAnnotationViewModel(_ viewModel: HaebitFilmAnnotationViewModel, requestToUpdateFilm film: Film) async throws {
+        try await delegate?.haebitFilmAnnotationView(self, requestToUpdateFilm: film)
     }
 }

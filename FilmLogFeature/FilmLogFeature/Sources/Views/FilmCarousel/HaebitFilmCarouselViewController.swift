@@ -114,6 +114,12 @@ final class HaebitFilmCarouselViewController: UIViewController {
         viewModel.isTitleUpdatingPublisher
             .assign(to: \.isLoading, on: mainTitleLabel)
             .store(in: &cancellables)
+        
+        viewModel.reloadCurrentIndexSignalPublisher
+            .sink { [weak self] _ in
+                self?.reloadCurrentIndex()
+            }
+            .store(in: &cancellables)
     }
     
     private func setupViews() {
@@ -136,8 +142,19 @@ final class HaebitFilmCarouselViewController: UIViewController {
     @objc private func didTapInfoButton(_ sender: UIButton) {
         guard let film = viewModel.films[safe: viewModel.currentIndex] else { return }
         let viewModel = HaebitFilmInfoViewModel(film: film)
+        viewModel.delegate = self.viewModel
         let viewControllerc = HaebitFilmInfoViewController(viewModel: viewModel)
         present(viewControllerc, animated: true)
+    }
+    
+    private func reloadCurrentIndex() {
+        let index = viewModel.currentIndex
+        guard let film = viewModel.films[safe: index] else {
+            navigationController?.popViewController(animated: false)
+            return
+        }
+        let viewController = HaebitFilmViewController(film: film, index: index)
+        photoCarouselContainerViewController.setViewControllers([viewController], direction: .reverse, animated: true, completion: nil)
     }
 }
 
