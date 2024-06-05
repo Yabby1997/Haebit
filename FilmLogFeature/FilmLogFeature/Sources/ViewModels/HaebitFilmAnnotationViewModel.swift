@@ -51,12 +51,6 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     
     func onDisappear() {
         cancellables = []
-        mainTitle = ""
-        subTitle = ""
-        currentLocation = nil
-        isTitleUpdating = false
-        currentFilm = nil
-        currentIndex = .zero
     }
     
     private func bind() {
