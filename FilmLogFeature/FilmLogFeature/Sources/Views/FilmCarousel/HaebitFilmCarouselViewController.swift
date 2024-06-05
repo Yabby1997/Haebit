@@ -150,6 +150,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
     private func reloadCurrentIndex() {
         let index = viewModel.currentIndex
         guard let film = viewModel.films[safe: index] else {
+            tabBarController?.setTabBarHidden(false, animated: false)
             navigationController?.popViewController(animated: false)
             return
         }
