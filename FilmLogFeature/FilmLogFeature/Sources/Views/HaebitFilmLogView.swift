@@ -33,9 +33,20 @@ struct HaebitFilmLogViewRepresentable: UIViewControllerRepresentable {
         let mapNavigationController = HaebitFilmLogNavigationController(rootViewController: mapViewController)
         mapNavigationController.tabBarItem = UITabBarItem(title: nil, image: .init(systemName: "map.fill"), tag: 0)
         
+        let itemAppearance = UITabBarItemAppearance()
+        itemAppearance.normal.iconColor = UIColor(red: 83 / 255, green: 83 / 255, blue: 83 / 255, alpha: 1.0)
+        itemAppearance.selected.iconColor = .white
+        
+        let barAppearance = UITabBarAppearance()
+        barAppearance.configureWithOpaqueBackground()
+        barAppearance.backgroundColor = .black
+        barAppearance.inlineLayoutAppearance = itemAppearance
+        barAppearance.stackedLayoutAppearance = itemAppearance
+        barAppearance.compactInlineLayoutAppearance = itemAppearance
+        
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.backgroundColor = .black
-        tabBarController.tabBar.tintColor = .white
+        tabBarController.tabBar.standardAppearance = barAppearance
+        tabBarController.tabBar.scrollEdgeAppearance = barAppearance
         tabBarController.viewControllers = [
             listNavigationController,
             mapNavigationController
