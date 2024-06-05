@@ -76,6 +76,7 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewWillAppear(true)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleLabel
+        viewModel.onAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -88,7 +89,6 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         bind()
-        viewModel.onAppear()
     }
     
     private func setupViews() {
@@ -106,6 +106,7 @@ final class HaebitFilmMapViewController: UIViewController {
                 guard let self else { return nil }
                 return mapView.annotations.compactMap { $0 as? FilmAnnotation }.filter { !films.contains($0.film) }
             }
+            .filter { $0.count > .zero }
             .sink { [weak self] annotations in
                 self?.mapView.removeAnnotations(annotations)
             }
@@ -117,6 +118,7 @@ final class HaebitFilmMapViewController: UIViewController {
                 let existingFilms = mapView.annotations.compactMap { ($0 as? FilmAnnotation)?.film }
                 return films.filter { !existingFilms.contains($0) }.compactMap { FilmAnnotation(film: $0) }
             }
+            .filter { $0.count > .zero }
             .sink { [weak self] annotations in
                 self?.mapView.addAnnotations(annotations)
             }

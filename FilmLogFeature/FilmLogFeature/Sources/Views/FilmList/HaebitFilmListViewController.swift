@@ -111,6 +111,7 @@ final class HaebitFilmListViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleStackView
+        viewModel.onAppear()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -123,7 +124,6 @@ final class HaebitFilmListViewController: UIViewController {
         setupViews()
         bindUI()
         configureDataSource()
-        viewModel.onAppear()
     }
     
     // MARK: - Helpers
@@ -146,7 +146,6 @@ final class HaebitFilmListViewController: UIViewController {
     
     private func bindUI() {
         viewModel.filmsPublisher
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] logs in
                 self?.applySnapshot(films: logs)
             }
