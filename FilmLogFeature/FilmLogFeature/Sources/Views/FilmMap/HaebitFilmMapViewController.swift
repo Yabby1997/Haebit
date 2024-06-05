@@ -147,12 +147,14 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
            let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID, for: annotation) as? HaebitFilmAnnotationView {
             let films = [annotation.film].sorted { $0.date > $1.date }
             view.films = films
+            view.delegate = viewModel
             view.clusteringIdentifier = clusterID
             return view
         } else if let cluster = annotation as? MKClusterAnnotation,
                   let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? HaebitFilmAnnotationView {
             let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film }).sorted { $0.date > $1.date }
             view.films = films
+            view.delegate = viewModel
             view.clusteringIdentifier = nil
             return view
         }

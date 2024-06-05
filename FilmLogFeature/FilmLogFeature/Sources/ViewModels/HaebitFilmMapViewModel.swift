@@ -51,17 +51,17 @@ final class HaebitFilmMapViewModel {
     }
     
     public func onAppear() {
-        reload()
+        Task {
+            await reload()
+        }
     }
     
-    private func reload() {
-        Task {
-            do {
-                let logs = try await logger.logs().sorted { $0.date > $1.date }.compactMap { $0.film }
-                films = logs.sorted { $0.date > $1.date }
-            } catch {
-                print(error.localizedDescription)
-            }
+    private func reload() async {
+        do {
+            let logs = try await logger.logs().sorted { $0.date > $1.date }.compactMap { $0.film }
+            films = logs.sorted { $0.date > $1.date }
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -82,6 +82,7 @@ extension HaebitFilmMapViewModel: HaebitFilmAnnotationViewDelegate {
     func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToDeleteFilm film: Film) async throws {
         // TODO: Remove actual image from filesystem.
         try await logger.remove(log: film.id)
+        await reload()
     }
     
     func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToUpdateFilm film: Film) async throws {
