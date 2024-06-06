@@ -25,7 +25,7 @@ struct HaebitFilmInfoView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                MapView(coordinate: $viewModel.coordinate)
+                MapInfoView(viewModel: viewModel)
                     .padding(.horizontal, 12)
                 Divider().padding(.horizontal, 12)
                 VStack(alignment: .center, spacing: 8) {
@@ -132,13 +132,21 @@ struct HaebitFilmInfoView: View {
             .scrollIndicators(.hidden)
             .navigationTitle("Info")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItemGroup(placement: .topBarLeading) {
                     Button {
                         isDeleteConfirmationDialogPresented = true
                     } label: {
                         Image(systemName: "trash")
                             .foregroundStyle(.red)
                     }
+                    Button {
+                        viewModel.undo()
+                    } label: {
+                        Image(systemName: "arrow.uturn.backward")
+                    }
+                    .foregroundStyle(.white)
+                    .opacity(viewModel.isEdited ? 1.0 : .zero)
+                    .animation(.easeInOut, value: viewModel.isEdited)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
