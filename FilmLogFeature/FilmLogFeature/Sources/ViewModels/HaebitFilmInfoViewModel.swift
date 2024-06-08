@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import HaebitCommonModels
 import Portolan
+import MapKit
 
 protocol HaebitFilmInfoViewModelDelegate: AnyObject {
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws
@@ -20,7 +21,9 @@ protocol HaebitFilmInfoViewModelDelegate: AnyObject {
 final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol {
     private let film: Film
     @Published var coordinate: Coordinate?
-    @Published var locationInfo: String?
+    @Published var searchQuery: String = ""
+    @Published var searchResults: [MapSearchResult] = []
+    @Published var searchResultSelection: MapSearchResult?
     @Published var date: Date
     @Published var focalLength: FocalLengthValue
     @Published var iso: IsoValue
@@ -41,6 +44,7 @@ final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol 
     weak var delegate: (any HaebitFilmInfoViewModelDelegate)?
     
     private var cancellables: Set<AnyCancellable> = []
+    private var searchTask: Task<Void, Never>?
     
     init(film: Film) {
         self.film = film
@@ -55,20 +59,54 @@ final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol 
     }
     
     private func bind() {
-        $coordinate
-            .sink { [weak self] coordinate in
-                self?.updateLocationInfo(coordinate: coordinate)
+        $searchQuery
+            .removeDuplicates()
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .sink { [weak self] query in
+                self?.search(query)
             }
             .store(in: &cancellables)
+        
+        $searchResultSelection
+            .compactMap { $0?.coordinate }
+            .assign(to: &$coordinate)
     }
     
-    private func updateLocationInfo(coordinate: Coordinate?) {
-        guard let coordinate else {
-            locationInfo = nil
-            return
-        }
-        Task {
-            locationInfo = await PortolanGeocoder.shared.represent(for: coordinate.portolanCoordinate)
+    private func search(_ query: String) {
+        searchTask?.cancel()
+        searchTask = Task {
+            let searchRequest = MKLocalSearch.Request()
+            searchRequest.naturalLanguageQuery = query
+            let search = MKLocalSearch(request: searchRequest)
+            searchResults = await withCheckedContinuation { continuation in
+                search.start { response, error in
+                    if let error {
+                        print("Failed to search location with error: \(error.localizedDescription)")
+                        continuation.resume(returning: [])
+                        return
+                    }
+                    
+                    guard let response else {
+                        continuation.resume(returning: [])
+                        return
+                    }
+                    
+                    continuation.resume(
+                        returning: response.mapItems.compactMap { item in
+                            guard let name = item.name,
+                                  let address = item.placemark.title,
+                                  let coordinate = item.placemark.coordinate.coordinate else {
+                                return nil
+                            }
+                            return MapSearchResult(
+                                name: name,
+                                address: address,
+                                coordinate: coordinate
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
     

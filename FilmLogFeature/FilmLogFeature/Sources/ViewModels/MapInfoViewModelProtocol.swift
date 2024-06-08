@@ -12,5 +12,7 @@ import HaebitCommonModels
 @MainActor
 protocol MapInfoViewModelProtocol: ObservableObject {
     var coordinate: Coordinate? { get set }
-    var locationInfo: String? { get set }
+    var searchQuery: String { get set }
+    var searchResults: [MapSearchResult] { get set }
+    var searchResultSelection: MapSearchResult? { get set}
 }
