@@ -25,8 +25,4 @@ public struct Film: Hashable, Sendable {
             hasher.combine(id)
         }
     }
-    
-    public static func == (lhs: Film, rhs: Film) -> Bool {
-        lhs.id == rhs.id
-    }
 }

@@ -133,7 +133,6 @@ extension Film {
             haebitCoordinate = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
         }
         
-        // TODO: Check if path logic is valid.
         return .init(
             id: id,
             date: date,

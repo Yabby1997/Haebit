@@ -87,5 +87,6 @@ extension HaebitFilmMapViewModel: HaebitFilmAnnotationViewDelegate {
     
     func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToUpdateFilm film: Film) async throws {
         try await logger.save(log: film.haebitLog)
+        await reload()
     }
 }

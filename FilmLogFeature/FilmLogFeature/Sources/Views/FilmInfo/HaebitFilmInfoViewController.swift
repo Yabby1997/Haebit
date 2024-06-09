@@ -21,6 +21,7 @@ struct HaebitFilmInfoView: View {
     @FocusState var isMemoFocused: Bool
     
     @State var isDeleteConfirmationDialogPresented = false
+    @State var isUpdateConfirmationDialogPresented = false
     
     var body: some View {
         NavigationStack {
@@ -138,7 +139,7 @@ struct HaebitFilmInfoView: View {
                             .foregroundStyle(.red)
                     }
                     Button {
-                        viewModel.undo()
+                        viewModel.didTapUndo()
                     } label: {
                         Image(systemName: "arrow.uturn.backward")
                     }
@@ -148,17 +149,32 @@ struct HaebitFilmInfoView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        dismiss()
+                        if viewModel.isEdited {
+                            isUpdateConfirmationDialogPresented = true
+                        } else {
+                            dismiss()
+                        }
                     } label: {
                         Image(systemName: "xmark")
                     }
                     .foregroundStyle(.white)
                 }
             }
-            .confirmationDialog("", isPresented: $isDeleteConfirmationDialogPresented, titleVisibility: .hidden) {
+            .confirmationDialog("정말 삭제하시겠습니까?", isPresented: $isDeleteConfirmationDialogPresented,  titleVisibility: .visible) {
                 Button("삭제하기", role: .destructive) {
                     Task {
-                        try? await viewModel.delete()
+                        try? await viewModel.didTapDelete()
+                        dismiss()
+                    }
+                }
+            }
+            .confirmationDialog("변경사항이 있습니다.", isPresented: $isUpdateConfirmationDialogPresented, titleVisibility: .visible) {
+                Button("변경사항 폐기", role: .destructive) {
+                    dismiss()
+                }
+                Button("저장", role: .none) {
+                    Task {
+                        try? await viewModel.didTapSave()
                         dismiss()
                     }
                 }

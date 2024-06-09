@@ -12,6 +12,7 @@ import HaebitCommonModels
 import Portolan
 import MapKit
 
+@MainActor
 protocol HaebitFilmInfoViewModelDelegate: AnyObject {
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws
@@ -110,20 +111,7 @@ final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol 
         }
     }
     
-    func didTapSave() {
-        let updatedFilm = film.update(
-            date: date,
-            coordinate: coordinate,
-            focalLength: focalLength,
-            iso: iso,
-            shutterSpeed: shutterSpeed,
-            aperture: aperture,
-            memo: memo
-        )
-        // TODO: Save updated film using logger
-    }
-    
-    func undo() {
+    func didTapUndo() {
         date = film.date
         coordinate = film.coordinate
         focalLength = film.focalLength
@@ -133,8 +121,21 @@ final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol 
         memo = film.memo
     }
     
-    func delete() async throws {
+    func didTapDelete() async throws {
         try await delegate?.haebitFilmInfoViewModel(self, requestToDeleteFilm: film)
+    }
+    
+    func didTapSave() async throws{
+        let updatedFilm = film.update(
+            date: date,
+            coordinate: coordinate,
+            focalLength: focalLength,
+            iso: iso,
+            shutterSpeed: shutterSpeed,
+            aperture: aperture,
+            memo: memo
+        )
+        try await delegate?.haebitFilmInfoViewModel(self, requestToUpdateFilm: updatedFilm)
     }
 }
 

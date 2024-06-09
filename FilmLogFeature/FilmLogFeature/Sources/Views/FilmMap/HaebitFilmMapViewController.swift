@@ -219,3 +219,9 @@ extension CLLocationCoordinate2D {
         .init(latitude: self.latitude, longitude: self.longitude)
     }
 }
+
+extension Film {
+    fileprivate static func == (lhs: Film, rhs: Film) -> Bool {
+        lhs.id == rhs.id && lhs.coordinate == rhs.coordinate
+    }
+}
