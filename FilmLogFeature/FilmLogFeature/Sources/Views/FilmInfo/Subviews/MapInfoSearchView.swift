@@ -69,6 +69,5 @@ struct MapInfoSearchView<ViewModel: MapInfoViewModelProtocol>: View {
         .padding(.horizontal, 12)
         .padding(.bottom, 20)
         .scrollDismissesKeyboard(.never)
-        .preferredColorScheme(.dark)
     }
 }

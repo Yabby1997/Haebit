@@ -30,8 +30,7 @@ struct FocalLengthInputView: View {
                 maxDigitCount: 5,
                 suffix: "mm",
                 placeholder: placeholder,
-                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced),
-                appearance: .dark
+                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)
             )
         }
         .padding(.horizontal, 20)
@@ -42,6 +41,5 @@ struct FocalLengthInputView: View {
                   let focalLength = FocalLengthValue(integerValue) else { return }
             value = focalLength
         }
-        .preferredColorScheme(.dark)
     }
 }

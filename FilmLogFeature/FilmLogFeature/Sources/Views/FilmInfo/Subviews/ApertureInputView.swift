@@ -30,13 +30,11 @@ struct ApertureInputView: View {
                 maxDigitCount: 3,
                 prefix: "ƒ",
                 placeholder: placeholder,
-                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced),
-                appearance: .dark
+                font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)
             )
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
-        .preferredColorScheme(.dark)
         .onAppear { isEditing = true }
         .onDisappear {
             guard let decimalValue = Float(numberString),

@@ -112,7 +112,6 @@ struct HaebitFilmInfoView: View {
             .bottomSheet(isPresented: $isDatePickerPresented) {
                 DatePicker(selection: $viewModel.date) {}
                     .datePickerStyle(.graphical)
-                    .preferredColorScheme(.dark)
                     .padding(20)
             }
             .bottomSheet(isPresented: $isApertureInputViewPresented) {
@@ -127,7 +126,6 @@ struct HaebitFilmInfoView: View {
             .bottomSheet(isPresented: $isIsoInputViewPresented) {
                 IsoInputView(value: $viewModel.iso)
             }
-            .preferredColorScheme(.dark)
             .navigationBarTitleDisplayMode(.inline)
             .scrollIndicators(.hidden)
             .navigationTitle("Info")
@@ -164,7 +162,6 @@ struct HaebitFilmInfoView: View {
                         dismiss()
                     }
                 }
-                .preferredColorScheme(.dark)
             }
         }
     }
@@ -174,7 +171,6 @@ struct HaebitFilmInfoView: View {
 final class HaebitFilmInfoViewController: UIHostingController<HaebitFilmInfoView> {
     init(viewModel: HaebitFilmInfoViewModel) {
         super.init(rootView: HaebitFilmInfoView(viewModel: viewModel))
-        overrideUserInterfaceStyle = .dark
         modalPresentationStyle = .fullScreen
     }
     

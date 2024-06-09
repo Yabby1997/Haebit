@@ -7,6 +7,7 @@ let plist: InfoPlist = .extendingDefault(
             "UIColorName": "LaunchScreenBackgroundColor",
         ],
         "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+        "UIUserInterfaceStyle": "Dark",
         "NSLocationWhenInUseUsageDescription": true,
         "ITSAppUsesNonExemptEncryption": false,
     ]

@@ -92,6 +92,8 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func setupViews() {
+        overrideUserInterfaceStyle = .light
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         
         view.backgroundColor = .black

@@ -57,8 +57,7 @@ struct ShutterSpeedInputView: View {
                 prefix: selectedUnit.prefix,
                 suffix: "s",
                 placeholder: selectedUnit == (value.value < 1.0 ? .denominator : .seconds) ? value.description : selectedUnit.description,
-                font: .systemFont(ofSize: 40, weight: .bold, design: .serif),
-                appearance: .dark
+                font: .systemFont(ofSize: 40, weight: .bold, design: .serif)
             )
             HStack(spacing: 2) {
                 Image(systemName: "arrow.left.arrow.right")
@@ -87,6 +86,5 @@ struct ShutterSpeedInputView: View {
                 self.value = shutterSpeed
             }
         }
-        .preferredColorScheme(.dark)
     }
 }

@@ -29,8 +29,7 @@ struct IsoInputView: View {
                 format: .integer,
                 maxDigitCount: 5,
                 placeholder: placeholder,
-                font: .systemFont(ofSize: 40, weight: .bold, design: .serif),
-                appearance: .dark
+                font: .systemFont(ofSize: 40, weight: .bold, design: .serif)
             )
         }
         .padding(.horizontal, 20)
@@ -41,6 +40,5 @@ struct IsoInputView: View {
                   let isoValue = IsoValue(integerValue) else { return }
             value = isoValue
         }
-        .preferredColorScheme(.dark)
     }
 }
