@@ -19,35 +19,56 @@ struct MapInfoSearchView<ViewModel: MapInfoViewModelProtocol>: View {
                 VStack {
                     Spacer()
                     Text("검색 결과가 없습니다.")
+                        .font(.system(size: 18, weight: .bold))
                     Spacer()
                 }
             } else {
-                List(selection: $viewModel.searchResultSelection) {
-                    ForEach(viewModel.searchResults, id:\.self) { result in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(result.name)
-                                .font(.system(size: 14, weight: .bold))
-                            Text(result.address)
-                                .font(.system(size: 12))
-                        }
+                ScrollView {
+                    Color.clear
+                        .frame(height: 12)
+                        .listRowInsets(.init(top: .zero, leading: .zero, bottom: .zero, trailing: .zero))
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
+                    ForEach(viewModel.searchResults, id:\.self) { result in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(result.name)
+                                    .font(.system(size: 14, weight: .bold))
+                                Text(result.address)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                        }
+                        .padding(.vertical, 1)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            viewModel.searchResultSelection = result
+                            dismiss()
+                        }
                     }
+                    Color.clear
+                        .frame(height: 40)
+                        .listRowInsets(.init(top: .zero, leading: .zero, bottom: .zero, trailing: .zero))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                 }
-                .listStyle(.plain)
+                .scrollIndicators(.hidden)
+                .mask(alignment: .topLeading)  {
+                    LinearGradient(colors: [.black, .black.opacity(.zero)], startPoint: .init(x: .zero, y: 0.7), endPoint: .init(x: .zero, y: 1.0))
+                }
             }
             TextField("Search", text: $viewModel.searchQuery)
-                .padding(.horizontal, 12)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 18, weight: .bold, design: .serif))
+                .font(.system(size: 24, weight: .bold, design: .serif))
                 .autocorrectionDisabled()
                 .foregroundColor(.white)
                 .focused($isFocused)
+                .onAppear { isFocused = true }
         }
-        .padding(.vertical, 12)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 20)
+        .scrollDismissesKeyboard(.never)
         .preferredColorScheme(.dark)
-        .onAppear {
-            isFocused = true
-        }
     }
 }

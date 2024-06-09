@@ -13,41 +13,40 @@ struct MapInfoView<ViewModel>: View where ViewModel: MapInfoViewModelProtocol {
     @State var isPresenting = false
     
     var body: some View {
-        ZStack {
-            VStack(spacing: .zero) {
-                MapPicker(coordinate: $viewModel.coordinate)
-                    .frame(height: 175)
-                ZStack {
-                    Color(uiColor: UIColor(red: 29 / 255, green: 29 / 255, blue: 29 / 255, alpha: 1.0))
-                    HStack {
-                        Text("위치 제거")
-                            .foregroundStyle(.yellow)
-                            .onTapGesture { viewModel.coordinate = nil }
-                            .opacity(viewModel.coordinate == nil ? .zero : 1.0)
-                            .animation(.easeInOut, value: viewModel.coordinate)
-                        Spacer()
-                        HStack(spacing: 4) {
-                            Text("위치 검색")
-                                .foregroundStyle(.white)
-                            Image(systemName: "chevron.right")
-                                .resizable()
-                                .frame(width: 8, height: 10)
-                        }
-                        .onTapGesture {
-                            isPresenting = true
-                        }
+        VStack(spacing: .zero) {
+            MapPicker(coordinate: $viewModel.coordinate)
+                .frame(height: 175)
+            ZStack {
+                Color(uiColor: UIColor(red: 29 / 255, green: 29 / 255, blue: 29 / 255, alpha: 1.0))
+                HStack {
+                    Text("위치 제거")
+                        .foregroundStyle(.yellow)
+                        .onTapGesture { viewModel.coordinate = nil }
+                        .opacity(viewModel.coordinate == nil ? .zero : 1.0)
+                        .animation(.easeInOut, value: viewModel.coordinate)
+                    Spacer()
+                    HStack(spacing: 4) {
+                        Text("위치 검색")
+                            .foregroundStyle(.white)
+                        Image(systemName: "chevron.right")
+                            .resizable()
+                            .frame(width: 8, height: 10)
                     }
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
+                    .onTapGesture { isPresenting = true }
                 }
-                .frame(height: 25)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
             }
+            .frame(height: 25)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .sheet(isPresented: $isPresenting) {
             MapInfoSearchView(viewModel: viewModel)
-                .presentationDetents([.height(150)])
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .highPriorityGesture(DragGesture())
+                .presentationDetents([.height(250)])
         }
     }
 }
