@@ -109,8 +109,8 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
         }
     }
     
-    // TODO: Remove actual image from filesystem.
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws {
+        try FileManager().removeItem(at: film.image)
         try await logger.remove(log: film.id)
         await reload()
         currentIndex = currentIndex < films.count ? currentIndex : .zero

@@ -80,7 +80,7 @@ final class HaebitFilmMapViewModel {
 
 extension HaebitFilmMapViewModel: HaebitFilmAnnotationViewDelegate {
     func haebitFilmAnnotationView(_ view: HaebitFilmAnnotationView, requestToDeleteFilm film: Film) async throws {
-        // TODO: Remove actual image from filesystem.
+        try FileManager().removeItem(at: film.image)
         try await logger.remove(log: film.id)
         await reload()
     }
