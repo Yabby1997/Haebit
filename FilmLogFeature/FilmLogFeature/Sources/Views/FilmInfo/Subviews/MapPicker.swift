@@ -10,6 +10,7 @@ import SwiftUI
 import MapKit
 import HaebitCommonModels
 
+@MainActor
 struct MapPicker: View {
     @Binding var coordinate: Coordinate?
     
@@ -23,7 +24,7 @@ struct MapViewRepresentable: UIViewRepresentable {
     @Binding var coordinate: Coordinate?
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        context.coordinator.updateCoordinate(coordinate?.clLocationCoordinate2D)
+        context.coordinator.updateCoordinate(coordinate)
     }
     
     func makeUIView(context: Context) -> some UIView {
@@ -54,12 +55,12 @@ struct MapViewRepresentable: UIViewRepresentable {
             mapView.addGestureRecognizer(gesture)
         }
         
-        func updateCoordinate(_ coordinate: CLLocationCoordinate2D?) {
-            mapView.removeAnnotations(mapView.annotations)
-            
-            guard let coordinate else { return }
+        func updateCoordinate(_ coordinate: Coordinate?) {
+            guard mapView.annotations.first?.coordinate.coordinate != coordinate,
+                  let coordinate = coordinate?.clLocationCoordinate2D else { return }
             let newAnnotation = MKPointAnnotation()
             newAnnotation.coordinate = coordinate
+            mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(newAnnotation)
             
             if let span {

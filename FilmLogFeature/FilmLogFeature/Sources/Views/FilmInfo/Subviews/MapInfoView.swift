@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@MainActor
 struct MapInfoView<ViewModel>: View where ViewModel: MapInfoViewModelProtocol {
     @StateObject var viewModel: ViewModel
     @State var isPresenting = false
@@ -15,7 +16,7 @@ struct MapInfoView<ViewModel>: View where ViewModel: MapInfoViewModelProtocol {
     var body: some View {
         VStack(spacing: .zero) {
             MapPicker(coordinate: $viewModel.coordinate)
-                .frame(height: 175)
+                .frame(height: 225)
             ZStack {
                 Color(uiColor: UIColor(red: 29 / 255, green: 29 / 255, blue: 29 / 255, alpha: 1.0))
                 HStack {
