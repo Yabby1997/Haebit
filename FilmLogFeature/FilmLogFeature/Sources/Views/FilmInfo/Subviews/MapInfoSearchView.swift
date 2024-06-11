@@ -19,7 +19,7 @@ struct MapInfoSearchView<ViewModel: MapInfoViewModelProtocol>: View {
                 if viewModel.searchResults.isEmpty {
                     VStack {
                         Spacer()
-                        Text("검색 결과가 없습니다.")
+                        Text(.mapInfoSearchViewNoResults)
                             .font(.system(size: 18, weight: .bold))
                         Spacer()
                     }
@@ -62,7 +62,7 @@ struct MapInfoSearchView<ViewModel: MapInfoViewModelProtocol>: View {
             }
             .transition(.slide)
             .animation(.easeInOut(duration: 0.3), value: viewModel.searchResults)
-            TextField("Search", text: $viewModel.searchQuery)
+            TextField(.mapInfoSearchViewQueryPlaceholder, text: $viewModel.searchQuery)
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold, design: .serif))
                 .autocorrectionDisabled()

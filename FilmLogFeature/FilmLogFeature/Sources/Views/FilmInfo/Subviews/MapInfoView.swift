@@ -20,14 +20,14 @@ struct MapInfoView<ViewModel>: View where ViewModel: MapInfoViewModelProtocol {
             ZStack {
                 Color(uiColor: UIColor(red: 29 / 255, green: 29 / 255, blue: 29 / 255, alpha: 1.0))
                 HStack {
-                    Text("위치 제거")
+                    Text(.mapInfoViewRemoveCoordinate)
                         .foregroundStyle(.yellow)
                         .onTapGesture { viewModel.coordinate = nil }
                         .opacity(viewModel.coordinate == nil ? .zero : 1.0)
                         .animation(.easeInOut, value: viewModel.coordinate)
                     Spacer()
                     HStack(spacing: 4) {
-                        Text("위치 검색")
+                        Text(.mapInfoViewSearchCoordinate)
                             .foregroundStyle(.white)
                         Image(systemName: "chevron.right")
                             .resizable()

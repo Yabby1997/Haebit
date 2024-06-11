@@ -56,17 +56,21 @@ struct MapViewRepresentable: UIViewRepresentable {
         }
         
         func updateCoordinate(_ coordinate: Coordinate?) {
-            guard mapView.annotations.first?.coordinate.coordinate != coordinate,
-                  let coordinate = coordinate?.clLocationCoordinate2D else { return }
+            guard let coordinate else {
+                mapView.removeAnnotations(mapView.annotations)
+                return
+            }
+            
+            guard mapView.annotations.first?.coordinate.coordinate != coordinate else { return }
             let newAnnotation = MKPointAnnotation()
-            newAnnotation.coordinate = coordinate
+            newAnnotation.coordinate = coordinate.clLocationCoordinate2D
             mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(newAnnotation)
             
             if let span {
                 mapView.setRegion(
                     .init(
-                        center: coordinate,
+                        center: coordinate.clLocationCoordinate2D,
                         span: span
                     ),
                     animated: true
@@ -74,7 +78,7 @@ struct MapViewRepresentable: UIViewRepresentable {
             } else {
                 mapView.setRegion(
                     .init(
-                        center: coordinate,
+                        center: coordinate.clLocationCoordinate2D,
                         latitudinalMeters: 1_000,
                         longitudinalMeters: 1_000
                     ),

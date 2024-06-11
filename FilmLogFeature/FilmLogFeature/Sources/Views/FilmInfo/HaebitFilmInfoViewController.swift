@@ -30,102 +30,27 @@ struct HaebitFilmInfoView: View {
                     MapInfoView(viewModel: viewModel)
                         .padding(.horizontal, 12)
                     Divider().padding(.horizontal, 12)
-                    VStack(alignment: .center, spacing: 8) {
-                        Text("촬영일")
-                            .font(.system(size: 12, weight: .semibold))
-                        HStack {
-                            Text(viewModel.date, style: .date)
-                            Text(viewModel.date, style: .time)
-                        }
-                        .animation(.easeInOut, value: viewModel.date)
-                        .font(.system(size: 18, weight: .bold, design: .serif))
-                    }
-                    .contentTransition(.numericText())
-                    .onTapGesture {
-                        isMemoEditing = false
-                        isDatePickerPresented = true
-                    }
-                    .padding(.horizontal, 20)
+                    DateInfoView(date: $viewModel.date)
                     Divider().padding(.horizontal, 12)
                     HStack(alignment: .center) {
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("조리개")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text(viewModel.aperture.title)
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
-                                .lineLimit(1)
-                                .animation(.easeInOut, value: viewModel.aperture)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .onTapGesture {
-                            isMemoEditing = false
-                            isApertureInputViewPresented = true
-                        }
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("셔터속도")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text(viewModel.shutterSpeed.description)
-                                .font(.system(size: 16, weight: .bold, design: .serif))
-                                .lineLimit(1)
-                                .animation(.easeInOut, value: viewModel.shutterSpeed)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .onTapGesture {
-                            isMemoEditing = false
-                            isShutterSpeedInputViewPresented = true
-                        }
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("초점거리")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text(viewModel.focalLength.title)
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
-                                .lineLimit(1)
-                                .animation(.easeInOut, value: viewModel.focalLength)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .onTapGesture {
-                            isMemoEditing = false
-                            isFocalLengthInputViewPresented = true
-                        }
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("감도")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text(viewModel.iso.title)
-                                .font(.system(size: 16, weight: .bold, design: .serif))
-                                .lineLimit(1)
-                                .animation(.easeInOut, value: viewModel.iso)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .onTapGesture {
-                            isMemoEditing = false
-                            isIsoInputViewPresented = true
-                        }
+                        ApertureInputView(value: $viewModel.aperture)
+                        ShutterSpeedInputView(value: $viewModel.shutterSpeed)
+                        FocalLengthInputView(value: $viewModel.focalLength)
+                        IsoInputView(value: $viewModel.iso)
                     }
                     .padding(.horizontal, 12)
                     .contentTransition(.numericText())
                     Divider().padding(.horizontal, 12)
-                    MemoView(text: $viewModel.memo, isEditing: $isMemoEditing, placeholder: "메모", font: .systemFont(ofSize: 16, weight: .bold, design: .serif))
-                        .padding(.horizontal, 12)
+                    MemoView(
+                        text: $viewModel.memo,
+                        isEditing: $isMemoEditing,
+                        placeholderKey: .memoViewPlaceholder,
+                        font: .systemFont(ofSize: 16, weight: .bold, design: .serif)
+                    )
+                    .padding(.horizontal, 12)
                 }
             }
-            .bottomSheet(isPresented: $isDatePickerPresented) {
-                DatePicker(selection: $viewModel.date) {}
-                    .datePickerStyle(.graphical)
-                    .padding(20)
-            }
-            .bottomSheet(isPresented: $isApertureInputViewPresented) {
-                ApertureInputView(value: $viewModel.aperture)
-            }
-            .bottomSheet(isPresented: $isShutterSpeedInputViewPresented) {
-                ShutterSpeedInputView(value: $viewModel.shutterSpeed)
-            }
-            .bottomSheet(isPresented: $isFocalLengthInputViewPresented) {
-                FocalLengthInputView(value: $viewModel.focalLength)
-            }
-            .bottomSheet(isPresented: $isIsoInputViewPresented) {
-                IsoInputView(value: $viewModel.iso)
-            }
-            .navigationTitle("Info")
+            .navigationTitle(.filmInfoViewTitle)
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively)
             .scrollIndicators(.hidden)
@@ -159,19 +84,19 @@ struct HaebitFilmInfoView: View {
                     .foregroundStyle(.white)
                 }
             }
-            .confirmationDialog("정말 삭제하시겠습니까?", isPresented: $isDeleteConfirmationDialogPresented,  titleVisibility: .visible) {
-                Button("삭제하기", role: .destructive) {
+            .confirmationDialog(.filmInfoViewDeleteConfirmationTitle, isPresented: $isDeleteConfirmationDialogPresented,  titleVisibility: .visible) {
+                Button(.filmInfoViewDeleteConfirmationDelete, role: .destructive) {
                     Task {
                         try? await viewModel.didTapDelete()
                         dismiss()
                     }
                 }
             }
-            .confirmationDialog("변경사항이 있습니다.", isPresented: $isUpdateConfirmationDialogPresented, titleVisibility: .visible) {
-                Button("변경사항 폐기", role: .destructive) {
+            .confirmationDialog(.filmInfoViewUpdateConfirmationTitme, isPresented: $isUpdateConfirmationDialogPresented, titleVisibility: .visible) {
+                Button(.filmInfoViewUpdateConfirmationAbandon, role: .destructive) {
                     dismiss()
                 }
-                Button("저장", role: .none) {
+                Button(.filmInfoViewUpdateConfirmationUpdate, role: .none) {
                     Task {
                         try? await viewModel.didTapSave()
                         dismiss()

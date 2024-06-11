@@ -12,7 +12,7 @@ import SwiftUI
 struct MemoView: UIViewRepresentable {
     @Binding var text: String
     @Binding var isEditing: Bool
-    @State var placeholder: String
+    let placeholderKey: String
     let font: UIFont
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
@@ -24,7 +24,7 @@ struct MemoView: UIViewRepresentable {
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.text = text
         uiView.font = font
-        context.coordinator.placeholderLabel.text = placeholder
+        context.coordinator.placeholderLabel.text = NSLocalizedString(placeholderKey, comment: "")
         context.coordinator.placeholderLabel.font = font
         context.coordinator.placeholderLabel.isHidden = !text.isEmpty
         if isEditing, uiView.isFirstResponder == false {
@@ -94,6 +94,6 @@ struct MemoView: UIViewRepresentable {
 #Preview {
     @State var text = ""
     var placeholder = "Placeholder"
-    return MemoView(text: $text, isEditing: .constant(true), placeholder: placeholder, font: .systemFont(ofSize: 14))
+    return MemoView(text: $text, isEditing: .constant(true), placeholderKey: placeholder, font: .systemFont(ofSize: 14))
 }
 
