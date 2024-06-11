@@ -125,9 +125,10 @@ struct HaebitFilmInfoView: View {
             .bottomSheet(isPresented: $isIsoInputViewPresented) {
                 IsoInputView(value: $viewModel.iso)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .scrollIndicators(.hidden)
             .navigationTitle("Info")
+            .navigationBarTitleDisplayMode(.inline)
+            .scrollDismissesKeyboard(.interactively)
+            .scrollIndicators(.hidden)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     Button {
