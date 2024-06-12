@@ -33,10 +33,10 @@ struct HaebitFilmInfoView: View {
                     DateInfoView(date: $viewModel.date)
                     Divider().padding(.horizontal, 12)
                     HStack(alignment: .center) {
-                        ApertureInputView(value: $viewModel.aperture)
-                        ShutterSpeedInputView(value: $viewModel.shutterSpeed)
-                        FocalLengthInputView(value: $viewModel.focalLength)
-                        IsoInputView(value: $viewModel.iso)
+                        ApertureInfoView(value: $viewModel.aperture)
+                        ShutterSpeedInfoView(value: $viewModel.shutterSpeed)
+                        ISOInfoView(value: $viewModel.iso)
+                        FocalLengthInfoView(value: $viewModel.focalLength)
                     }
                     .padding(.horizontal, 12)
                     .contentTransition(.numericText())

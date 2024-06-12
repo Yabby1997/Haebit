@@ -1,5 +1,5 @@
 //
-//  IsoInputView.swift
+//  FocalLengthInfoView.swift
 //  FilmLogFeature
 //
 //  Created by Seunghun on 5/26/24.
@@ -9,24 +9,26 @@
 import SwiftUI
 import HaebitCommonModels
 
-struct IsoInputView: View {
+struct FocalLengthInfoView: View {
     private let placeholder: String
-    @Binding var value: IsoValue
+    @Binding var value: FocalLengthValue
     @State var numberString = ""
     @State var isEditing = false
     @State var isPresenting = false
     
-    init(value: Binding<IsoValue>) {
+    init(value: Binding<FocalLengthValue>) {
         placeholder = value.wrappedValue.title
         self._value = value
     }
     
     var body: some View {
         VStack(alignment: .center, spacing: 4) {
-            Text(.isoInputViewTitle)
+            Text(.focalLengthInputViewTitle)
                 .font(.system(size: 12, weight: .semibold))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             Text(value.title)
-                .font(.system(size: 16, weight: .bold, design: .serif))
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
                 .lineLimit(1)
                 .animation(.easeInOut, value: value)
         }
@@ -34,14 +36,15 @@ struct IsoInputView: View {
         .onTapGesture { isPresenting = true }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text(.isoInputViewTitle).font(.system(size: 18, weight: .bold))
+                Text(.focalLengthInputViewTitle).font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,
                     isEditing: $isEditing,
                     format: .integer,
                     maxDigitCount: 5,
+                    suffix: "mm",
                     placeholder: placeholder,
-                    font: .systemFont(ofSize: 40, weight: .bold, design: .serif)
+                    font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)
                 )
             }
             .padding(.horizontal, 20)
@@ -49,8 +52,8 @@ struct IsoInputView: View {
             .onAppear { isEditing = true }
             .onDisappear {
                 guard let integerValue = UInt32(numberString),
-                      let isoValue = IsoValue(integerValue) else { return }
-                value = isoValue
+                      let focalLength = FocalLengthValue(integerValue) else { return }
+                value = focalLength
             }
         }
     }

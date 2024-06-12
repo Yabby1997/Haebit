@@ -1,5 +1,5 @@
 //
-//  ShutterSpeedInputView.swift
+//  ShutterSpeedInfoView.swift
 //  FilmLogFeature
 //
 //  Created by Seunghun on 5/26/24.
@@ -9,7 +9,7 @@
 import SwiftUI
 import HaebitCommonModels
 
-struct ShutterSpeedInputView: View {
+struct ShutterSpeedInfoView: View {
     enum Unit {
         case seconds
         case denominator
@@ -51,6 +51,8 @@ struct ShutterSpeedInputView: View {
         VStack(alignment: .center, spacing: 4) {
             Text(.shutterSpeedInputViewTitle)
                 .font(.system(size: 12, weight: .semibold))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             Text(value.description)
                 .font(.system(size: 16, weight: .bold, design: .serif))
                 .lineLimit(1)

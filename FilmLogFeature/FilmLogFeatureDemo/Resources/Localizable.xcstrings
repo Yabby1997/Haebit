@@ -7,121 +7,257 @@
     "Add" : {
 
     },
-    "lightMeterControlViewUnlockButton" : {
+    "apertureInputViewTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock"
+            "value" : "Aperture"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock"
+            "value" : "조리개"
           }
         }
       }
     },
-    "lightMeterViewAccessAlertDoNotAskButton" : {
+    "dateInfoViewTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Do not ask again"
+            "value" : "Date & Time"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다시 묻지 않기"
+            "value" : "촬영일"
           }
         }
       }
     },
-    "lightMeterViewAccessAlertOpenSettingsButton" : {
+    "filmInfoViewDeleteConfirmationDelete" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Settings"
+            "value" : "Delete Film"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "설정 열기"
+            "value" : "필름 삭제"
           }
         }
       }
     },
-    "lightMeterViewCameraAccessAlertMessage" : {
+    "filmInfoViewDeleteConfirmationTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "illumeter uses the camera to measure the exposure value and log it. Please allow camera access in Settings."
+            "value" : "Deleting this cannot be undone.\nAre you sure you want to delete it?"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해빛은 노출값(EV) 측정 및 로그 기록을 위해 카메라를 사용합니다. 설정을 열어 카메라 권한을 허용해주세요."
+            "value" : "삭제하면 되돌릴 수 없습니다.\n삭제하시겠습니까?"
           }
         }
       }
     },
-    "lightMeterViewCameraAccessAlertTitle" : {
+    "filmInfoViewTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Camera Access"
+            "value" : "Film Info"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "카메라 권한"
+            "value" : "필름 정보"
           }
         }
       }
     },
-    "lightMeterViewGPSAccessAlertMessage" : {
+    "filmInfoViewUpdateConfirmationAbandon" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "illumeter uses GPS for logging purposes. Please allow location access in Settings. If you prefer to log it without location, please select \"Do not ask again\"."
+            "value" : "Discard Changes"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해빛은 로그 기록을 위해 GPS를 사용합니다. 설정을 열어 위치 권한을 허용해주세요. 위치 기록없이 사용을 원하시면 \"다시 묻지 않기\"를 선택해주세요."
+            "value" : "번경사항 폐기"
           }
         }
       }
     },
-    "lightMeterViewGPSAccessAlertTitle" : {
+    "filmInfoViewUpdateConfirmationTitme" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Location Access"
+            "value" : "There are unsaved changes."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "위치 권한"
+            "value" : "저장되지 않은 변경사항이 있습니다. "
+          }
+        }
+      }
+    },
+    "filmInfoViewUpdateConfirmationUpdate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save Changes"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "변경사항 저장"
+          }
+        }
+      }
+    },
+    "focalLengthInputViewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focal Length"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초점거리"
+          }
+        }
+      }
+    },
+    "isoInputViewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISO"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "감도"
+          }
+        }
+      }
+    },
+    "mapInfoSearchViewNoResults" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results found."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 결과가 없습니다."
+          }
+        }
+      }
+    },
+    "mapInfoSearchViewQueryPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 검색"
+          }
+        }
+      }
+    },
+    "mapInfoViewRemoveCoordinate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 제거"
+          }
+        }
+      }
+    },
+    "mapInfoViewSearchCoordinate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 검색"
+          }
+        }
+      }
+    },
+    "memoViewPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caption"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모"
           }
         }
       }
@@ -137,6 +273,23 @@
     },
     "Select image" : {
 
+    },
+    "shutterSpeedInputViewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shutter Speed"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "셔터속도"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
