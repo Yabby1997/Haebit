@@ -27,19 +27,22 @@ struct HaebitFilmInfoView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
-                    MapInfoView(viewModel: viewModel)
+                    VStack(spacing: 12) {
+                        MapInfoView(viewModel: viewModel)
+                            .padding(.horizontal, 12)
+                        Divider().padding(.horizontal, 12)
+                        DateInfoView(date: $viewModel.date)
+                        Divider().padding(.horizontal, 12)
+                        HStack(alignment: .center) {
+                            ApertureInfoView(value: $viewModel.aperture)
+                            ShutterSpeedInfoView(value: $viewModel.shutterSpeed)
+                            ISOInfoView(value: $viewModel.iso)
+                            FocalLengthInfoView(value: $viewModel.focalLength)
+                        }
                         .padding(.horizontal, 12)
-                    Divider().padding(.horizontal, 12)
-                    DateInfoView(date: $viewModel.date)
-                    Divider().padding(.horizontal, 12)
-                    HStack(alignment: .center) {
-                        ApertureInfoView(value: $viewModel.aperture)
-                        ShutterSpeedInfoView(value: $viewModel.shutterSpeed)
-                        ISOInfoView(value: $viewModel.iso)
-                        FocalLengthInfoView(value: $viewModel.focalLength)
+                        .contentTransition(.numericText())
                     }
-                    .padding(.horizontal, 12)
-                    .contentTransition(.numericText())
+                    .simultaneousGesture(TapGesture().onEnded { isMemoEditing = false })
                     Divider().padding(.horizontal, 12)
                     MemoView(
                         text: $viewModel.memo,
