@@ -20,6 +20,7 @@ protocol HaebitFilmInfoViewModelDelegate: AnyObject {
 
 @MainActor
 final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol {
+    private let searchService = PortolanLocationSearchService()
     private let film: Film
     @Published var coordinate: Coordinate?
     @Published var searchQuery: String = ""
@@ -75,40 +76,7 @@ final class HaebitFilmInfoViewModel: ObservableObject, MapInfoViewModelProtocol 
     
     private func search(_ query: String) {
         searchTask?.cancel()
-        searchTask = Task {
-            let searchRequest = MKLocalSearch.Request()
-            searchRequest.naturalLanguageQuery = query
-            let search = MKLocalSearch(request: searchRequest)
-            searchResults = await withCheckedContinuation { continuation in
-                search.start { response, error in
-                    if let error {
-                        print("Failed to search location with error: \(error.localizedDescription)")
-                        continuation.resume(returning: [])
-                        return
-                    }
-                    
-                    guard let response else {
-                        continuation.resume(returning: [])
-                        return
-                    }
-                    
-                    continuation.resume(
-                        returning: response.mapItems.compactMap { item in
-                            guard let name = item.name,
-                                  let address = item.placemark.title,
-                                  let coordinate = item.placemark.coordinate.coordinate else {
-                                return nil
-                            }
-                            return MapSearchResult(
-                                name: name,
-                                address: address,
-                                coordinate: coordinate
-                            )
-                        }
-                    )
-                }
-            }
-        }
+        searchTask = Task { searchResults = await searchService.search(query: query).map { $0.mapSearchResult } }
     }
     
     func didTapUndo() {
@@ -159,6 +127,19 @@ extension Film {
             shutterSpeed: shutterSpeed,
             aperture: aperture,
             memo: memo
+        )
+    }
+}
+
+extension PortolanLocation {
+    var mapSearchResult: MapSearchResult {
+        .init(
+            name: name,
+            address: address,
+            coordinate: .init(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude
+            )!
         )
     }
 }
