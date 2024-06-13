@@ -130,8 +130,8 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                     shutterSpeed: shutterSpeed.value,
                     aperture: aperture.value
                 )
-                    .nearest(among: isoValues.map { $0.value } )
-                return isoValues.first { $0.value == iso }
+                    .nearest(among: isoValues.map { Float($0.value) } )
+                return isoValues.first { Float($0.value) == iso }
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -149,7 +149,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 guard let self else { return nil }
                 let value = try? LightMeterService.getShutterSpeedValue(
                     ev: ev,
-                    iso: iso.value,
+                    iso: Float(iso.value),
                     aperture: aperture.value
                 )
                     .nearest(among: shutterSpeedValues.map { $0.value } )
@@ -171,7 +171,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 guard let self else { return nil }
                 let aperture = try? LightMeterService.getApertureValue(
                     ev: ev,
-                    iso: iso.value,
+                    iso: Float(iso.value),
                     shutterSpeed: shutterSpeed.value
                 )
                     .nearest(among: apertureValues.map { $0.value } )
@@ -322,7 +322,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                     longitude: location?.longitude,
                     image: captured.imagePath,
                     focalLength: focalLength.value,
-                    iso: iso.iso,
+                    iso: iso.value,
                     shutterSpeedNumerator: shutterSpeed.numerator,
                     shutterSpeedDenominator: shutterSpeed.denominator,
                     aperture: aperture.value,

@@ -9,7 +9,6 @@
 import SwiftUI
 import HaebitUI
 import StoreKit
-import HaebitLogger
 
 public struct HaebitLightMeterView<ViewModel, LogView: View>: View where ViewModel: HaebitLightMeterViewModelProtocol {
     @StateObject var viewModel: ViewModel

@@ -14,13 +14,20 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let dependencies: [TargetDependency] = [
-    .project(target: "HaebitUI", path: "../../../Modules/HaebitUI"),
-    .project(target: "Obscura", path: "../../../Modules/Obscura"),
-    .project(target: "LightMeter", path: "../../../Modules/LightMeter"),
-    .project(target: "Portolan", path: "../../../Modules/Portolan"),
-    .project(target: "HaebitLogger", path: "../../../Modules/HaebitLogger"),
+let releasedDependencies: [TargetDependency] = [
+    .external(name: "HaebitCommonModels"),
+    .external(name: "HaebitUI"),
+    .external(name: "LightMeter"),
+    .external(name: "Obscura"),
+    .external(name: "Portolan"),
+]
+
+let devDependencies: [TargetDependency] = [
     .project(target: "HaebitCommonModels", path: "../../../Modules/HaebitCommonModels"),
+    .project(target: "HaebitUI", path: "../../../Modules/HaebitUI"),
+    .project(target: "LightMeter", path: "../../../Modules/LightMeter"),
+    .project(target: "Obscura", path: "../../../Modules/Obscura"),
+    .project(target: "Portolan", path: "../../../Modules/Portolan"),
 ]
 
 let targets: [Target] = [
@@ -32,7 +39,7 @@ let targets: [Target] = [
         deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         sources: ["LightMeterFeature/Sources/**"],
         resources: ["LightMeterFeature/Resources/**"],
-        dependencies: dependencies,
+        dependencies: devDependencies,
         settings: .settings(base: ["SWIFT_STRICT_CONCURRENCY": "complete"])
     ),
     Target(

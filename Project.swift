@@ -21,7 +21,6 @@ let plist: InfoPlist = .extendingDefault(
 )
 
 let targetDependencies: [TargetDependency] = [
-    .external(name: "SnapKit"),
     .project(target: "LightMeterFeature", path: "LightMeterFeature"),
     .project(target: "FilmLogFeature", path: "FilmLogFeature"),
 ]

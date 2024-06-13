@@ -9,7 +9,6 @@
 import Foundation
 import LightMeterFeature
 import HaebitCommonModels
-import HaebitLogger
 import LightMeter
 import QuartzCore
 import UIKit
@@ -81,13 +80,13 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
-                let iso = try? LightMeterService.getIsoValue(
+                let value = try? LightMeterService.getIsoValue(
                     ev: ev,
                     shutterSpeed: shutterSpeed.value,
                     aperture: aperture.value
                 )
-                    .nearest(among: isoValues.map { $0.value } )
-                return isoValues.first { $0.value == iso }
+                    .nearest(among: isoValues.map { Float($0.value) } )
+                return isoValues.first { Float($0.value) == value }
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -101,7 +100,7 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 guard let self else { return nil }
                 let value = try? LightMeterService.getShutterSpeedValue(
                     ev: ev,
-                    iso: iso.value,
+                    iso: Float(iso.value),
                     aperture: aperture.value
                 )
                     .nearest(among: shutterSpeedValues.map { $0.value } )
@@ -119,7 +118,7 @@ final class DemoLightMeterViewModel: HaebitLightMeterViewModelProtocol {
                 guard let self else { return nil }
                 let aperture = try? LightMeterService.getApertureValue(
                     ev: ev,
-                    iso: iso.value,
+                    iso: Float(iso.value),
                     shutterSpeed: shutterSpeed.value
                 )
                     .nearest(among: apertureValues.map { $0.value } )

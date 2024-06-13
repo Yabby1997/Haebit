@@ -139,7 +139,7 @@ extension Film {
             coordinate: haebitCoordinate,
             image: image.path.replacingOccurrences(of: URL.homeDirectory.path + "/", with: ""),
             focalLength: focalLength.value,
-            iso: iso.iso,
+            iso: iso.value,
             shutterSpeed: HaebitShutterSpeed(
                 numerator: shutterSpeed.numerator,
                 denominator: shutterSpeed.denominator

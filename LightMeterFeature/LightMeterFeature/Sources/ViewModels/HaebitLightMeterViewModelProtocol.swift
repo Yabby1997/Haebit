@@ -8,7 +8,6 @@
 
 import Foundation
 import HaebitCommonModels
-import HaebitLogger
 import QuartzCore
 
 @MainActor

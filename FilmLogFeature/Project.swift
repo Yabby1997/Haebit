@@ -13,12 +13,20 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let targetDependencies: [TargetDependency] = [
+let releasedDependencies: [TargetDependency] = [
     .external(name: "SnapKit"),
-    .project(target: "Portolan", path: "../../../Modules/Portolan"),
+    .external(name: "HaebitCommonModels"),
+    .external(name: "HaebitLogger"),
+    .external(name: "HaebitUtil"),
+    .external(name: "Portolan"),
+]
+
+let devDependencies: [TargetDependency] = [
+    .external(name: "SnapKit"),
+    .project(target: "HaebitCommonModels", path: "../../../Modules/HaebitCommonModels"),
     .project(target: "HaebitLogger", path: "../../../Modules/HaebitLogger"),
     .project(target: "HaebitUtil", path: "../../../Modules/HaebitUtil"),
-    .project(target: "HaebitCommonModels", path: "../../../Modules/HaebitCommonModels"),
+    .project(target: "Portolan", path: "../../../Modules/Portolan"),
 ]
 
 let targets: [Target] = [
@@ -30,7 +38,7 @@ let targets: [Target] = [
         deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         sources: ["FilmLogFeature/Sources/**"],
         resources: ["FilmLogFeature/Resources/**"],
-        dependencies: targetDependencies,
+        dependencies: devDependencies,
         settings: .settings(base: ["SWIFT_STRICT_CONCURRENCY": "complete"])
     ),
     Target(
