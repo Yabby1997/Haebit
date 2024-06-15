@@ -9,6 +9,29 @@
 import Combine
 import UIKit
 
+fileprivate class PhotoListCollectionViewFlowLayout: UICollectionViewFlowLayout {
+    override init() {
+        super.init()
+        scrollDirection = .vertical
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        let attributes = super.layoutAttributesForItem(at: indexPath)
+        attributes?.transform = .init(scaleX: 1, y: -1)
+        return attributes
+    }
+    
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let attributes = super.layoutAttributesForElements(in: rect)
+        if let attributes { attributes.forEach { $0.transform = .init(scaleX: 1, y: -1) } }
+        return attributes
+    }
+}
+
 final class HaebitFilmListViewController: UIViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Film>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Film>
@@ -57,7 +80,7 @@ final class HaebitFilmListViewController: UIViewController {
     }()
     
     private lazy var photoListCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: photoListCollectionViewFlowLayout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: PhotoListCollectionViewFlowLayout())
         collectionView.register(HaebitFilmListCell.self, forCellWithReuseIdentifier: HaebitFilmListCell.reuseIdentifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
@@ -87,12 +110,6 @@ final class HaebitFilmListViewController: UIViewController {
     private var cancellables: Set<AnyCancellable> = []
     private var dataSource: DataSource?
     private var dataSourceSnapshot = DataSourceSnapshot()
-    
-    private var photoListCollectionViewFlowLayout: UICollectionViewFlowLayout = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        return flowLayout
-    }()
     
     // MARK: - Initializers
     
@@ -186,7 +203,6 @@ final class HaebitFilmListViewController: UIViewController {
     private func configureDataSource() {
         dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
-            cell.transform = .init(scaleX: 1, y: -1)
             cell.photoView.setImage(UIImage(url: film.image))
             return cell
         }

@@ -38,11 +38,6 @@ final class HaebitFilmListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        transform = .init(scaleX: 1, y: -1)
-    }
-    
     override func prepareForReuse() {
         photoView.image = nil
     }
