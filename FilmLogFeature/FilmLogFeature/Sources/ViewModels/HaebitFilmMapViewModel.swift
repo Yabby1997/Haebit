@@ -51,7 +51,7 @@ final class HaebitFilmMapViewModel {
         
     }
     
-    public func onAppear() {
+    func onAppear() {
         Task {
             await reload()
         }

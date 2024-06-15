@@ -3,7 +3,7 @@ import UIKit
 import HaebitLogger
 
 public struct HaebitFilmLogView: View {
-    let logger: HaebitLogger
+    private let logger: HaebitLogger
     
     public init(logger: HaebitLogger) {
         self.logger = logger

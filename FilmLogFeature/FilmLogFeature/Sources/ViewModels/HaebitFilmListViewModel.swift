@@ -13,7 +13,7 @@ import HaebitLogger
 import HaebitUtil
 import Portolan
 
-public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
+class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
@@ -37,7 +37,7 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
     
     private var cancellables: Set<AnyCancellable> = []
     
-    public init(logger: HaebitLogger) {
+    init(logger: HaebitLogger) {
         self.logger = logger
         Task { await reload() }
         bind()
@@ -80,7 +80,7 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
             .store(in: &cancellables)
     }
     
-    public func onAppear() {
+    func onAppear() {
         Task {
             await reload()
         }
