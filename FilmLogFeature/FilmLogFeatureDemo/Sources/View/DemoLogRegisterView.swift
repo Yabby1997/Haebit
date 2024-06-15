@@ -92,14 +92,10 @@ struct DemoLogRegisterView: View {
             .navigationTitle("Register")
             .onChange(of: selectedItem) { _ in
                 Task {
-                    let (data, image) = try await Task.detached {
-                        let data = try await selectedItem?.loadTransferable(type: Data.self)
-                        let image = try await selectedItem?.loadTransferable(type: Image.self)
-                        return (data, image)
-                    }.value
-                    guard let data, let image else { return }
+                    let data = try await selectedItem?.loadTransferable(type: Data.self)
+                    guard let data, let uiImage = UIImage(data: data) else { return }
                     viewModel.imageData = data
-                    self.image = image
+                    self.image = Image(uiImage: uiImage)
                 }
             }
             .onChange(of: viewModel.imageData) { newValue in

@@ -17,17 +17,15 @@ class DemoLogRegisterViewModel: ObservableObject {
     @Published var date: Date = .now
     @Published var latitude: Float?
     @Published var longitude: Float?
-    @Published var focalLength: UInt32?
-    @Published var iso: UInt32?
+    @Published var focalLength: UInt32 = 50
+    @Published var iso: UInt32 = 200
     @Published var shutterSpeedNumerator: UInt32 = 1
     @Published var shutterSpeedDenominator: UInt32 = 60
-    @Published var aperture: Float?
+    @Published var aperture: Float = 11
     @Published var memo: String = ""
     @Published var isLoading = false
     
-    var isRegisterable: Bool {
-        imageData != nil && focalLength != nil && iso != nil && aperture != nil
-    }
+    var isRegisterable: Bool { imageData != nil }
     
     init(logger: HaebitLogger) {
         self.logger = logger
@@ -35,7 +33,7 @@ class DemoLogRegisterViewModel: ObservableObject {
     }
     
     func register() {
-        guard let imageData, let focalLength, let iso, let aperture else { return }
+        guard let imageData  else { return }
         isLoading = true
         let outputFileURL = imageDirectory.appending(path: UUID().uuidString + ".jpeg")
         
@@ -72,13 +70,6 @@ class DemoLogRegisterViewModel: ObservableObject {
     private func clear() {
         imageData = nil
         date = .now
-        latitude = nil
-        longitude = nil
-        focalLength = nil
-        iso = nil
-        shutterSpeedNumerator = 1
-        shutterSpeedDenominator = 60
-        aperture = nil
         memo = ""
     }
     
