@@ -76,13 +76,17 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewWillAppear(true)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleLabel
-        viewModel.onAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setTitlePosition(.center)
         navigationItem.titleView = nil
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.onAppear()
     }
     
     override func viewDidLoad() {

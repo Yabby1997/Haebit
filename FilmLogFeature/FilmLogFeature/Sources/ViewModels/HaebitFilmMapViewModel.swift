@@ -30,6 +30,7 @@ final class HaebitFilmMapViewModel {
     
     init(logger: HaebitLogger) {
         self.logger = logger
+        Task { await reload() }
         bind()
     }
     

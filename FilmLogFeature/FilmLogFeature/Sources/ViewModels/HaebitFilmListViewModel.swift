@@ -39,6 +39,7 @@ public final class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol 
     
     public init(logger: HaebitLogger) {
         self.logger = logger
+        Task { await reload() }
         bind()
     }
     

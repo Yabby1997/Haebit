@@ -124,18 +124,6 @@ final class HaebitFilmListViewController: UIViewController {
     
     // MARK: - Callbacks
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setTitlePosition(.left)
-        navigationItem.titleView = titleStackView
-        viewModel.onAppear()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        navigationItem.titleView = nil
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -143,6 +131,22 @@ final class HaebitFilmListViewController: UIViewController {
         configureDataSource()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setTitlePosition(.left)
+        navigationItem.titleView = titleStackView
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.titleView = nil
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.onAppear()
+    }
+
     // MARK: - Helpers
     
     private func setupViews() {
