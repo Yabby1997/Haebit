@@ -210,7 +210,7 @@ final class HaebitFilmListViewController: UIViewController {
         dataSourceSnapshot.appendSections([Section.List])
         dataSourceSnapshot.appendItems(films)
         dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation) { [weak self] in
-            self?.updateCurrentIndexIfNeeded()
+            self?.updateCurrentIndex()
         }
     }
     
@@ -218,7 +218,7 @@ final class HaebitFilmListViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    func updateCurrentIndexIfNeeded() {
+    private func updateCurrentIndex() {
         let center = view.convert(photoListCollectionView.center, to: photoListCollectionView)
         let indexPath = photoListCollectionView.indexPathForItem(at: center)
         viewModel.currentIndex = indexPath?.item ?? .zero
@@ -236,12 +236,13 @@ final class HaebitFilmListViewController: UIViewController {
 
 extension HaebitFilmListViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateCurrentIndexIfNeeded()
         let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
         if scrollSpeed < .zero {
-            self.tabBarController?.setTabBarHidden(false, animated: true)
+            updateCurrentIndex()
+            tabBarController?.setTabBarHidden(false, animated: true)
         } else if scrollSpeed > .zero {
-            self.tabBarController?.setTabBarHidden(true, animated: true)
+            updateCurrentIndex()
+            tabBarController?.setTabBarHidden(true, animated: true)
         }
     }
 }
