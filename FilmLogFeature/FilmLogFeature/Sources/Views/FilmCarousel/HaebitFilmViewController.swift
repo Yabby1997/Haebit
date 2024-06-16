@@ -32,9 +32,6 @@ final class HaebitFilmViewController: UIViewController {
         return label
     }()
     
-    private var isPresenting = false
-    private let maximumHeight = 400.0
-    
     // MARK: - Properties
     
     private var film: Film

@@ -61,7 +61,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
     private var viewModel: (any HaebitFilmCarouselViewModelProtocol)
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
-    
+
     // MARK: - Initializers
     
     init(viewModel: any HaebitFilmCarouselViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate? = nil) {
@@ -83,6 +83,12 @@ final class HaebitFilmCarouselViewController: UIViewController {
         navigationController?.setTitlePosition(.center)
         navigationItem.setHidesBackButton(true, animated: false)
         navigationItem.titleView = titleStack
+        dismissIfNeeded()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        reloadIfNeeded()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -114,12 +120,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         viewModel.isTitleUpdatingPublisher
             .assign(to: \.isLoading, on: mainTitleLabel)
             .store(in: &cancellables)
-        
-        viewModel.reloadCurrentIndexSignalPublisher
-            .sink { [weak self] _ in
-                self?.reloadCurrentIndex()
-            }
-            .store(in: &cancellables)
     }
     
     private func setupViews() {
@@ -147,19 +147,25 @@ final class HaebitFilmCarouselViewController: UIViewController {
         present(viewControllerc, animated: true)
     }
     
-    private func reloadCurrentIndex() {
-        let index = viewModel.currentIndex
-        guard let film = viewModel.films[safe: index] else {
-            tabBarController?.setTabBarHidden(false, animated: false)
-            navigationController?.popViewController(animated: false)
-            return
+    private func dismissIfNeeded() {
+        guard viewModel.films.isEmpty else { return }
+        tabBarController?.setTabBarHidden(false, animated: false)
+        navigationController?.popViewController(animated: false)
+    }
+    
+    private func reloadIfNeeded() {
+        guard viewModel.isReloadNeeded, let film = viewModel.films[safe: viewModel.currentIndex] else { return }
+        let viewController = HaebitFilmViewController(film: film, index: viewModel.currentIndex)
+        view.isUserInteractionEnabled = false
+        photoCarouselContainerViewController.setViewControllers([viewController], direction: .reverse, animated: true) { [weak self] _ in
+            guard let self else { return }
+            viewModel.isReloadNeeded = false
+            view.isUserInteractionEnabled = true
         }
-        let viewController = HaebitFilmViewController(film: film, index: index)
-        photoCarouselContainerViewController.setViewControllers([viewController], direction: .reverse, animated: true, completion: nil)
     }
 }
 
-// MARK: - UIPageViewControllerDelegate, UIPageViewControllerDataSource
+// MARK: - UIPageViewControllerDelegate, UIPageViewControllerDataSourceo
 
 extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

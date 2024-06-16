@@ -22,7 +22,6 @@ protocol HaebitFilmAnnotationViewModelDelegate: AnyObject {
 final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     private let dateFormatter = HaebitDateFormatter()
     
-    @Published private var reloadCurrentIndexSignal: Void?
     @Published private var mainTitle: String = ""
     @Published private var subTitle: String = ""
     @Published private var currentLocation: Coordinate?
@@ -30,16 +29,11 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     @Published private var currentFilm: Film?
     @Published var films: [Film] = []
     @Published var currentIndex: Int = .zero
+    var isReloadNeeded = false
     var currentFilmPublisher: AnyPublisher<Film?, Never> { $currentFilm.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
-    var reloadCurrentIndexSignalPublisher: AnyPublisher<Void, Never> {
-        $reloadCurrentIndexSignal
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -108,8 +102,7 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
         try await delegate?.haebitFilmAnnotationViewModel(self, requestToDeleteFilm: film)
         films.removeAll { $0.id == film.id }
         currentIndex = currentIndex < films.count ? currentIndex : .zero
-        reloadCurrentIndexSignal = ()
-        reloadCurrentIndexSignal = nil
+        isReloadNeeded = true
     }
     
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws {
@@ -117,7 +110,6 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
         if let index = (films.firstIndex { $0.id == film.id }) {
             films[index] = film
         }
-        reloadCurrentIndexSignal = ()
-        reloadCurrentIndexSignal = nil
+        isReloadNeeded = true
     }
 }

@@ -195,13 +195,6 @@ final class HaebitFilmListViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
-        viewModel.reloadCurrentIndexSignalPublisher
-            .sink { [weak self] _ in
-                guard let self else { return }
-                scrollToItemAt(index: viewModel.currentIndex)
-            }
-            .store(in: &cancellables)
     }
     
     private func configureDataSource() {

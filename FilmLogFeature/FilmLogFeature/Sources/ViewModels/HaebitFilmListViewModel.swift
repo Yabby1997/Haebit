@@ -17,23 +17,17 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
     
-    @Published private var reloadCurrentIndexSignal: Void?
     @Published private var mainTitle: String = ""
     @Published private var subTitle: String = ""
     @Published private var isTitleUpdating = false
     @Published private var currentFilm: Film?
     @Published private(set) var films: [Film] = []
     @Published var currentIndex: Int = .zero
+    var isReloadNeeded = false
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
-    var reloadCurrentIndexSignalPublisher: AnyPublisher<Void, Never> {
-        $reloadCurrentIndexSignal
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -115,15 +109,13 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
         try await logger.remove(log: film.id)
         await reload()
         currentIndex = currentIndex < films.count ? currentIndex : .zero
-        reloadCurrentIndexSignal = ()
-        reloadCurrentIndexSignal = nil
+        isReloadNeeded = true
     }
     
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToUpdateFilm film: Film) async throws {
         try await logger.save(log: film.haebitLog)
         await reload()
-        reloadCurrentIndexSignal = ()
-        reloadCurrentIndexSignal = nil
+        isReloadNeeded = true
     }
 }
 
