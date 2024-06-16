@@ -23,9 +23,8 @@ struct BottomSheet<SheetContent: View>: ViewModifier {
                     .background {
                         GeometryReader { proxy in
                             Color.clear
-                                .onChange(of: proxy.size) { newValue in
-                                    detentHeight = newValue.height
-                                }
+                                .onAppear { detentHeight = proxy.size.height }
+                                .onChange(of: proxy.size) { detentHeight = $0.height }
                         }
                     }
                     .presentationDetents([.height(detentHeight)])
