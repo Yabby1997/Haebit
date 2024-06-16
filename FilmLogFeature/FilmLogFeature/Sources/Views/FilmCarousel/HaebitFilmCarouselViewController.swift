@@ -161,6 +161,7 @@ final class HaebitFilmCarouselViewController: UIViewController {
             guard let self else { return }
             viewModel.isReloadNeeded = false
             view.isUserInteractionEnabled = true
+            delegate?.carouselDidScroll(self, toIndex: viewController.index)
         }
     }
 }
