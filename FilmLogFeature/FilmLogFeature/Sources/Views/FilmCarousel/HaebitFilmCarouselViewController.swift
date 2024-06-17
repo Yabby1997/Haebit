@@ -123,6 +123,14 @@ final class HaebitFilmCarouselViewController: UIViewController {
     }
     
     private func setupViews() {
+        let index = viewModel.currentIndex
+        guard let film = viewModel.films[safe: index] else {
+            navigationController?.popViewController(animated: false)
+            return
+        }
+        
+        let viewController = HaebitFilmViewController(film: film, index: index)
+        
         titleStack.snp.makeConstraints { $0.width.equalTo(250) }
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: infoButton)
         
@@ -132,10 +140,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
         view.addSubview(photoCarouselContainerViewController.view)
         photoCarouselContainerViewController.didMove(toParent: self)
         photoCarouselContainerViewController.view.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        let index = viewModel.currentIndex
-        let film = viewModel.films[index]
-        let viewController = HaebitFilmViewController(film: film, index: index)
         photoCarouselContainerViewController.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
     }
     

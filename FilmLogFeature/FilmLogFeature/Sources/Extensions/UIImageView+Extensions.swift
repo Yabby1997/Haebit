@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIImageView {
-    func setDownSampledImage(at url: URL) async {
+    func setDownSampledImage(at url: URL, withAnimation duration: TimeInterval = 0.3) async {
         let size = frame.size
         let scale = window?.windowScene?.screen.scale ?? 3.0
         
@@ -34,7 +34,7 @@ extension UIImageView {
             return
         }
         
-        setImage(UIImage(cgImage: cgImage))
+        setImage(UIImage(cgImage: cgImage), withAnimation: duration)
     }
     
     func setImage(_ image: UIImage?, withAnimation duration: TimeInterval = 0.3) {

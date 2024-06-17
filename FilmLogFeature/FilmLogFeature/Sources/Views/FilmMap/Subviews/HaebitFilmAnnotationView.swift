@@ -69,18 +69,24 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     private func bind() {
         viewModel.currentFilmPublisher
+            .first()
             .sink { [weak self] _ in
-                self?.refresh()
+                self?.refresh(animated: true)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.currentFilmPublisher
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.refresh(animated: false)
             }
             .store(in: &cancellables)
     }
     
-    private func refresh() {
+    private func refresh(animated: Bool) {
         guard let film = viewModel.films[safe: viewModel.currentIndex] else { return }
         countBadge.count = UInt(viewModel.films.count)
-        Task {
-            await imageView.setDownSampledImage(at: film.image)
-        }
+        Task { await imageView.setDownSampledImage(at: film.image, withAnimation: animated ? 0.3 : .zero) }
     }
     
     private func setupViews() {

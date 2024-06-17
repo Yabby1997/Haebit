@@ -48,6 +48,14 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     }
     
     private func bind() {
+        $films.map { $0.count }
+            .removeDuplicates()
+            .compactMap { [weak self] filmCount in
+                guard let self else { return nil }
+                return currentIndex < filmCount ? currentIndex : .zero
+            }
+            .assign(to: &$currentIndex)
+        
         $films.combineLatest($currentIndex)
             .map { films, index in
                 films[safe: index]
@@ -101,7 +109,6 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     func haebitFilmInfoViewModel(_ viewModel: HaebitFilmInfoViewModel, requestToDeleteFilm film: Film) async throws {
         try await delegate?.haebitFilmAnnotationViewModel(self, requestToDeleteFilm: film)
         films.removeAll { $0.id == film.id }
-        currentIndex = currentIndex < films.count ? currentIndex : .zero
         isReloadNeeded = true
     }
     
