@@ -59,6 +59,8 @@ final class HaebitFilmMapViewController: UIViewController {
 
     private var snapshotAnnotationView: HaebitFilmAnnotationView?
     
+    @Published private var isMapInitiallyRendered = false
+    
     private let viewModel: HaebitFilmMapViewModel
     
     private var cancellables: Set<AnyCancellable> = []
@@ -107,8 +109,9 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.filmsPublisher
-            .compactMap { [weak self] films -> [FilmAnnotation]? in
+        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered)
+            .filter { $1 }
+            .compactMap { [weak self] films, _ -> [FilmAnnotation]? in
                 guard let self else { return nil }
                 return mapView.annotations.compactMap { $0 as? FilmAnnotation }.filter { !films.contains($0.film) }
             }
@@ -118,8 +121,9 @@ final class HaebitFilmMapViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        viewModel.filmsPublisher
-            .compactMap { [weak self] films -> [FilmAnnotation]? in
+        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered)
+            .filter { $1 }
+            .compactMap { [weak self] films, _ -> [FilmAnnotation]? in
                 guard let self else { return nil }
                 let existingFilms = mapView.annotations.compactMap { ($0 as? FilmAnnotation)?.film }
                 return films.filter { !existingFilms.contains($0) }.compactMap { FilmAnnotation(film: $0) }
@@ -191,6 +195,11 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
     
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
         viewModel.currentLocation = mapView.region.center.coordinate
+    }
+    
+    func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+        guard isMapInitiallyRendered == false else { return }
+        isMapInitiallyRendered = fullyRendered
     }
 }
 

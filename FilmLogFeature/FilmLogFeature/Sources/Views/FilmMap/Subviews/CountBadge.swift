@@ -52,6 +52,7 @@ final class CountBadge: UIView {
     private func setupViews() {
         backgroundColor = .red
         clipsToBounds = true
+        isHidden = true
         
         updateMinimumSize()
     
