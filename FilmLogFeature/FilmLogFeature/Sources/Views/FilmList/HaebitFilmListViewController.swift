@@ -58,14 +58,7 @@ final class HaebitFilmListViewController: UIViewController {
         return label
     }()
     
-    private let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .white
-        label.textAlignment = .left
-        return label
-    }()
-    
+    private let subtitleLabel = SubtitleLabel()
 
     private lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -190,9 +183,7 @@ final class HaebitFilmListViewController: UIViewController {
         viewModel.subTitlePublisher
             .sink { [weak self] title in
                 guard let self else { return }
-                UIView.transition(with: subtitleLabel, duration: 0.3, options: .transitionCrossDissolve) {
-                    self.subtitleLabel.text = title
-                }
+                subtitleLabel.text = title
             }
             .store(in: &cancellables)
     }
