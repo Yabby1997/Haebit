@@ -237,11 +237,10 @@ final class HaebitFilmListViewController: UIViewController {
 extension HaebitFilmListViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollSpeed = scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
+        if scrollView.isDragging { updateCurrentIndex() }
         if scrollSpeed < .zero {
-            updateCurrentIndex()
             tabBarController?.setTabBarHidden(false, animated: true)
         } else if scrollSpeed > .zero {
-            updateCurrentIndex()
             tabBarController?.setTabBarHidden(true, animated: true)
         }
     }
