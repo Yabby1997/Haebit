@@ -77,6 +77,7 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
         
         viewModel.currentFilmPublisher
             .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] _ in
                 self?.refresh(animated: false)
             }
