@@ -125,6 +125,7 @@ class HaebitNavigationAnimator: NSObject {
                 transitionContext.completeTransition(false)
                 self?.snapshot?.removeFromSuperview()
                 self?.transitionContext = nil
+                self?.isDismissingWithGesture = false
             }
         }
     }
@@ -137,7 +138,7 @@ class HaebitNavigationAnimator: NSObject {
               let baseTargetView = base.viewForTransition(),
               let baseTargetFrame = base.regionForTransition(),
               let snapshot = baseTargetView.bluredSnapshot(intensity: base.blurIntensityForSnapshot()) else {
-            transitionContext.completeTransition(false)
+            UIView.animate(withDuration: .zero, animations: {}) { _ in  transitionContext.completeTransition(false) }
             return
         }
         
@@ -187,7 +188,7 @@ class HaebitNavigationAnimator: NSObject {
               let pushedTargetView = pushed.viewForTransition(),
               let pushedTargetFrame = pushed.regionForTransition(),
               let snapshot = pushedTargetView.bluredSnapshot(intensity: pushed.blurIntensityForSnapshot()) else {
-            transitionContext.completeTransition(false)
+            UIView.animate(withDuration: .zero, animations: {}) { _ in  transitionContext.completeTransition(false) }
             return
         }
         
@@ -266,23 +267,29 @@ extension HaebitNavigationAnimator: UIViewControllerAnimatedTransitioning {
 
 extension HaebitNavigationAnimator: UIViewControllerInteractiveTransitioning {
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
-        self.transitionContext = transitionContext
-        guard let base = transitionContext.viewController(forKey: .to) as? HaebitNavigationAnimatorSnapshotProvidable,
+        guard isDismissingWithGesture,
+              let base = transitionContext.viewController(forKey: .to) as? HaebitNavigationAnimatorSnapshotProvidable,
               let baseTargetFrame = base.regionForTransition(),
               let baseTargetView = base.viewForTransition(),
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
               let pushedTargetFrame = pushed.regionForTransition(),
-              let snapshot = pushedTargetView.snapshotView(afterScreenUpdates: false) else { return }
+              let snapshot = pushedTargetView.snapshotView(afterScreenUpdates: false) else {
+            UIView.animate(withDuration: .zero, animations: {}) { _ in
+                transitionContext.cancelInteractiveTransition()
+                transitionContext.completeTransition(false)
+            }
+            return
+        }
         
-        baseTargetView.isHidden = true
-        pushedTargetView.isHidden = true
-
+        self.transitionContext = transitionContext
         self.baseTargetFrame = baseTargetFrame
         self.pushedTargetFrame = pushedTargetFrame
         self.snapshot = snapshot
-        snapshot.frame = pushedTargetFrame
         
+        baseTargetView.isHidden = true
+        pushedTargetView.isHidden = true
+        snapshot.frame = pushedTargetFrame
         transitionContext.containerView.insertSubview(base.view, belowSubview: pushed.view)
         transitionContext.containerView.addSubview(snapshot)
     }
