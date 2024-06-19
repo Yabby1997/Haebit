@@ -9,11 +9,6 @@
 import Combine
 import UIKit
 
-@MainActor
-protocol HaebitFilmCarouselViewControllerDelegate: AnyObject {
-    func carouselDidScroll(_ haebitFilmCarouselViewController: HaebitFilmCarouselViewController, toIndex index: Int)
-}
-
 final class HaebitFilmCarouselViewController: UIViewController {
     
     // MARK: - Subviews
@@ -57,16 +52,14 @@ final class HaebitFilmCarouselViewController: UIViewController {
     
     // MARK: - Properties
     
-    private weak var delegate: HaebitFilmCarouselViewControllerDelegate?
     private var viewModel: (any HaebitFilmCarouselViewModelProtocol)
     private var cancellables: Set<AnyCancellable> = []
     private var currentlyDisplayingViewController: UIViewController? { photoCarouselContainerViewController.viewControllers?[.zero] }
 
     // MARK: - Initializers
     
-    init(viewModel: any HaebitFilmCarouselViewModelProtocol, delegate: HaebitFilmCarouselViewControllerDelegate? = nil) {
+    init(viewModel: any HaebitFilmCarouselViewModelProtocol) {
         self.viewModel = viewModel
-        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         setupViews()
         bind()
@@ -165,7 +158,6 @@ final class HaebitFilmCarouselViewController: UIViewController {
             guard let self else { return }
             viewModel.isReloadNeeded = false
             view.isUserInteractionEnabled = true
-            delegate?.carouselDidScroll(self, toIndex: viewController.index)
         }
     }
 }
@@ -204,12 +196,8 @@ extension HaebitFilmCarouselViewController: UIPageViewControllerDelegate, UIPage
         previousViewControllers: [UIViewController],
         transitionCompleted completed: Bool
     ) {
-        if completed {
-            delegate?.carouselDidScroll(self, toIndex: viewModel.currentIndex)
-        } else if let viewController = previousViewControllers.first as? HaebitFilmViewController {
-            viewModel.currentIndex = viewController.index
-            delegate?.carouselDidScroll(self, toIndex: viewController.index)
-        }
+        guard completed == false, let prevIndex = (previousViewControllers.first as? HaebitFilmViewController)?.index else { return }
+        viewModel.currentIndex = prevIndex
     }
 }
 

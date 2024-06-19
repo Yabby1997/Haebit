@@ -39,11 +39,11 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
     
     weak var delegate: HaebitFilmAnnotationViewModelDelegate?
     
-    func onAppear() {
+    func prepareForDisplay() {
         bind()
     }
     
-    func onDisappear() {
+    func prepareForReuse() {
         cancellables = []
     }
     
@@ -57,13 +57,11 @@ final class HaebitFilmAnnotationViewModel: HaebitFilmCarouselViewModelProtocol {
             .assign(to: &$currentIndex)
         
         $films.combineLatest($currentIndex)
-            .map { films, index in
-                films[safe: index]
-            }
-            .removeDuplicates()
+            .map { $0[safe: $1] }
             .assign(to: &$currentFilm)
         
         $currentFilm
+            .removeDuplicates()
             .sink { [weak self] film in
                 guard let self else { return }
                 if let film {

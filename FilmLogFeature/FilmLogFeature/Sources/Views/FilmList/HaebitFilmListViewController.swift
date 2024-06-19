@@ -128,6 +128,7 @@ final class HaebitFilmListViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleStackView
+        scrollToCurrentIndexIfNeeded()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -190,7 +191,8 @@ final class HaebitFilmListViewController: UIViewController {
     
     private func configureDataSource() {
         dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath) as? HaebitFilmListCell else { return nil }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath)
+            guard let cell = cell as? HaebitFilmListCell else { return cell }
             cell.photoView.setImage(UIImage(url: film.image))
             return cell
         }
@@ -200,9 +202,7 @@ final class HaebitFilmListViewController: UIViewController {
         dataSourceSnapshot = DataSourceSnapshot()
         dataSourceSnapshot.appendSections([Section.List])
         dataSourceSnapshot.appendItems(films)
-        dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation) { [weak self] in
-            self?.updateCurrentIndex()
-        }
+        dataSource?.apply(dataSourceSnapshot, animatingDifferences: withAnimation)
     }
     
     @objc private func didTapClose(_ sender: UIButton) {
@@ -215,10 +215,11 @@ final class HaebitFilmListViewController: UIViewController {
         viewModel.currentIndex = indexPath?.item ?? .zero
     }
     
-    private func scrollToItemAt(index: Int) {
-        guard (.zero..<viewModel.films.count).contains(index) else { return }
-        let indexPath = IndexPath(item: index, section: 0)
-        photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+    private func scrollToCurrentIndexIfNeeded(animated: Bool = false) {
+        let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
+        guard photoListCollectionView.numberOfSections > .zero,
+              photoListCollectionView.indexPathsForVisibleItems.contains(indexPath) == false else { return }
+        photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: animated)
         photoListCollectionView.layoutIfNeeded()
     }
 }
@@ -267,17 +268,9 @@ extension HaebitFilmListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.currentIndex = indexPath.item
         navigationController?.pushViewController(
-            HaebitFilmCarouselViewController(viewModel: viewModel, delegate: self),
+            HaebitFilmCarouselViewController(viewModel: viewModel),
             animated: true
         )
-    }
-}
-
-// MARK: - PhotoCarouselViewControllerDelegate
-
-extension HaebitFilmListViewController: HaebitFilmCarouselViewControllerDelegate {
-    func carouselDidScroll(_ containerViewController: HaebitFilmCarouselViewController, toIndex currentIndex: Int) {
-        scrollToItemAt(index: currentIndex)
     }
 }
 
@@ -285,28 +278,14 @@ extension HaebitFilmListViewController: HaebitFilmCarouselViewControllerDelegate
 
 extension HaebitFilmListViewController: HaebitNavigationAnimatorSnapshotProvidable {
     func viewForTransition() -> UIView? {
-        let visibleCells = photoListCollectionView.indexPathsForVisibleItems
         let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
-        
-        if !visibleCells.contains(indexPath) {
-            photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
-            photoListCollectionView.layoutIfNeeded()
-        }
-        
         guard let cell = photoListCollectionView.cellForItem(at: indexPath) as? HaebitFilmListCell else { return nil }
         return cell.photoView
     }
     
     func regionForTransition() -> CGRect? {
         view.layoutIfNeeded()
-        let visibleCells = photoListCollectionView.indexPathsForVisibleItems
         let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
-        
-        if !visibleCells.contains(indexPath) {
-            photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
-            photoListCollectionView.layoutIfNeeded()
-        }
-        
         guard let cell = photoListCollectionView.cellForItem(at: indexPath) as? HaebitFilmListCell else { return nil }
         return photoListCollectionView.convert(cell.convert(cell.photoView.frame, to: photoListCollectionView), to: view)
     }

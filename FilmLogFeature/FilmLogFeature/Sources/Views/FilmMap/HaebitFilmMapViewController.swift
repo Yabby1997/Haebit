@@ -57,9 +57,9 @@ final class HaebitFilmMapViewController: UIViewController {
         return gradientLayer
     }()
 
-    private var snapshotAnnotationView: HaebitFilmAnnotationView?
-    
+    private var selectedAnnotationView: HaebitFilmAnnotationView?
     @Published private var isMapInitiallyRendered = false
+    @Published private var isAppearing = false
     
     private let viewModel: HaebitFilmMapViewModel
     
@@ -78,12 +78,15 @@ final class HaebitFilmMapViewController: UIViewController {
         super.viewWillAppear(true)
         navigationController?.setTitlePosition(.left)
         navigationItem.titleView = titleLabel
+        selectedAnnotationView?.onAppear()
+        isAppearing = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setTitlePosition(.center)
         navigationItem.titleView = nil
+        isAppearing = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -109,9 +112,9 @@ final class HaebitFilmMapViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered)
-            .filter { $1 }
-            .compactMap { [weak self] films, _ -> [FilmAnnotation]? in
+        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered, $isAppearing)
+            .filter { $1 && $2 }
+            .compactMap { [weak self] films, _, _ -> [FilmAnnotation]? in
                 guard let self else { return nil }
                 return mapView.annotations.compactMap { $0 as? FilmAnnotation }.filter { !films.contains($0.film) }
             }
@@ -121,9 +124,9 @@ final class HaebitFilmMapViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered)
-            .filter { $1 }
-            .compactMap { [weak self] films, _ -> [FilmAnnotation]? in
+        viewModel.filmsPublisher.combineLatest($isMapInitiallyRendered, $isAppearing)
+            .filter { $1 && $2 }
+            .compactMap { [weak self] films, _, _ -> [FilmAnnotation]? in
                 guard let self else { return nil }
                 let existingFilms = mapView.annotations.compactMap { ($0 as? FilmAnnotation)?.film }
                 return films.filter { !existingFilms.contains($0) }.compactMap { FilmAnnotation(film: $0) }
@@ -187,7 +190,7 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let filmAnnotationView = (view as? HaebitFilmAnnotationView) else { return }
-        snapshotAnnotationView = filmAnnotationView
+        selectedAnnotationView = filmAnnotationView
         let carouselViewController = HaebitFilmCarouselViewController(viewModel: filmAnnotationView.viewModel)
         navigationController?.pushViewController(carouselViewController, animated: true)
         mapView.deselectAnnotation(view.annotation, animated: false)
@@ -205,16 +208,16 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
 
 extension HaebitFilmMapViewController: HaebitNavigationAnimatorSnapshotProvidable {
     func viewForTransition() -> UIView? {
-        snapshotAnnotationView?.imageView
+        selectedAnnotationView?.imageView
     }
     
     func regionForTransition() -> CGRect? {
-        guard let snapshotAnnotationView else { return nil }
+        guard let selectedAnnotationView else { return nil }
         return mapView.convert(
-            snapshotAnnotationView.convert(
-                snapshotAnnotationView.frameView.convert(
-                    snapshotAnnotationView.imageView.frame,
-                    to: snapshotAnnotationView
+            selectedAnnotationView.convert(
+                selectedAnnotationView.frameView.convert(
+                    selectedAnnotationView.imageView.frame,
+                    to: selectedAnnotationView
                 ),
                 to: mapView
             ),

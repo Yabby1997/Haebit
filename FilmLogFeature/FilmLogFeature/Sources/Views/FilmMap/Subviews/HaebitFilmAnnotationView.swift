@@ -55,7 +55,7 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        viewModel.onDisappear()
+        viewModel.prepareForReuse()
         cancellables = []
         imageView.image = nil
         countBadge.count = .zero
@@ -63,28 +63,15 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
-        viewModel.onAppear()
-        bind()
+        viewModel.prepareForDisplay()
+        updateView(animated: true)
     }
     
-    private func bind() {
-        viewModel.currentFilmPublisher
-            .first()
-            .sink { [weak self] _ in
-                self?.refresh(animated: true)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.currentFilmPublisher
-            .dropFirst()
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.refresh(animated: false)
-            }
-            .store(in: &cancellables)
+    func onAppear() {
+        updateView(animated: false)
     }
     
-    private func refresh(animated: Bool) {
+    private func updateView(animated: Bool) {
         guard let film = viewModel.films[safe: viewModel.currentIndex] else { return }
         countBadge.count = UInt(viewModel.films.count)
         Task { await imageView.setDownSampledImage(at: film.image, withAnimation: animated ? 0.3 : .zero) }

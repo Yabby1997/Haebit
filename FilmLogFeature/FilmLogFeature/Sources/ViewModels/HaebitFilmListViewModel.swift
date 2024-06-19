@@ -38,10 +38,8 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     }
     
     private func bind() {
-        $currentIndex
-            .map { [weak self] index in
-                self?.films[safe: index]
-            }
+        $films.combineLatest($currentIndex)
+            .map { $0[safe: $1]}
             .assign(to: &$currentFilm)
         
         $currentFilm
@@ -66,7 +64,6 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
             .store(in: &cancellables)
         
         $currentFilm
-            .removeDuplicates()
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink { [weak self] film in
                 self?.updateTitle(for: film)
