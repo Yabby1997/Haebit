@@ -45,6 +45,7 @@ class HaebitNavigationAnimator: NSObject {
     override init() {
         super.init()
         dismissGestureRecognizer.addTarget(self, action: #selector(interactDismissGestureRecognizer))
+        dismissGestureRecognizer.delegate = self
     }
     
     // MARK: - Interactive Dismiss
@@ -250,6 +251,15 @@ class HaebitNavigationAnimator: NSObject {
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             }
         }
+    }
+}
+
+extension HaebitNavigationAnimator: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        false
     }
 }
 
