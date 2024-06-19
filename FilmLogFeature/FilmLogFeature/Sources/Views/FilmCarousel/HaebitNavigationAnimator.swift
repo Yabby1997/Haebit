@@ -47,25 +47,33 @@ class HaebitNavigationAnimator: NSObject {
         dismissGestureRecognizer.addTarget(self, action: #selector(interactDismissGestureRecognizer))
     }
     
-    // MARK: - Private Methods
+    // MARK: - Interactive Dismiss
     
     @objc private func interactDismissGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
-        if gesture.state == .began, gesture.velocity(in: gesture.view).y > .zero {
-            isDismissingWithGesture = true
-            navigationController?.popViewController(animated: true)
+        switch gesture.state {
+        case .began: startInteractiveDismiss(with: gesture)
+        case .changed: updateInteractiveDismiss(with: gesture)
+        case .ended, .cancelled: finalizeInteractiveDismiss(with: gesture)
+        default: return
         }
-        
+    }
+    
+    private func startInteractiveDismiss(with gesture: UIPanGestureRecognizer) {
+        guard gesture.velocity(in: gesture.view).y > .zero else { return }
+        isDismissingWithGesture = true
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func updateInteractiveDismiss(with gesture: UIPanGestureRecognizer) {
         guard let transitionContext,
               let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
               let pushedTargetView = pushed.viewForTransition(),
               let pushedTargetFrame,
-              let base = transitionContext.viewController(forKey: .to)  as? HaebitNavigationAnimatorSnapshotProvidable,
-              let baseTargetView = base.viewForTransition(),
-              let baseTargetFrame else { return }
+              let baseTargetFrame else {
+            return
+        }
         
         let translation = gesture.translation(in: pushed.view)
-        let velocity = gesture.velocity(in: pushed.view)
-        
         let newCenter = CGPoint(
             x: pushedTargetView.center.x + translation.x,
             y: pushedTargetView.center.y + translation.y
@@ -86,11 +94,29 @@ class HaebitNavigationAnimator: NSObject {
             )
         )
         snapshot?.center = newCenter
-        
-        guard gesture.state == .ended else { return }
+    }
+    
+    private func finalizeInteractiveDismiss(with gesture: UIPanGestureRecognizer) {
         isDismissingWithGesture = false
+        guard let transitionContext,
+              let pushed = transitionContext.viewController(forKey: .from) as? HaebitNavigationAnimatorSnapshotProvidable,
+              let pushedTargetView = pushed.viewForTransition(),
+              let pushedTargetFrame,
+              let base = transitionContext.viewController(forKey: .to)  as? HaebitNavigationAnimatorSnapshotProvidable,
+              let baseTargetView = base.viewForTransition(),
+              let baseTargetFrame else {
+            return
+        }
         
-        if velocity.y >= 0, newCenter.y > pushedTargetView.center.y {
+        let translation = gesture.translation(in: pushed.view)
+        let velocity = gesture.velocity(in: pushed.view)
+        
+        let newCenter = CGPoint(
+            x: pushedTargetView.center.x + translation.x,
+            y: pushedTargetView.center.y + translation.y
+        )
+        
+        if velocity.y >= .zero, newCenter.y > pushedTargetView.center.y {
             UIView.animate(
                 withDuration: interactionSuccessDuration,
                 delay: .zero,
@@ -125,10 +151,11 @@ class HaebitNavigationAnimator: NSObject {
                 transitionContext.completeTransition(false)
                 self?.snapshot?.removeFromSuperview()
                 self?.transitionContext = nil
-                self?.isDismissingWithGesture = false
             }
         }
     }
+    
+    // MARK: - Non-interactive Present/Dismiss
     
     private func animatePushTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let pushed = transitionContext.viewController(forKey: .to) as? HaebitNavigationAnimatorSnapshotProvidable,
