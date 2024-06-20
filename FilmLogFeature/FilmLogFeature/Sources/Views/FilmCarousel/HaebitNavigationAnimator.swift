@@ -73,28 +73,23 @@ class HaebitNavigationAnimator: NSObject {
               let baseTargetFrame else {
             return
         }
-        
         let translation = gesture.translation(in: pushed.view)
-        let newCenter = CGPoint(
-            x: pushedTargetView.center.x + translation.x,
-            y: pushedTargetView.center.y + translation.y
-        )
-        
         let diffWidth = pushedTargetFrame.width - baseTargetFrame.width
         let diffHeight = pushedTargetFrame.height - baseTargetFrame.height
-        
-        let progress = min((translation.y < .zero ? .zero : translation.y / pushedTargetView.center.y), 1.0)
-        pushed.view.alpha = 1 - progress
-        transitionContext.updateInteractiveTransition(progress)
-        
+        let scale = min((translation.y < .zero ? .zero : translation.y * 2.0 / pushedTargetView.frame.height), 1.0)
         snapshot?.frame = CGRect(
             origin: .zero,
             size: CGSize(
-                width: pushedTargetFrame.width - diffWidth * progress,
-                height: pushedTargetFrame.height - diffHeight * progress
+                width: pushedTargetFrame.width - diffWidth * scale,
+                height: pushedTargetFrame.height - diffHeight * scale
             )
         )
-        snapshot?.center = newCenter
+        snapshot?.center = CGPoint(
+            x: pushedTargetView.center.x + translation.x,
+            y: pushedTargetView.center.y + translation.y
+        )
+        pushed.view.alpha = 1 -  min((translation.y < .zero ? .zero : translation.y * 2.0 / pushedTargetView.frame.height), 1.0)
+        transitionContext.updateInteractiveTransition(min((translation.y < .zero ? .zero : translation.y * 10.0 / pushedTargetView.frame.height), 1.0))
     }
     
     private func finalizeInteractiveDismiss(with gesture: UIPanGestureRecognizer) {
@@ -126,6 +121,7 @@ class HaebitNavigationAnimator: NSObject {
                 self?.snapshot?.frame = baseTargetFrame
                 pushed.view.alpha = .zero
                 base.tabBarController?.tabBar.alpha = 1
+                transitionContext.updateInteractiveTransition(1.0)
             } completion: { [weak self] _ in
                 pushedTargetView.isHidden = false
                 baseTargetView.isHidden = false
@@ -145,6 +141,7 @@ class HaebitNavigationAnimator: NSObject {
                 self?.snapshot?.frame = pushedTargetFrame
                 pushed.view.alpha = 1.0
                 base.tabBarController?.tabBar.alpha = .zero
+                transitionContext.updateInteractiveTransition(.zero)
             } completion: { [weak self] _ in
                 pushedTargetView.isHidden = false
                 baseTargetView.isHidden = false
