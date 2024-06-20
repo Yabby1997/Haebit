@@ -39,7 +39,7 @@ let targets: [Target] = [
         deploymentTarget: .iOS(targetVersion: "16.0", devices: [.iphone]),
         sources: ["LightMeterFeature/Sources/**"],
         resources: ["LightMeterFeature/Resources/**"],
-        dependencies: devDependencies,
+        dependencies: releasedDependencies,
         settings: .settings(base: ["SWIFT_STRICT_CONCURRENCY": "complete"])
     ),
     Target(
