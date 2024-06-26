@@ -216,8 +216,9 @@ final class HaebitFilmListViewController: UIViewController {
     }
     
     private func scrollToCurrentIndexIfNeeded(animated: Bool = false) {
-        let indexPath = IndexPath(item: viewModel.currentIndex, section: 0)
+        let indexPath = IndexPath(item: viewModel.currentIndex, section: .zero)
         guard photoListCollectionView.numberOfSections > .zero,
+              (.zero..<photoListCollectionView.numberOfItems(inSection: .zero)).contains(indexPath.item),
               photoListCollectionView.indexPathsForVisibleItems.contains(indexPath) == false else { return }
         photoListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: animated)
         photoListCollectionView.layoutIfNeeded()
