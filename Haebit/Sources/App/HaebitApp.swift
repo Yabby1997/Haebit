@@ -24,7 +24,8 @@ struct HaebitApp: App {
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
                     reviewRequestValidator: DefaultReviewRequestValidator(), 
                     gpsAccessValidator: DefaultGPSAccessValidator(),
-                    feedbackProvider: LightMeterHapticFeedbackProvider()
+                    feedbackProvider: LightMeterHapticFeedbackProvider(),
+                    preferenceProvider: DefaultLightMeterPreferenceProvider()
                 ),
                 logView: HaebitFilmLogView(logger: logger)
             )

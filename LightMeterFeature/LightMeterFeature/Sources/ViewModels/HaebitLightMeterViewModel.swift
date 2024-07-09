@@ -24,16 +24,9 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     private let reviewRequestValidator: ReviewRequestValidatable
     private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
+    private let preferenceProvider: LightMeterPreferenceProvidable
     private let debounceQueue = DispatchQueue.global()
     nonisolated public let previewLayer: CALayer
-    
-    // MARK: - Constants
-    
-    nonisolated private let availableApertureValues: [Float] = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
-    nonisolated private let availableShutterSpeedDenominators: [UInt32] = [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
-    nonisolated private let availableShutterSpeedNumerators: [UInt32] = [1, 2, 4, 8, 16, 30, 60]
-    nonisolated private let availableIsoValues: [UInt32] = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
-    nonisolated private let availableFocalLengths: [UInt32] = [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
     
     // MARK: - Properties
     
@@ -77,23 +70,25 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
         statePersistence: LightMeterStatePersistenceProtocol,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
-        feedbackProvider: LightMeterFeedbackProvidable
+        feedbackProvider: LightMeterFeedbackProvidable,
+        preferenceProvider: LightMeterPreferenceProvidable
     ) {
         self.logger = logger
         self.statePersistence = statePersistence
         self.reviewRequestValidator = reviewRequestValidator
         self.gpsAccessValidator = gpsAccessValidator
         self.feedbackProvider = feedbackProvider
+        self.preferenceProvider = preferenceProvider
         previewLayer = camera.previewLayer
         lightMeterMode = statePersistence.mode
         aperture = statePersistence.aperture
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
-        apertureValues = availableApertureValues.compactMap { ApertureValue($0) }
-        shutterSpeedValues = availableShutterSpeedDenominators.compactMap { ShutterSpeedValue(denominator: $0) } + availableShutterSpeedNumerators.compactMap { ShutterSpeedValue(numerator: $0) }
-        isoValues = availableIsoValues.compactMap { IsoValue($0) }
-        focalLengthValues = filterFocalLengths(with: 10)
+        apertureValues = preferenceProvider.apertureValues
+        shutterSpeedValues = preferenceProvider.shutterSpeedValues
+        isoValues = preferenceProvider.isoValues
+        focalLengthValues = preferenceProvider.focalLengthValues(under: 10)
     }
     
     // MARK: - Private Methods
@@ -202,7 +197,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             await camera.maxZoomFactor
                 .receive(on: DispatchQueue.main)
                 .compactMap { [weak self] maxZoomFactor in
-                    self?.filterFocalLengths(with: maxZoomFactor)
+                    self?.preferenceProvider.focalLengthValues(under: maxZoomFactor)
                 }
                 .assign(to: &$focalLengthValues)
             
@@ -244,10 +239,6 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
         Task {
             try? await camera.zoom(factor: factor)
         }
-    }
-    
-    private func filterFocalLengths(with maxZoomFactor: CGFloat) -> [FocalLengthValue] {
-        availableFocalLengths.compactMap { FocalLengthValue($0) }.filter { $0.zoomFactor <= maxZoomFactor }
     }
     
     // MARK: - Internal Methods
