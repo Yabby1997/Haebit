@@ -1,8 +1,8 @@
 import ProjectDescription
 
 let majorVersion: Int = 1
-let minorVersion: Int = 3
-let patchVersion: Int = 1
+let minorVersion: Int = 4
+let patchVersion: Int = 0
 let versionString: Plist.Value = "\(majorVersion).\(minorVersion).\(patchVersion)"
 
 let plist: InfoPlist = .extendingDefault(
