@@ -10,8 +10,8 @@ import SwiftUI
 import HaebitCommonModels
 import HaebitUI
 
-struct IsoRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct IsoRing: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {

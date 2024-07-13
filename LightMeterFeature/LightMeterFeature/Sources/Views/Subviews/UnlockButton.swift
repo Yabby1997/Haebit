@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct UnlockButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct UnlockButton: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
 
     var body: some View {
         Button(action: viewModel.didTapUnlock) { Text(.lightMeterControlViewUnlockButton) }

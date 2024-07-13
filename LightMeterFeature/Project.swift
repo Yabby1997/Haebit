@@ -18,7 +18,6 @@ let releasedDependencies: [TargetDependency] = [
     .external(name: "HaebitCommonModels"),
     .external(name: "HaebitUI"),
     .external(name: "LightMeter"),
-    .external(name: "Obscura"),
     .external(name: "Portolan"),
 ]
 
@@ -26,7 +25,6 @@ let devDependencies: [TargetDependency] = [
     .project(target: "HaebitCommonModels", path: "../../../Modules/HaebitCommonModels"),
     .project(target: "HaebitUI", path: "../../../Modules/HaebitUI"),
     .project(target: "LightMeter", path: "../../../Modules/LightMeter"),
-    .project(target: "Obscura", path: "../../../Modules/Obscura"),
     .project(target: "Portolan", path: "../../../Modules/Portolan"),
 ]
 

@@ -9,8 +9,8 @@
 import SwiftUI
 import HaebitUI
 
-struct ApertureRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct ApertureRing: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
 
     var body: some View {

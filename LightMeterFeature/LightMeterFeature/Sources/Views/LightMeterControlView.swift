@@ -9,8 +9,8 @@
 import SwiftUI
 import HaebitUI
 
-struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct LightMeterControlView: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
@@ -35,14 +35,3 @@ struct LightMeterControlView<ViewModel>: View where ViewModel: HaebitLightMeterV
         .animation(.easeIn(duration: 0.1), value: viewModel.isCapturing)
     }
 }
-
-//#Preview {
-//    LightMeterControlView(viewModel: DemoHaebitLightMeterViewModel())
-//        .environmentObject(
-//            LightMeterControlViewDependencies(
-//                exposureControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingExposureFeedbackProvider()),
-//                zoomControlDependency: HaebitApertureRingDependencies(feedbackProvidable: ApertureRingZoomFeedbackProvider()),
-//                shutterButtonDependency: HaebitShutterButtonDependencies(feedbackProvidable: DefaultShutterButtonFeedbackProvider())
-//            )
-//        )
-//}

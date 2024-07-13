@@ -10,14 +10,14 @@ import AVFAudio
 @preconcurrency import Combine
 import HaebitCommonModels
 import LightMeter
-import Obscura
 import Portolan
 @preconcurrency import QuartzCore
 
-public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol {
+@MainActor
+public final class HaebitLightMeterViewModel: ObservableObject {
     // MARK: - Dependencies
     
-    private let camera = ObscuraCamera()
+    private let camera: LightMeterCamera
     private let logger: HaebitLightMeterLoggable
     private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
@@ -46,7 +46,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
-    @Published public var lightMeterMode: LightMeterMode { didSet { feedbackProvider.generateInteractionFeedback() } }
+    @Published public var lightMeterMode: LightMeterMode
     @Published public var apertureValues: [ApertureValue] = []
     @Published public var shutterSpeedValues: [ShutterSpeedValue] = []
     @Published public var isoValues: [IsoValue] = []
@@ -66,13 +66,15 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     // MARK: - Initializers
     
     public init(
+        camera: LightMeterCamera,
         logger: HaebitLightMeterLoggable,
+        preferenceProvider: LightMeterPreferenceProvidable,
         statePersistence: LightMeterStatePersistenceProtocol,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
-        feedbackProvider: LightMeterFeedbackProvidable,
-        preferenceProvider: LightMeterPreferenceProvidable
+        feedbackProvider: LightMeterFeedbackProvidable = LightMeterHapticFeedbackProvider()
     ) {
+        self.camera = camera
         self.logger = logger
         self.statePersistence = statePersistence
         self.reviewRequestValidator = reviewRequestValidator
@@ -132,6 +134,13 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             .receive(on: DispatchQueue.main)
             .assign(to: &$iso)
         
+        $lightMeterMode
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.feedbackProvider.generateCompletionFeedback()
+            }
+            .store(in: &cancellables)
+        
         $exposureValue.combineLatest($iso, $aperture)
             .removeDuplicates { $0 == $1 }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
@@ -189,50 +198,48 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
             .map { $0?.coordinate }
             .assign(to: &$location)
         
-        Task {
-            await camera.isRunning
-                .receive(on: DispatchQueue.main)
-                .assign(to: &$isCameraRunning)
-            
-            await camera.maxZoomFactor
-                .receive(on: DispatchQueue.main)
-                .compactMap { [weak self] maxZoomFactor in
-                    self?.preferenceProvider.focalLengthValues(under: maxZoomFactor)
-                }
-                .assign(to: &$focalLengthValues)
-            
-            await camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
-                .removeDuplicates { $0 == $1 }
-                .debounce(for: .seconds(0.1), scheduler: debounceQueue)
-                .compactMap { iso, shutterSpeed, aperture in
-                    try? LightMeterService.getExposureValue(
-                        iso: iso,
-                        shutterSpeed: shutterSpeed,
-                        aperture: aperture
-                    )
-                }
-                .removeDuplicates()
-                .receive(on: DispatchQueue.main)
-                .assign(to: &$exposureValue)
-            
-            await camera.isExposureLocked.combineLatest(await camera.isFocusLocked)
-                .map { $0 == $1 && $0 }
-                .receive(on: DispatchQueue.main)
-                .assign(to: &$isLocked)
-            
-            await camera.exposureLockPoint.combineLatest(await camera.focusLockPoint)
-                .filter { $0 == $1 }
-                .map { $0.0 }
-                .receive(on: DispatchQueue.main)
-                .assign(to: &$lockPoint)
-            
-            await camera.isExposureLocked.combineLatest(camera.isFocusLocked)
-                .debounce(for: .seconds(1.5), scheduler: debounceQueue)
-                .filter { $0 == $1 && $0 }
-                .map { _ in nil }
-                .receive(on: DispatchQueue.main)
-                .assign(to: &$lockPoint)
-        }
+        camera.isRunning
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isCameraRunning)
+        
+        camera.maxZoomFactor
+            .receive(on: DispatchQueue.main)
+            .compactMap { [weak self] maxZoomFactor in
+                self?.preferenceProvider.focalLengthValues(under: maxZoomFactor)
+            }
+            .assign(to: &$focalLengthValues)
+        
+        camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
+            .removeDuplicates { $0 == $1 }
+            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
+            .compactMap { iso, shutterSpeed, aperture in
+                try? LightMeterService.getExposureValue(
+                    iso: iso,
+                    shutterSpeed: shutterSpeed,
+                    aperture: aperture
+                )
+            }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$exposureValue)
+        
+        camera.isExposureLocked.combineLatest(camera.isFocusLocked)
+            .map { $0 == $1 && $0 }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLocked)
+        
+        camera.exposureLockPoint.combineLatest(camera.focusLockPoint)
+            .filter { $0 == $1 }
+            .map { $0.0 }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$lockPoint)
+        
+        camera.isExposureLocked.combineLatest(camera.isFocusLocked)
+            .debounce(for: .seconds(1.5), scheduler: debounceQueue)
+            .filter { $0 == $1 && $0 }
+            .map { _ in nil }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$lockPoint)
     }
     
     private func zoomCamera(factor: CGFloat) throws {
@@ -258,7 +265,7 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
                 try? await camera.setHDRMode(isEnabled: false)
                 bind()
             } catch {
-                if case .notAuthorized = error as? ObscuraCamera.Errors {
+                if case .notAuthorized = error as? LightMeterCameraErrors {
                     shouldRequestCameraAccess = true
                 }
             }
@@ -305,13 +312,13 @@ public final class HaebitLightMeterViewModel: HaebitLightMeterViewModelProtocol 
     public func didTapShutter() {
         isCapturing = true
         Task {
-            guard let captured = try? await camera.capturePhoto() else { return }
+            guard let imagePath = try? await camera.capturePhoto() else { return }
             do {
                 try await logger.save(
                     date: Date(),
                     latitude: location?.latitude,
                     longitude: location?.longitude,
-                    image: captured.imagePath,
+                    image: imagePath,
                     focalLength: focalLength.value,
                     iso: iso.value,
                     shutterSpeedNumerator: shutterSpeed.numerator,

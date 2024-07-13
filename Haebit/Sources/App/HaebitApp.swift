@@ -20,12 +20,12 @@ struct HaebitApp: App {
         WindowGroup {
             HaebitLightMeterView(
                 viewModel: HaebitLightMeterViewModel(
+                    camera: LightMeterObscuraCamera(),
                     logger: logger,
+                    preferenceProvider: DefaultLightMeterPreferenceProvider(),
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
                     reviewRequestValidator: DefaultReviewRequestValidator(), 
-                    gpsAccessValidator: DefaultGPSAccessValidator(),
-                    feedbackProvider: LightMeterHapticFeedbackProvider(),
-                    preferenceProvider: DefaultLightMeterPreferenceProvider()
+                    gpsAccessValidator: DefaultGPSAccessValidator()
                 ),
                 logView: HaebitFilmLogView(logger: logger)
             )

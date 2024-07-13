@@ -10,8 +10,8 @@ import SwiftUI
 import HaebitCommonModels
 import HaebitUI
 
-struct ShutterSpeedRing<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct ShutterSpeedRing: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {

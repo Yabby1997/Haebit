@@ -10,14 +10,14 @@ import SwiftUI
 import HaebitUI
 import StoreKit
 
-public struct HaebitLightMeterView<ViewModel, LogView: View>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+public struct HaebitLightMeterView<LogView: View>: View{
+    @StateObject var viewModel: HaebitLightMeterViewModel
     @Environment(\.openURL) var openURL
     @Environment(\.scenePhase) var scenePhase
     let logView: LogView
     
     public init(
-        viewModel: ViewModel,
+        viewModel: HaebitLightMeterViewModel,
         logView: LogView
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel)

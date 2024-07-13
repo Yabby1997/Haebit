@@ -4,8 +4,20 @@ import SwiftUI
 
 @main
 struct HaebitLightMeterDemoApp: App {
-    @State var isPresentingDemoSettingSheet = false
-    @StateObject var viewModel = DemoLightMeterViewModel()
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    
+    init() {
+        _viewModel = StateObject(
+            wrappedValue: HaebitLightMeterViewModel(
+                camera: MockLightMeterCamera(),
+                logger: MockLightMeterLogger(),
+                preferenceProvider: MockLightMeterPreferenceProvider(),
+                statePersistence: MockStatePersistence(),
+                reviewRequestValidator: MockReviewRequestValidator(),
+                gpsAccessValidator: MockGPSAccessValidator()
+            )
+        )
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -13,12 +25,6 @@ struct HaebitLightMeterDemoApp: App {
                 viewModel: viewModel,
                 logView: EmptyView()
             )
-            .onTapGesture(count: 2) {
-                isPresentingDemoSettingSheet = true
-            }
-            .fullScreenCover(isPresented: $isPresentingDemoSettingSheet) {
-                DemoLightMeterConfigView(viewModel: viewModel)
-            }
             .environmentObject(
                 LightMeterControlViewDependencies(
                     exposureControlDependency: HaebitApertureRingDependencies(

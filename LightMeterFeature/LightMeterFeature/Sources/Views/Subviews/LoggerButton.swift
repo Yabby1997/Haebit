@@ -9,8 +9,8 @@
 import SwiftUI
 import HaebitUI
 
-struct LoggerButton<ViewModel>: View where ViewModel: HaebitLightMeterViewModelProtocol {
-    @StateObject var viewModel: ViewModel
+struct LoggerButton: View {
+    @StateObject var viewModel: HaebitLightMeterViewModel
     
     var body: some View {
         HStack {

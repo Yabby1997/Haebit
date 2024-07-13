@@ -20,9 +20,16 @@ let plist: InfoPlist = .extendingDefault(
     ]
 )
 
-let targetDependencies: [TargetDependency] = [
+let releasedDependencies: [TargetDependency] = [
     .project(target: "LightMeterFeature", path: "LightMeterFeature"),
     .project(target: "FilmLogFeature", path: "FilmLogFeature"),
+    .external(name: "Obscura"),
+]
+
+let devDependencies: [TargetDependency] = [
+    .project(target: "LightMeterFeature", path: "LightMeterFeature"),
+    .project(target: "FilmLogFeature", path: "FilmLogFeature"),
+    .project(target: "Obscura", path: "../../Modules/Obscura"),
 ]
 
 let settings: Settings = .settings(
@@ -47,7 +54,7 @@ let targets: [Target] = [
             "Haebit/Resources/Common/**",
             "Haebit/Resources/Dev/**"
         ],
-        dependencies: targetDependencies,
+        dependencies: devDependencies,
         settings: settings
     ),
     Target(
@@ -62,7 +69,7 @@ let targets: [Target] = [
             "Haebit/Resources/Common/**",
             "Haebit/Resources/Real/**"
         ],
-        dependencies: targetDependencies,
+        dependencies: releasedDependencies,
         settings: settings
     )
 ]
