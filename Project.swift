@@ -69,7 +69,7 @@ let targets: [Target] = [
             "Haebit/Resources/Common/**",
             "Haebit/Resources/Real/**"
         ],
-        dependencies: releasedDependencies,
+        dependencies: devDependencies,
         settings: settings
     )
 ]
