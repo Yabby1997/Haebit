@@ -6,12 +6,13 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
-import HaebitCommonModels
+import Combine
 import Foundation
+import HaebitCommonModels
 
 public protocol LightMeterPreferenceProvidable: AnyObject {
-    var apertureValues: [ApertureValue] { get }
-    var shutterSpeedValues: [ShutterSpeedValue] { get }
-    var isoValues: [IsoValue] { get }
-    func focalLengthValues(under maxZoomFactor: CGFloat) -> [FocalLengthValue]
+    var apertureValues: AnyPublisher<[ApertureValue], Never> { get }
+    var shutterSpeedValues: AnyPublisher<[ShutterSpeedValue], Never> { get }
+    var isoValues: AnyPublisher<[IsoValue], Never> { get }
+    var focalLengthValues: AnyPublisher<[FocalLengthValue], Never> { get }
 }

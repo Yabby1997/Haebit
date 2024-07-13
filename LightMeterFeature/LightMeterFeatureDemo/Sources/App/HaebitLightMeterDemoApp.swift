@@ -4,26 +4,31 @@ import SwiftUI
 
 @main
 struct HaebitLightMeterDemoApp: App {
-    @StateObject var viewModel: HaebitLightMeterViewModel
+    let camera: MockLightMeterCamera
+    let preferenceProvider: MockLightMeterPreferenceProvider
     
     init() {
-        _viewModel = StateObject(
-            wrappedValue: HaebitLightMeterViewModel(
-                camera: MockLightMeterCamera(),
-                logger: MockLightMeterLogger(),
-                preferenceProvider: MockLightMeterPreferenceProvider(),
-                statePersistence: MockStatePersistence(),
-                reviewRequestValidator: MockReviewRequestValidator(),
-                gpsAccessValidator: MockGPSAccessValidator()
-            )
-        )
+        camera = MockLightMeterCamera(screenScaleFactor: UIScreen.main.scale)
+        preferenceProvider = MockLightMeterPreferenceProvider()
     }
     
     var body: some Scene {
         WindowGroup {
             HaebitLightMeterView(
-                viewModel: viewModel,
-                logView: EmptyView()
+                viewModel: HaebitLightMeterViewModel(
+                    camera: camera,
+                    logger: MockLightMeterLogger(),
+                    preferenceProvider: preferenceProvider,
+                    statePersistence: MockStatePersistence(),
+                    reviewRequestValidator: MockReviewRequestValidator(),
+                    gpsAccessValidator: MockGPSAccessValidator()
+                ),
+                logView: DemoLightMeterConfigView(
+                    viewModel: DemoLightMeterConfigViewModel(
+                        camera: camera,
+                        preferenceProvider: preferenceProvider
+                    )
+                )
             )
             .environmentObject(
                 LightMeterControlViewDependencies(

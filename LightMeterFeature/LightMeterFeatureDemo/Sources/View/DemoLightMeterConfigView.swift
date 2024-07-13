@@ -9,62 +9,119 @@
 import PhotosUI
 import SwiftUI
 
-//@MainActor
-//struct DemoLightMeterConfigView: View {
-//    @Environment(\.dismiss) var dismiss
-//    @State var selectedItem: PhotosPickerItem?
-//    @StateObject var viewModel: DemoLightMeterViewModel
-//    
-//    @State var exposureValueString = ""
-//    
-//    var body: some View {
-//        NavigationStack {
-//            List {
-//                Section("Fake Preview") {
-//                    PhotosPicker(selection: $selectedItem, preferredItemEncoding: .compatible) {
-//                        if let cgimage = viewModel.previewImage {
-//                            Image(uiImage: UIImage(cgImage: cgimage))
-//                                .resizable()
-//                                .aspectRatio(contentMode: .fill)
-//                        } else {
-//                            Text("Select photo")
-//                        }
-//                    }
-//                }
-//                Section("Exposure Value") {
-//                    FloatField("EV", float: $viewModel.exposureValue)
-//                }
-//                Section("Exposure Lock") {
-//                    HStack {
-//                        FloatField("X", float: $viewModel.lockPointX)
-//                        FloatField("Y", float: $viewModel.lockPointY)
-//                    }
-//                    Toggle("Lock", isOn: $viewModel.isLocked)
-//                    Button(action: viewModel.resetLock) {
-//                        Text("Reset")
-//                            .foregroundStyle(.red)
-//                    }
-//                }
-//            }
-//            .navigationTitle("Register")
-//            .toolbar {
-//                ToolbarItem(placement: .confirmationAction) {
-//                    Button {
-//                        dismiss.callAsFunction()
-//                    } label: {
-//                        Text("Done")
-//                    }
-//                }
-//            }
-//            .onChange(of: selectedItem) { value in
-//                guard let selectedItem else { return }
-//                Task {
-//                    guard let data = try? await selectedItem.loadTransferable(type: Data.self) else { return }
-//                    viewModel.setPreview(UIImage(data: data)?.cgImage)
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//extension PhotosPickerItem: @unchecked Sendable {}
+@MainActor
+struct DemoLightMeterConfigView: View {
+    @Environment(\.dismiss) var dismiss
+    @State var selectedItem: PhotosPickerItem?
+    @StateObject var viewModel: DemoLightMeterConfigViewModel
+    
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Preview") {
+                    PhotosPicker(selection: $selectedItem, preferredItemEncoding: .compatible) {
+                        if let cgimage = viewModel.previewImage {
+                            Image(uiImage: UIImage(cgImage: cgimage))
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else {
+                            Text("Select photo")
+                        }
+                    }
+                }
+                Section("Exposure Value") {
+                    VStack {
+                        HStack {
+                            Text("APT")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("Aperture", text: $viewModel.aperture)
+                        }
+                        HStack {
+                            Text("SPD")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("ShutterSpeed", text: $viewModel.shutterSpeed)
+                        }
+                        HStack {
+                            Text("ISO")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("ISO", text: $viewModel.iso)
+                        }
+                    }
+                    .keyboardType(.decimalPad)
+                }
+                Section("Exposure Lock") {
+                    VStack {
+                        HStack {
+                            Text("COD")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("X", text: $viewModel.lockPointX)
+                                .multilineTextAlignment(.trailing)
+                            Text(",")
+                            TextField("Y", text: $viewModel.lockPointY)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .keyboardType(.decimalPad)
+                        Toggle("Lock", isOn: $viewModel.isLocked)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.yellow)
+                        Button(action: viewModel.didTapResetLock) {
+                            Text("Reset")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.red)
+                        }
+                    }
+                }
+                Section("Preferences") {
+                    VStack {
+                        HStack {
+                            Text("APT")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("Apertures", text: $viewModel.apertures)
+                        }
+                        HStack {
+                            Text("SPD")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("ShutterSpeeds", text: $viewModel.shutterSpeeds)
+                        }
+                        HStack {
+                            Text("ISO")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("ISOs", text: $viewModel.isos)
+                        }
+                        HStack {
+                            Text("FCL")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            TextField("FocalLengths", text: $viewModel.focalLengths)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Demo Config")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        viewModel.didTapDismiss()
+                        dismiss.callAsFunction()
+                    } label: {
+                        Text("Dismiss")
+                    }
+                }
+            }
+            .onChange(of: selectedItem) { value in
+                guard let selectedItem else { return }
+                Task {
+                    guard let data = try? await selectedItem.loadTransferable(type: Data.self) else { return }
+                    viewModel.previewImage = (UIImage(data: data)?.cgImage)
+                }
+            }
+        }
+    }
+}

@@ -12,10 +12,21 @@ import LightMeterFeature
 @preconcurrency import QuartzCore
 
 actor MockLightMeterCamera: LightMeterCamera {
+    private let screenScaleFactor: CGFloat
     nonisolated let previewLayer: CALayer
-    nonisolated let isRunning: AnyPublisher<Bool, Never>
-    nonisolated let maxZoomFactor: AnyPublisher<CGFloat, Never>
-    nonisolated let isHDREnabled: AnyPublisher<Bool, Never>
+    
+    nonisolated let previewImageSubject = CurrentValueSubject<CGImage?, Never>(nil)
+    nonisolated let apertureSubject = CurrentValueSubject<Float, Never>(1.6)
+    nonisolated let shutterSpeedSubject = CurrentValueSubject<Float, Never>(1 / 60)
+    nonisolated let isoSubject = CurrentValueSubject<Float, Never>(100)
+    nonisolated let lockPointSubject = CurrentValueSubject<CGPoint?, Never>(nil)
+    nonisolated let isLockedSubject = CurrentValueSubject<Bool, Never>(false)
+    
+    nonisolated let isRunning: AnyPublisher<Bool, Never> = Just(false).eraseToAnyPublisher()
+    nonisolated let maxZoomFactor: AnyPublisher<CGFloat, Never> = Just(.greatestFiniteMagnitude).eraseToAnyPublisher()
+    nonisolated let isHDREnabled: AnyPublisher<Bool, Never> = Just(false).eraseToAnyPublisher()
+    nonisolated let zoomFactor: AnyPublisher<CGFloat, Never> = Just(1.0).eraseToAnyPublisher()
+    nonisolated let isCapturing: AnyPublisher<Bool, Never> = Just(false).eraseToAnyPublisher()
     nonisolated let iso: AnyPublisher<Float, Never>
     nonisolated let shutterSpeed: AnyPublisher<Float, Never>
     nonisolated let aperture: AnyPublisher<Float, Never>
@@ -23,62 +34,47 @@ actor MockLightMeterCamera: LightMeterCamera {
     nonisolated let focusLockPoint: AnyPublisher<CGPoint?, Never>
     nonisolated let isExposureLocked: AnyPublisher<Bool, Never>
     nonisolated let isFocusLocked: AnyPublisher<Bool, Never>
-    nonisolated let zoomFactor: AnyPublisher<CGFloat, Never>
-    nonisolated let isCapturing: AnyPublisher<Bool, Never>
     
-    init() {
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init(screenScaleFactor: CGFloat) {
+        self.screenScaleFactor = screenScaleFactor
         self.previewLayer = CALayer()
-        self.isRunning = Just(false).eraseToAnyPublisher()
-        self.maxZoomFactor = Just(10).eraseToAnyPublisher()
-        self.isHDREnabled = Just(false).eraseToAnyPublisher()
-        self.iso = Just(100).eraseToAnyPublisher()
-        self.shutterSpeed = Just(1.0).eraseToAnyPublisher()
-        self.aperture = Just(1.4).eraseToAnyPublisher()
-        self.exposureLockPoint = Just(nil).eraseToAnyPublisher()
-        self.focusLockPoint = Just(nil).eraseToAnyPublisher()
-        self.isExposureLocked = Just(false).eraseToAnyPublisher()
-        self.isFocusLocked = Just(false).eraseToAnyPublisher()
-        self.zoomFactor = Just(1.0).eraseToAnyPublisher()
-        self.isCapturing = Just(false).eraseToAnyPublisher()
+        self.iso = isoSubject.eraseToAnyPublisher()
+        self.shutterSpeed = shutterSpeedSubject.eraseToAnyPublisher()
+        self.aperture = apertureSubject.eraseToAnyPublisher()
+        self.exposureLockPoint = lockPointSubject.eraseToAnyPublisher()
+        self.focusLockPoint = lockPointSubject.eraseToAnyPublisher()
+        self.isExposureLocked = isLockedSubject.eraseToAnyPublisher()
+        self.isFocusLocked = isLockedSubject.eraseToAnyPublisher()
+        Task {
+            await bind()
+        }
     }
     
-    func setup() async throws {
-        //
+    func bind() {
+        previewImageSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                guard let self else { return }
+                CATransaction.begin()
+                previewLayer.contents = image
+                previewLayer.contentsGravity = .resizeAspectFill
+                previewLayer.contentsScale = screenScaleFactor
+                previewLayer.displayIfNeeded()
+                CATransaction.commit()
+            }
+            .store(in: &cancellables)
     }
     
-    func start() async {
-        //
-    }
-    
-    func stop() async {
-        //
-    }
-    
-    func zoom(factor: CGFloat) async throws {
-        //
-    }
-    
-    func setHDRMode(isEnabled: Bool) async throws {
-        //
-    }
-    
-    func lockExposure(on point: CGPoint) async throws {
-        //
-    }
-    
-    func unlockExposure() async throws {
-        //
-    }
-    
-    func lockFocus(on point: CGPoint) async throws {
-        //
-    }
-    
-    func unlockFocus() async throws {
-        //
-    }
-    
-    func capturePhoto() async throws -> String? {
-        nil
-    }
+    func setup() async throws {}
+    func start() async {}
+    func stop() async {}
+    func zoom(factor: CGFloat) async throws {}
+    func setHDRMode(isEnabled: Bool) async throws {}
+    func lockExposure(on point: CGPoint) async throws {}
+    func unlockExposure() async throws {}
+    func lockFocus(on point: CGPoint) async throws {}
+    func unlockFocus() async throws {}
+    func capturePhoto() async throws -> String? { nil }
 }

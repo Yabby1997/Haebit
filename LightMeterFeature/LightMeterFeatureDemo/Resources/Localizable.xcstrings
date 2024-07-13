@@ -1,7 +1,22 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Done" : {
+    "," : {
+
+    },
+    "APT" : {
+
+    },
+    "COD" : {
+
+    },
+    "Dismiss" : {
+
+    },
+    "FCL" : {
+
+    },
+    "ISO" : {
 
     },
     "lightMeterControlViewUnlockButton" : {
@@ -127,6 +142,9 @@
 
     },
     "Select photo" : {
+
+    },
+    "SPD" : {
 
     }
   },

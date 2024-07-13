@@ -19,12 +19,12 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     
     private let camera: LightMeterCamera
     private let logger: HaebitLightMeterLoggable
+    private let preferenceProvider: LightMeterPreferenceProvidable
     private let portolan = PortolanLocationManager()
     private let statePersistence: LightMeterStatePersistenceProtocol
     private let reviewRequestValidator: ReviewRequestValidatable
     private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
-    private let preferenceProvider: LightMeterPreferenceProvidable
     private let debounceQueue = DispatchQueue.global()
     nonisolated public let previewLayer: CALayer
     
@@ -47,7 +47,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
     @Published public var lightMeterMode: LightMeterMode
-    @Published public var apertureValues: [ApertureValue] = []
+    @Published public var apertureValues: [ApertureValue] = [.init(1.4)!]
     @Published public var shutterSpeedValues: [ShutterSpeedValue] = []
     @Published public var isoValues: [IsoValue] = []
     @Published public var focalLengthValues: [FocalLengthValue] = []
@@ -87,16 +87,32 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
-        apertureValues = preferenceProvider.apertureValues
-        shutterSpeedValues = preferenceProvider.shutterSpeedValues
-        isoValues = preferenceProvider.isoValues
-        focalLengthValues = preferenceProvider.focalLengthValues(under: 10)
     }
     
     // MARK: - Private Methods
     
     private func bind() {
         cancellables = []
+        
+        // TODO: Reflect statePersistence's state
+        preferenceProvider.apertureValues
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$apertureValues)
+        
+        preferenceProvider.shutterSpeedValues
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$shutterSpeedValues)
+        
+        preferenceProvider.isoValues
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isoValues)
+        
+        preferenceProvider.focalLengthValues.combineLatest(camera.maxZoomFactor)
+            .map { focalLengthValues, maxZoomFactor in
+                focalLengthValues.filter { $0.zoomFactor <= maxZoomFactor }
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$focalLengthValues)
         
         reviewRequestValidator.shouldRequestReviewPublisher
             .receive(on: DispatchQueue.main)
@@ -201,13 +217,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         camera.isRunning
             .receive(on: DispatchQueue.main)
             .assign(to: &$isCameraRunning)
-        
-        camera.maxZoomFactor
-            .receive(on: DispatchQueue.main)
-            .compactMap { [weak self] maxZoomFactor in
-                self?.preferenceProvider.focalLengthValues(under: maxZoomFactor)
-            }
-            .assign(to: &$focalLengthValues)
         
         camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
             .removeDuplicates { $0 == $1 }
