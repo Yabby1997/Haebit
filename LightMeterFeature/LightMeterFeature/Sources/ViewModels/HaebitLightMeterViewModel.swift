@@ -47,7 +47,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
     @Published public var lightMeterMode: LightMeterMode
-    @Published public var apertureValues: [ApertureValue] = [.init(1.4)!]
+    @Published public var apertureValues: [ApertureValue] = []
     @Published public var shutterSpeedValues: [ShutterSpeedValue] = []
     @Published public var isoValues: [IsoValue] = []
     @Published public var focalLengthValues: [FocalLengthValue] = []
@@ -87,6 +87,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
+        bind()
     }
     
     // MARK: - Private Methods
@@ -272,7 +273,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             do {
                 try await camera.setup()
                 try? await camera.setHDRMode(isEnabled: false)
-                bind()
             } catch {
                 if case .notAuthorized = error as? LightMeterCameraErrors {
                     shouldRequestCameraAccess = true
