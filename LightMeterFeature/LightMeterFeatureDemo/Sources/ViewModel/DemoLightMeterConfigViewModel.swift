@@ -49,6 +49,9 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
         self.shutterSpeeds = preferenceProvider.shutterSpeeds
         self.isos = preferenceProvider.isos
         self.focalLengths = preferenceProvider.focalLengths
+        Task {
+            await camera.setCamera(isOn: false)
+        }
     }
     
     func didTapResetLock() {
@@ -75,6 +78,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
             preferenceProvider.shutterSpeeds = shutterSpeeds
             preferenceProvider.isos = isos
             preferenceProvider.focalLengths = focalLengths
+            await camera.setCamera(isOn: true)
         }
     }
 }
