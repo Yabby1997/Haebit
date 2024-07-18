@@ -122,34 +122,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         gpsAccessValidator.shouldAskGPSAccessPublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$shouldRequestGPSAccess)
-
-        $focalLength
-            .sink { [weak self] focalLength in
-                try? self?.zoomCamera(factor: focalLength.zoomFactor)
-            }
-            .store(in: &cancellables)
-        
-        $exposureValue.combineLatest($shutterSpeed, $aperture)
-            .removeDuplicates { $0 == $1 }
-            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
-            .filter { [weak self] _ in
-                self?.lightMeterMode == .iso
-                && self?.isCapturing == false
-                && self?.isPresentingLogger == false
-            }
-            .compactMap { [weak self] ev, shutterSpeed, aperture in
-                guard let self else { return nil }
-                let iso = try? LightMeterService.getIsoValue(
-                    ev: ev,
-                    shutterSpeed: shutterSpeed.value,
-                    aperture: aperture.value
-                )
-                    .nearest(among: isoValues.map { Float($0.value) } )
-                return isoValues.first { Float($0.value) == iso }
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$iso)
         
         $lightMeterMode
             .removeDuplicates()
@@ -158,8 +130,34 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        $exposureValue.combineLatest($iso, $aperture)
+        $isCameraRunning.combineLatest($exposureValue, $iso, $shutterSpeed)
             .removeDuplicates { $0 == $1 }
+            .filter { $0.0 }
+            .map { ($0.1, $0.2, $0.3) }
+            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
+            .filter { [weak self] _ in
+                self?.lightMeterMode == .aperture
+                && self?.isCapturing == false
+                && self?.isPresentingLogger == false
+            }
+            .compactMap { [weak self] ev, iso, shutterSpeed in
+                guard let self else { return nil }
+                let aperture = try? LightMeterService.getApertureValue(
+                    ev: ev,
+                    iso: Float(iso.value),
+                    shutterSpeed: shutterSpeed.value
+                )
+                    .nearest(among: apertureValues.map { $0.value } )
+                return apertureValues.first { $0.value == aperture }
+            }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$aperture)
+        
+        $isCameraRunning.combineLatest($exposureValue, $iso, $aperture)
+            .removeDuplicates { $0 == $1 }
+            .filter { $0.0 }
+            .map { ($0.1, $0.2, $0.3) }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .shutterSpeed
@@ -180,27 +178,35 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$shutterSpeed)
         
-        $exposureValue.combineLatest($iso, $shutterSpeed)
+        $isCameraRunning.combineLatest($exposureValue, $shutterSpeed, $aperture)
             .removeDuplicates { $0 == $1 }
+            .filter { $0.0 }
+            .map { ($0.1, $0.2, $0.3) }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .aperture
+                self?.lightMeterMode == .iso
                 && self?.isCapturing == false
                 && self?.isPresentingLogger == false
             }
-            .compactMap { [weak self] ev, iso, shutterSpeed in
+            .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
-                let aperture = try? LightMeterService.getApertureValue(
+                let iso = try? LightMeterService.getIsoValue(
                     ev: ev,
-                    iso: Float(iso.value),
-                    shutterSpeed: shutterSpeed.value
+                    shutterSpeed: shutterSpeed.value,
+                    aperture: aperture.value
                 )
-                    .nearest(among: apertureValues.map { $0.value } )
-                return apertureValues.first { $0.value == aperture }
+                    .nearest(among: isoValues.map { Float($0.value) } )
+                return isoValues.first { Float($0.value) == iso }
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$aperture)
+            .assign(to: &$iso)
+        
+        $focalLength
+            .sink { [weak self] focalLength in
+                try? self?.zoomCamera(factor: focalLength.zoomFactor)
+            }
+            .store(in: &cancellables)
         
         $isLocked
             .receive(on: DispatchQueue.main)
