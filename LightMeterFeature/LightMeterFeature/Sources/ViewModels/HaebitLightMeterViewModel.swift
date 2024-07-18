@@ -95,7 +95,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     private func bind() {
         cancellables = []
         
-        // TODO: Reflect statePersistence's state
         preferenceProvider.apertureValues
             .receive(on: DispatchQueue.main)
             .assign(to: &$apertureValues)
@@ -107,6 +106,31 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         preferenceProvider.isoValues
             .receive(on: DispatchQueue.main)
             .assign(to: &$isoValues)
+        
+        $isCameraRunning.combineLatest(preferenceProvider.apertureValues)
+            .filter { $0.0 }
+            .compactMap { [weak self] _, apertureValues in
+                guard let value = self?.aperture.value else { return nil }
+                return apertureValues.first { $0.value == value.nearest(among: apertureValues.map { $0.value }) }
+            }
+            .assign(to: &$aperture)
+        
+        $isCameraRunning.combineLatest(preferenceProvider.shutterSpeedValues)
+            .filter { $0.0 }
+            .compactMap { [weak self] _, shutterSpeedValues in
+                guard let value = self?.shutterSpeed.value else { return nil }
+                return shutterSpeedValues.first { $0.value == value.nearest(among: shutterSpeedValues.map { $0.value }) }
+            }
+            .assign(to: &$shutterSpeed)
+        
+        $isCameraRunning.combineLatest(preferenceProvider.isoValues)
+            .filter { $0.0 }
+            .compactMap { [weak self] _, isoValues in
+                guard let self else { return nil }
+                let value = Float(iso.value)
+                return isoValues.first { Float($0.value) == value.nearest(among: isoValues.compactMap { Float($0.value) }) }
+            }
+            .assign(to: &$iso)
         
         preferenceProvider.focalLengthValues.combineLatest(camera.maxZoomFactor)
             .map { focalLengthValues, maxZoomFactor in
