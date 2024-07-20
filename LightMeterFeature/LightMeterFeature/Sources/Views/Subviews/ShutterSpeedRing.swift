@@ -12,10 +12,14 @@ import HaebitUI
 
 struct ShutterSpeedRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
-    @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.shutterSpeed, entries: $viewModel.shutterSpeedValues) { shutterSpeed in
+        HaebitApertureRing(
+            selection: $viewModel.shutterSpeed,
+            entries: $viewModel.shutterSpeedValues,
+            feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
+            isMute: .constant(true)
+        ) { shutterSpeed in
             Text(shutterSpeed.title)
                 .foregroundStyle(
                     viewModel.shutterSpeedMode
@@ -27,7 +31,6 @@ struct ShutterSpeedRing: View {
                 .font(.system(size: 18, weight: .bold, design: .serif))
                 .shadow(radius: 2)
         }
-        .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
         .disabled(viewModel.shutterSpeedMode)
     }

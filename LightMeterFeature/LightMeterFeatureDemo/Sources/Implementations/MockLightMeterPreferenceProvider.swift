@@ -49,4 +49,10 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
             .map { $0.components(separatedBy: ",").compactMap { UInt32($0) }.compactMap { FocalLengthValue($0) } }
             .eraseToAnyPublisher()
     }
+    
+    // TODO: Change to be modifiable
+    var apertureRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.soft).eraseToAnyPublisher() }
+    var shutterSpeedRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
+    var isoRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.heavy).eraseToAnyPublisher() }
+    var focalLengthRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.rigid).eraseToAnyPublisher() }
 }

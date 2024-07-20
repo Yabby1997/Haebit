@@ -11,10 +11,14 @@ import HaebitUI
 
 struct FocalRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
-    @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.focalLength, entries: $viewModel.focalLengthValues) {
+        HaebitApertureRing(
+            selection: $viewModel.focalLength,
+            entries: $viewModel.focalLengthValues,
+            feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
+            isMute: .constant(true)
+        ) {
             Rectangle()
                 .foregroundStyle(.white)
                 .frame(width: 2, height: 6)
@@ -25,6 +29,5 @@ struct FocalRing: View {
                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                 .shadow(radius: 2)
         }
-        .environmentObject(dependencies.zoomControlDependency)
     }
 }

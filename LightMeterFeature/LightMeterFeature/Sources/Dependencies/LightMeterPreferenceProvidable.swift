@@ -15,4 +15,8 @@ public protocol LightMeterPreferenceProvidable: AnyObject {
     var shutterSpeedValues: AnyPublisher<[ShutterSpeedValue], Never> { get }
     var isoValues: AnyPublisher<[IsoValue], Never> { get }
     var focalLengthValues: AnyPublisher<[FocalLengthValue], Never> { get }
+    var apertureRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
+    var shutterSpeedRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
+    var isoRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
+    var focalLengthRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
 }

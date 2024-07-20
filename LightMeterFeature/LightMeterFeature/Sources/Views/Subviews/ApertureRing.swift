@@ -11,10 +11,14 @@ import HaebitUI
 
 struct ApertureRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
-    @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
 
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.aperture, entries: $viewModel.apertureValues) {
+        HaebitApertureRing(
+            selection: $viewModel.aperture,
+            entries: $viewModel.apertureValues,
+            feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
+            isMute: .constant(true)
+        ) {
             Circle()
                 .foregroundColor(.red)
                 .frame(width: 5, height: 5)
@@ -30,7 +34,6 @@ struct ApertureRing: View {
                 .font(.system(size: 14, weight: .semibold, design: .monospaced))
                 .shadow(radius: 2)
         }
-        .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .aperture }
         .disabled(viewModel.apertureMode)
     }

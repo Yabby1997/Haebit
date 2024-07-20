@@ -12,10 +12,14 @@ import HaebitUI
 
 struct IsoRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
-    @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
     
     var body: some View {
-        HaebitApertureRing(selection: $viewModel.iso, entries: $viewModel.isoValues) { iso in
+        HaebitApertureRing(
+            selection: $viewModel.iso,
+            entries: $viewModel.isoValues,
+            feedbackStyle: .constant(viewModel.isoRingFeedbackStyle.impactGeneratorFeedbackSyle),
+            isMute: .constant(true)
+        ) { iso in
             Text(iso.title)
                 .foregroundStyle(
                     viewModel.isoMode
@@ -27,7 +31,6 @@ struct IsoRing: View {
                 .font(.system(size: 14, weight: .bold, design: .serif))
                 .shadow(radius: 2)
         }
-        .environmentObject(dependencies.exposureControlDependency)
         .onTapGesture { viewModel.lightMeterMode = .iso }
         .disabled(viewModel.isoMode)
     }

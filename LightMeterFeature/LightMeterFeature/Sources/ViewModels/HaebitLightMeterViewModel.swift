@@ -55,6 +55,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
+    @Published public var apertureRingFeedbackStyle: FeedbackStyle = .light
+    @Published public var shutterSpeedRingFeedbackStyle: FeedbackStyle = .light
+    @Published public var isoRingFeedbackStyle: FeedbackStyle = .light
+    @Published public var focalRingFeedbackStyle: FeedbackStyle = .light
     @Published public var lockPoint: CGPoint? = nil
     @Published public var isLocked: Bool = false
     @Published public private(set) var isCapturing = false
@@ -106,6 +110,18 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         preferenceProvider.isoValues
             .receive(on: DispatchQueue.main)
             .assign(to: &$isoValues)
+        
+        preferenceProvider.apertureRingFeedbackStyle
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$apertureRingFeedbackStyle)
+        
+        preferenceProvider.shutterSpeedRingFeedbackStyle
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$shutterSpeedRingFeedbackStyle)
+        
+        preferenceProvider.isoRingFeedbackStyle
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isoRingFeedbackStyle)
         
         $isCameraRunning.combineLatest(preferenceProvider.apertureValues)
             .filter { $0.0 }
