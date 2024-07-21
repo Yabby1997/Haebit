@@ -6,10 +6,10 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
-import HaebitCommonModels
 @preconcurrency import Combine
 import CoreGraphics
 import Foundation
+import HaebitCommonModels
 
 @MainActor
 final class DemoLightMeterConfigViewModel: ObservableObject {
@@ -27,8 +27,10 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
     @Published var shutterSpeeds: String
     @Published var isos: String
     @Published var focalLengths: String
-    
-    private var cancellables: Set<AnyCancellable> = []
+    @Published var apertureFeedbackStyle: FeedbackStyle
+    @Published var shutterSpeedFeedbackStyle: FeedbackStyle
+    @Published var isoFeedbackStyle: FeedbackStyle
+    @Published var focalLengthFeedbackStyle: FeedbackStyle
     
     init(
         camera: MockLightMeterCamera,
@@ -49,6 +51,10 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
         self.shutterSpeeds = preferenceProvider.shutterSpeeds
         self.isos = preferenceProvider.isos
         self.focalLengths = preferenceProvider.focalLengths
+        self.apertureFeedbackStyle = preferenceProvider.apertureFeedbackStyle
+        self.shutterSpeedFeedbackStyle = preferenceProvider.shutterSpeedFeedbackStyle
+        self.isoFeedbackStyle = preferenceProvider.isoFeedbackStyle
+        self.focalLengthFeedbackStyle = preferenceProvider.focalLengthFeedbackStyle
         Task {
             await camera.setCamera(isOn: false)
         }
@@ -78,6 +84,10 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
             preferenceProvider.shutterSpeeds = shutterSpeeds
             preferenceProvider.isos = isos
             preferenceProvider.focalLengths = focalLengths
+            preferenceProvider.apertureFeedbackStyle = apertureFeedbackStyle
+            preferenceProvider.shutterSpeedFeedbackStyle = shutterSpeedFeedbackStyle
+            preferenceProvider.isoFeedbackStyle = isoFeedbackStyle
+            preferenceProvider.focalLengthFeedbackStyle = focalLengthFeedbackStyle
             await camera.setCamera(isOn: true)
         }
     }

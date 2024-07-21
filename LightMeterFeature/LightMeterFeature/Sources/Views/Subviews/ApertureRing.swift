@@ -17,7 +17,7 @@ struct ApertureRing: View {
             selection: $viewModel.aperture,
             entries: $viewModel.apertureValues,
             feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(true)
+            isMute: .constant(false)
         ) {
             Circle()
                 .foregroundColor(.red)

@@ -18,7 +18,7 @@ struct IsoRing: View {
             selection: $viewModel.iso,
             entries: $viewModel.isoValues,
             feedbackStyle: .constant(viewModel.isoRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(true)
+            isMute: .constant(false)
         ) { iso in
             Text(iso.title)
                 .foregroundStyle(

@@ -16,6 +16,10 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
     @Published var shutterSpeeds = "1/8000,1/4000,1/2000,1/1000,1/500,1/250,1/125,1/60,1/30,1/15,1/8,1/4,1/2,1/1,2/1,4/1,8/1,15/1,30/1,60/1"
     @Published var isos = "25,50,100,200,400,800,1600,3200,6400,12800,25600,51200"
     @Published var focalLengths = "28,35,40,50,70,85,100,135,170,200"
+    @Published var apertureFeedbackStyle: FeedbackStyle = .light
+    @Published var shutterSpeedFeedbackStyle: FeedbackStyle = .light
+    @Published var isoFeedbackStyle: FeedbackStyle = .light
+    @Published var focalLengthFeedbackStyle: FeedbackStyle = .soft
 
     var apertureValues: AnyPublisher<[ApertureValue], Never> {
         $apertures
@@ -50,9 +54,31 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
             .eraseToAnyPublisher()
     }
     
-    // TODO: Change to be modifiable
-    var apertureRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.soft).eraseToAnyPublisher() }
-    var shutterSpeedRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
-    var isoRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.heavy).eraseToAnyPublisher() }
-    var focalLengthRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { Just(.rigid).eraseToAnyPublisher() }
+    var apertureRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+        $apertureFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
+    }
+    
+    var shutterSpeedRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+        $shutterSpeedFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
+    }
+    
+    var isoRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+        $isoFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
+    }
+    
+    var focalLengthRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+        $focalLengthFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
+    }
+}
+
+extension FeedbackStyle {
+    var lightMeterFeatureFeedbackStyle: LightMeterFeature.FeedbackStyle {
+        switch self {
+        case .heavy: return .heavy
+        case .medium: return .medium
+        case .light: return .light
+        case .rigid: return .rigid
+        case .soft: return .soft
+        }
+    }
 }

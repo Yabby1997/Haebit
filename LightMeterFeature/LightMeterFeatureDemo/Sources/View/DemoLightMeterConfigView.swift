@@ -75,7 +75,7 @@ struct DemoLightMeterConfigView: View {
                         }
                     }
                 }
-                Section("Preferences") {
+                Section("Values") {
                     VStack {
                         HStack {
                             Text("APT")
@@ -100,6 +100,54 @@ struct DemoLightMeterConfigView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
                             TextField("FocalLengths", text: $viewModel.focalLengths)
+                        }
+                    }
+                }
+                Section("Feedbacks") {
+                    VStack {
+                        HStack {
+                            Text("APT")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.apertureFeedbackStyle) {
+                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
+                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        HStack {
+                            Text("SPD")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.shutterSpeedFeedbackStyle) {
+                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
+                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        HStack {
+                            Text("ISO")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.isoFeedbackStyle) {
+                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
+                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        HStack {
+                            Text("FCL")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.focalLengthFeedbackStyle) {
+                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
+                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                }
+                            }
+                            .pickerStyle(.segmented)
                         }
                     }
                 }

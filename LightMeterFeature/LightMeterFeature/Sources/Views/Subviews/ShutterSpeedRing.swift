@@ -18,7 +18,7 @@ struct ShutterSpeedRing: View {
             selection: $viewModel.shutterSpeed,
             entries: $viewModel.shutterSpeedValues,
             feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(true)
+            isMute: .constant(false)
         ) { shutterSpeed in
             Text(shutterSpeed.title)
                 .foregroundStyle(
