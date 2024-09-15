@@ -38,10 +38,24 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         }
     }
     
+    public var constantsDescription: String {
+        [
+            isApertureFixed ? aperture.description : nil,
+            isShutterSpeedFixed ? shutterSpeed.description : nil,
+            isIsoFixed ? iso.description : nil,
+            isFocalLengthFixed ? focalLength.title : nil
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+    }
+    
     public var apertureMode: Bool { lightMeterMode == .aperture }
     public var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     public var isoMode: Bool { lightMeterMode == .iso }
-    public var shouldDisplayFocalLengthRing: Bool { focalLengthValues.count > 1 }
+    @Published public var isApertureFixed = false
+    @Published public var isShutterSpeedFixed = false
+    @Published public var isIsoFixed = false
+    @Published public var isFocalLengthFixed = false
     @Published public var shouldRequestReview = false
     @Published public var isPresentingLogger = false
     @Published public var shouldRequestCameraAccess = false
@@ -297,6 +311,39 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { _ in nil }
             .receive(on: DispatchQueue.main)
             .assign(to: &$lockPoint)
+        
+        $apertureValues
+            .map { $0.count == 1 }
+            .assign(to: &$isApertureFixed)
+        
+        $shutterSpeedValues
+            .map { $0.count == 1 }
+            .assign(to: &$isShutterSpeedFixed)
+        
+        $isoValues
+            .map { $0.count == 1 }
+            .assign(to: &$isIsoFixed)
+        
+        $focalLengthValues
+            .map { $0.count == 1 }
+            .assign(to: &$isFocalLengthFixed)
+        
+        $isApertureFixed.combineLatest($isShutterSpeedFixed, $isIsoFixed)
+            .filter { [weak self] in
+                guard let self else { return false }
+                return ($0 && lightMeterMode == .aperture)
+                    || ($1 && lightMeterMode == .shutterSpeed)
+                    || ($2 && lightMeterMode == .iso)
+            }
+            .compactMap { [weak self] _ -> LightMeterMode? in
+                guard let self else { return nil }
+                return isApertureFixed
+                    ? isShutterSpeedFixed
+                        ? .iso
+                        : .shutterSpeed
+                    : .aperture
+            }
+            .assign(to: &$lightMeterMode)
     }
     
     private func zoomCamera(factor: CGFloat) throws {

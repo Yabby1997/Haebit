@@ -29,6 +29,7 @@ public struct HaebitLightMeterView<LogView: View>: View{
             HaebitCameraView(previewLayer: viewModel.previewLayer)
                 .ignoresSafeArea()
                 .onTapGesture(coordinateSpace: .local, perform: viewModel.didTap(point:))
+            LightMeterConstantView(viewModel: viewModel)
             LightMeterResultView(
                 resultDescription: viewModel.resultDescription,
                 exposureValue: viewModel.exposureValue,

@@ -14,24 +14,26 @@ struct ShutterSpeedRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
     
     var body: some View {
-        HaebitApertureRing(
-            selection: $viewModel.shutterSpeed,
-            entries: $viewModel.shutterSpeedValues,
-            feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(false)
-        ) { shutterSpeed in
-            Text(shutterSpeed.title)
-                .foregroundStyle(
-                    viewModel.shutterSpeedMode
+        if viewModel.isShutterSpeedFixed == false {
+            HaebitApertureRing(
+                selection: $viewModel.shutterSpeed,
+                entries: $viewModel.shutterSpeedValues,
+                feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                isMute: .constant(false)
+            ) { shutterSpeed in
+                Text(shutterSpeed.title)
+                    .foregroundStyle(
+                        viewModel.shutterSpeedMode
                         ? viewModel.shutterSpeed == shutterSpeed
-                            ? .yellow
-                            : .gray
+                        ? .yellow
+                        : .gray
                         : .white
-                )
-                .font(.system(size: 18, weight: .bold, design: .serif))
-                .shadow(radius: 2)
+                    )
+                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .shadow(radius: 2)
+            }
+            .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
+            .disabled(viewModel.shutterSpeedMode)
         }
-        .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
-        .disabled(viewModel.shutterSpeedMode)
     }
 }

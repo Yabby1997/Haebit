@@ -13,28 +13,26 @@ struct ApertureRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
 
     var body: some View {
-        HaebitApertureRing(
-            selection: $viewModel.aperture,
-            entries: $viewModel.apertureValues,
-            feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(false)
-        ) {
-            Circle()
-                .foregroundColor(.red)
-                .frame(width: 5, height: 5)
-        } content: { aperture in
-            Text(aperture.title)
-                .foregroundStyle(
-                    viewModel.apertureMode
-                        ? viewModel.aperture == aperture
-                            ? .yellow
-                            : .gray
-                        : .white
-                )
-                .font(.system(size: 14, weight: .semibold, design: .monospaced))
-                .shadow(radius: 2)
+        if viewModel.isApertureFixed == false {
+            HaebitApertureRing(
+                selection: $viewModel.aperture,
+                entries: $viewModel.apertureValues,
+                feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                isMute: .constant(false)
+            ) { aperture in
+                Text(aperture.title)
+                    .foregroundStyle(
+                        viewModel.apertureMode
+                            ? viewModel.aperture == aperture
+                                ? .yellow
+                                : .gray
+                            : .white
+                    )
+                    .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                    .shadow(radius: 2)
+            }
+            .onTapGesture { viewModel.lightMeterMode = .aperture }
+            .disabled(viewModel.apertureMode)
         }
-        .onTapGesture { viewModel.lightMeterMode = .aperture }
-        .disabled(viewModel.apertureMode)
     }
 }

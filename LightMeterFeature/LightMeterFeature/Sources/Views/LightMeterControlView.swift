@@ -18,12 +18,17 @@ struct LightMeterControlView: View {
             Spacer()
             VStack(spacing: 6) {
                 UnlockButton(viewModel: viewModel)
-                ApertureRing(viewModel: viewModel)
-                ShutterSpeedRing(viewModel: viewModel)
-                IsoRing(viewModel: viewModel)
-                if viewModel.shouldDisplayFocalLengthRing {
-                    FocalRing(viewModel: viewModel)
+                VStack(spacing: .zero) {
+                    Circle()
+                        .foregroundColor(.red)
+                        .frame(width: 5, height: 5)
+                    VStack(spacing: 6) {
+                        ApertureRing(viewModel: viewModel)
+                        ShutterSpeedRing(viewModel: viewModel)
+                        IsoRing(viewModel: viewModel)
+                    }
                 }
+                FocalRing(viewModel: viewModel)
                 ZStack {
                     LoggerButton(viewModel: viewModel)
                     ShutterButton(viewModel: viewModel)

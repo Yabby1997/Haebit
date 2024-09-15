@@ -14,24 +14,26 @@ struct IsoRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
     
     var body: some View {
-        HaebitApertureRing(
-            selection: $viewModel.iso,
-            entries: $viewModel.isoValues,
-            feedbackStyle: .constant(viewModel.isoRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(false)
-        ) { iso in
-            Text(iso.title)
-                .foregroundStyle(
-                    viewModel.isoMode
+        if viewModel.isIsoFixed == false {
+            HaebitApertureRing(
+                selection: $viewModel.iso,
+                entries: $viewModel.isoValues,
+                feedbackStyle: .constant(viewModel.isoRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                isMute: .constant(false)
+            ) { iso in
+                Text(iso.title)
+                    .foregroundStyle(
+                        viewModel.isoMode
                         ? viewModel.iso == iso
-                            ? .yellow
-                            : .gray
+                        ? .yellow
+                        : .gray
                         : .white
-                )
-                .font(.system(size: 14, weight: .bold, design: .serif))
-                .shadow(radius: 2)
+                    )
+                    .font(.system(size: 14, weight: .bold, design: .serif))
+                    .shadow(radius: 2)
+            }
+            .onTapGesture { viewModel.lightMeterMode = .iso }
+            .disabled(viewModel.isoMode)
         }
-        .onTapGesture { viewModel.lightMeterMode = .iso }
-        .disabled(viewModel.isoMode)
     }
 }
