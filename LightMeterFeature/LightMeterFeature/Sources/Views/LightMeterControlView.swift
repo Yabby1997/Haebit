@@ -21,7 +21,9 @@ struct LightMeterControlView: View {
                 ApertureRing(viewModel: viewModel)
                 ShutterSpeedRing(viewModel: viewModel)
                 IsoRing(viewModel: viewModel)
-                FocalRing(viewModel: viewModel)
+                if viewModel.shouldDisplayFocalLengthRing {
+                    FocalRing(viewModel: viewModel)
+                }
                 ZStack {
                     LoggerButton(viewModel: viewModel)
                     ShutterButton(viewModel: viewModel)

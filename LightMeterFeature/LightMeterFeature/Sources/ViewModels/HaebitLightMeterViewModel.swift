@@ -41,6 +41,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     public var apertureMode: Bool { lightMeterMode == .aperture }
     public var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     public var isoMode: Bool { lightMeterMode == .iso }
+    public var shouldDisplayFocalLengthRing: Bool { focalLengthValues.count > 1 }
     @Published public var shouldRequestReview = false
     @Published public var isPresentingLogger = false
     @Published public var shouldRequestCameraAccess = false
