@@ -15,7 +15,7 @@ struct LightMeterResultView: View {
 
     var body: some View {
         VStack {
-            Text(resultDescription)
+            Text(resultDescription.replacingOccurrences(of: "⁄", with: "⁄ "))
                 .font(.system(size: 50, weight: .bold, design: .serif))
                 .foregroundStyle(.white)
                 .animation(.easeInOut, value: resultDescription)
