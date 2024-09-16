@@ -316,17 +316,37 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { $0.count == 1 }
             .assign(to: &$isApertureFixed)
         
+        $apertureValues
+            .filter { $0.count == 1 }
+            .compactMap { $0.first }
+            .assign(to: &$aperture)
+        
         $shutterSpeedValues
             .map { $0.count == 1 }
             .assign(to: &$isShutterSpeedFixed)
+        
+        $shutterSpeedValues
+            .filter { $0.count == 1 }
+            .compactMap { $0.first }
+            .assign(to: &$shutterSpeed)
         
         $isoValues
             .map { $0.count == 1 }
             .assign(to: &$isIsoFixed)
         
+        $isoValues
+            .filter { $0.count == 1 }
+            .compactMap { $0.first }
+            .assign(to: &$iso)
+        
         $focalLengthValues
             .map { $0.count == 1 }
             .assign(to: &$isFocalLengthFixed)
+        
+        $focalLengthValues
+            .filter { $0.count == 1 }
+            .compactMap { $0.first }
+            .assign(to: &$focalLength)
         
         $isApertureFixed.combineLatest($isShutterSpeedFixed, $isIsoFixed)
             .filter { [weak self] in
