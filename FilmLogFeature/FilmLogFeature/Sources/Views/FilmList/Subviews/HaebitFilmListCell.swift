@@ -19,6 +19,12 @@ final class HaebitFilmListCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
+    private let frameView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(resource: .frameKS)
+        return imageView
+    }()
+    
     lazy var photoView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -45,14 +51,12 @@ final class HaebitFilmListCell: UICollectionViewCell {
     // MARK: - Helpers
     
     private func setupViews() {
-        layer.shadowOffset = CGSize(width: 4, height: 4)
+        contentView.backgroundColor = .clear
+        
+        layer.shadowOffset = CGSize(width: 2, height: 2)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.7
         
-        contentView.backgroundColor = .black
-        
-        guard let frameView = UIHostingController(rootView: Frame135()).view else { return }
-        frameView.backgroundColor = .black
         contentView.addSubview(frameView)
         frameView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
@@ -61,7 +65,7 @@ final class HaebitFilmListCell: UICollectionViewCell {
         photoView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(24.0 / 35.0)
-            make.height.equalTo(contentView.snp.width).multipliedBy(36.0 / 35.0)
+            make.height.equalTo(photoView.snp.width).multipliedBy(36.0 / 24.0)
         }
     }
 }
