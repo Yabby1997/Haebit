@@ -19,13 +19,13 @@ final class HaebitFilmListCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
-    private let frameView: UIImageView = {
+    let frameView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .frameKS)
         return imageView
     }()
     
-    lazy var photoView: UIImageView = {
+    let photoView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -45,6 +45,7 @@ final class HaebitFilmListCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         photoView.image = nil
     }
     

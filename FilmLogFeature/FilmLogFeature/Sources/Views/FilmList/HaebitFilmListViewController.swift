@@ -7,6 +7,7 @@
 //
 
 import Combine
+import HaebitCommonModels
 import UIKit
 
 fileprivate class PhotoListCollectionViewFlowLayout: UICollectionViewFlowLayout {
@@ -187,12 +188,21 @@ final class HaebitFilmListViewController: UIViewController {
                 subtitleLabel.text = title
             }
             .store(in: &cancellables)
+        
+        viewModel.perforationShapePublisher
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                photoListCollectionView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
     private func configureDataSource() {
-        dataSource = DataSource(collectionView: photoListCollectionView) { collectionView, indexPath, film in
+        dataSource = DataSource(collectionView: photoListCollectionView) { [weak self] collectionView, indexPath, film in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HaebitFilmListCell.reuseIdentifier, for: indexPath)
-            guard let cell = cell as? HaebitFilmListCell else { return cell }
+            guard let self, let cell = cell as? HaebitFilmListCell else { return cell }
+            cell.frameView.image = viewModel.perforationShape.frameImage
             cell.photoView.setImage(UIImage(url: film.image))
             return cell
         }

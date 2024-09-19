@@ -35,7 +35,10 @@ struct DemoHaebitFilmLogView: View {
             )
         }
         .fullScreenCover(isPresented: $isPresentingLogView) {
-            HaebitFilmLogView(logger: logger)
+            HaebitFilmLogView(
+                logger: logger,
+                preferenceProvider: DemoLoggerPreferenceProvider()
+            )
         }
     }
 }

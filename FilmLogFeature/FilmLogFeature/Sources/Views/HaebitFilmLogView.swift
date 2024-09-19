@@ -4,28 +4,46 @@ import HaebitLogger
 
 public struct HaebitFilmLogView: View {
     private let logger: HaebitLogger
+    private let preferenceProvider: LoggerPreferenceProvidable
     
-    public init(logger: HaebitLogger) {
+    public init(
+        logger: HaebitLogger,
+        preferenceProvider: LoggerPreferenceProvidable
+    ) {
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
     }
     
     public var body: some View {
-        HaebitFilmLogViewRepresentable(logger: logger)
-            .persistentSystemOverlays(.hidden)
-            .statusBarHidden()
-            .ignoresSafeArea()
+        HaebitFilmLogViewRepresentable(
+            logger: logger,
+            preferenceProvider: preferenceProvider
+        )
+        .persistentSystemOverlays(.hidden)
+        .statusBarHidden()
+        .ignoresSafeArea()
     }
 }
 
 struct HaebitFilmLogViewRepresentable: UIViewControllerRepresentable {
     let logger: HaebitLogger
+    let preferenceProvider: LoggerPreferenceProvidable
     
-    init(logger: HaebitLogger) {
+    init(
+        logger: HaebitLogger,
+        preferenceProvider: LoggerPreferenceProvidable
+    ) {
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
     }
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        let listViewController = HaebitFilmListViewController(viewModel:  HaebitFilmListViewModel(logger: logger))
+        let listViewController = HaebitFilmListViewController(
+            viewModel:  HaebitFilmListViewModel(
+                logger: logger,
+                preferenceProvider: preferenceProvider
+            )
+        )
         let listNavigationController = HaebitFilmLogNavigationController(rootViewController: listViewController)
         listNavigationController.tabBarItem = UITabBarItem(title: nil, image: .init(systemName: "photo.stack"), tag: 0)
         

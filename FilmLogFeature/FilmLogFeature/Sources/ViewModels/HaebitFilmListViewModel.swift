@@ -16,6 +16,7 @@ import Portolan
 class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
+    private let preferenceProvider: LoggerPreferenceProvidable
     
     @Published private var mainTitle: String = ""
     @Published private var subTitle: String = ""
@@ -23,16 +24,22 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     @Published private var currentFilm: Film?
     @Published private(set) var films: [Film] = []
     @Published var currentIndex: Int = .zero
+    @Published private(set) var perforationShape: PerforationShape = .ks
     var isReloadNeeded = false
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
-    
+    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShape }
+
     private var cancellables: Set<AnyCancellable> = []
     
-    init(logger: HaebitLogger) {
+    init(
+        logger: HaebitLogger,
+        preferenceProvider: LoggerPreferenceProvidable
+    ) {
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
         Task { await reload() }
         bind()
     }
@@ -69,6 +76,9 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
                 self?.updateTitle(for: film)
             }
             .store(in: &cancellables)
+        
+        preferenceProvider.perforationShape
+            .assign(to: &$perforationShape)
     }
     
     func onAppear() {
