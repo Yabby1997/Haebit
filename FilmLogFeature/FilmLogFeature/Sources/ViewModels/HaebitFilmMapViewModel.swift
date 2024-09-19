@@ -17,19 +17,26 @@ import Portolan
 final class HaebitFilmMapViewModel {
     private let logger: HaebitLogger
     private let dateFormatter = HaebitDateFormatter()
+    private let preferenceProvider: LoggerPreferenceProvidable
     
     @Published private var films: [Film] = []
     @Published private var mainTitle: String = ""
     @Published private var isTitleUpdating = false
     @Published var currentLocation: Coordinate?
+    @Published private(set) var perforationShape: PerforationShape = .ks
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
+    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShape }
     
     private var cancellables: Set<AnyCancellable> = []
     
-    init(logger: HaebitLogger) {
+    init(
+        logger: HaebitLogger,
+        preferenceProvider: LoggerPreferenceProvidable
+    ) {
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
         Task { await reload() }
         bind()
     }
@@ -49,6 +56,8 @@ final class HaebitFilmMapViewModel {
             }
             .store(in: &cancellables)
         
+        preferenceProvider.perforationShape
+            .assign(to: &$perforationShape)
     }
     
     func onAppear() {

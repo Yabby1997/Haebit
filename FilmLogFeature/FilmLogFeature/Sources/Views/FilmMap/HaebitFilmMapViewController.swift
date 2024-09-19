@@ -149,6 +149,16 @@ final class HaebitFilmMapViewController: UIViewController {
                 self?.titleLabel.isLoading = isUpdating
             }
             .store(in: &cancellables)
+        
+        viewModel.perforationShapePublisher
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let annotations = mapView.annotations
+                mapView.removeAnnotations(annotations)
+                mapView.addAnnotations(annotations)
+            }
+            .store(in: &cancellables)
     }
     
     func setRegionIfNeeded() {
@@ -173,6 +183,7 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
         if let annotation = annotation as? FilmAnnotation,
            let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationID, for: annotation) as? HaebitFilmAnnotationView {
             let films = [annotation.film].sorted { $0.date > $1.date }
+            view.frameView.image = viewModel.perforationShape.frameImage
             view.films = films
             view.delegate = viewModel
             view.clusteringIdentifier = clusterID
@@ -180,6 +191,7 @@ extension HaebitFilmMapViewController: MKMapViewDelegate {
         } else if let cluster = annotation as? MKClusterAnnotation,
                   let view = mapView.dequeueReusableAnnotationView(withIdentifier: clusterID, for: annotation) as? HaebitFilmAnnotationView {
             let films = (cluster.memberAnnotations.compactMap { ($0 as? FilmAnnotation)?.film }).sorted { $0.date > $1.date }
+            view.frameView.image = viewModel.perforationShape.frameImage
             view.films = films
             view.delegate = viewModel
             view.clusteringIdentifier = nil

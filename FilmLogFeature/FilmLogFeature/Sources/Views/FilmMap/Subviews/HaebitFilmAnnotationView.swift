@@ -7,6 +7,7 @@
 //
 
 import Combine
+import HaebitCommonModels
 import MapKit
 import SnapKit
 
@@ -17,13 +18,13 @@ protocol HaebitFilmAnnotationViewDelegate: AnyObject {
 
 @MainActor
 final class HaebitFilmAnnotationView: MKAnnotationView {
-    var frameView: UIImageView = {
+    let frameView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = FilmLogFeatureAsset.frameBH.image
         return imageView
     }()
     
-    var imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -38,8 +39,6 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     }
     
     private(set) var viewModel = HaebitFilmAnnotationViewModel()
-    
-    private var cancellables: Set<AnyCancellable> = []
     
     weak var delegate: HaebitFilmAnnotationViewDelegate?
     
@@ -56,7 +55,6 @@ final class HaebitFilmAnnotationView: MKAnnotationView {
     override func prepareForReuse() {
         super.prepareForReuse()
         viewModel.prepareForReuse()
-        cancellables = []
         imageView.image = nil
         countBadge.count = .zero
     }
