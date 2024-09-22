@@ -12,6 +12,7 @@ import SwiftUI
 
 struct DemoHaebitFilmLogView: View {
     private var logger = HaebitLogger(repository: DefaultHaebitLogRepository())
+    private let preferenceProvider =  DemoLoggerPreferenceProvider()
     @State var isPresentingRegisterView = false
     @State var isPresentingLogView = false
     
@@ -20,7 +21,7 @@ struct DemoHaebitFilmLogView: View {
             Button {
                 isPresentingRegisterView = true
             } label: {
-                Text("Register New Logs")
+                Text("Open Configuration")
             }
             Button {
                 isPresentingLogView = true
@@ -29,15 +30,18 @@ struct DemoHaebitFilmLogView: View {
             }
         }
         .fullScreenCover(isPresented: $isPresentingRegisterView) {
-            DemoLogRegisterView(
-                viewModel: DemoLogRegisterViewModel(logger: logger),
+            DemoConfigView(
+                viewModel: DemoConfigViewModel(
+                    logger: logger,
+                    preferenceProvider: preferenceProvider
+                ),
                 isPresented: $isPresentingRegisterView
             )
         }
         .fullScreenCover(isPresented: $isPresentingLogView) {
             HaebitFilmLogView(
                 logger: logger,
-                preferenceProvider: DemoLoggerPreferenceProvider()
+                preferenceProvider: preferenceProvider
             )
         }
     }

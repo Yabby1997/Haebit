@@ -262,10 +262,13 @@
         }
       }
     },
+    "Open Configuration" : {
+
+    },
     "Open HaebitFilmLogView" : {
 
     },
-    "Register New Logs" : {
+    "Register" : {
 
     },
     "s" : {

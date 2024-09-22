@@ -12,7 +12,8 @@ import FilmLogFeature
 import Foundation
 
 class DemoLoggerPreferenceProvider: LoggerPreferenceProvidable {
-    var perforationShape: AnyPublisher<HaebitCommonModels.PerforationShape, Never> {
-        Just(.ks).eraseToAnyPublisher()
+    @Published var perforationShape: PerforationShape = .ks
+    var perforationShapePublisher: AnyPublisher<HaebitCommonModels.PerforationShape, Never> {
+        $perforationShape.eraseToAnyPublisher()
     }
 }

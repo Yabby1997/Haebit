@@ -27,7 +27,7 @@ final class HaebitFilmMapViewModel {
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var mainTitlePublisher: AnyPublisher<String, Never> { $mainTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
-    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShape }
+    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShapePublisher }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -56,7 +56,7 @@ final class HaebitFilmMapViewModel {
             }
             .store(in: &cancellables)
         
-        preferenceProvider.perforationShape
+        preferenceProvider.perforationShapePublisher
             .assign(to: &$perforationShape)
     }
     

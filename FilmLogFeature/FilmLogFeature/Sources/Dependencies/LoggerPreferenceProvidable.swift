@@ -11,5 +11,5 @@ import Foundation
 import HaebitCommonModels
 
 public protocol LoggerPreferenceProvidable: AnyObject {
-    var perforationShape: AnyPublisher<PerforationShape, Never> { get }
+    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { get }
 }

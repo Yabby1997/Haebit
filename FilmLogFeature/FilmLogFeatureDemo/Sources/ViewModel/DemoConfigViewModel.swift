@@ -1,5 +1,5 @@
 //
-//  DemoLogRegisterViewModel.swift
+//  DemoConfigViewModel.swift
 //
 //
 //  Created by Seunghun on 5/12/24.
@@ -7,10 +7,12 @@
 
 import Foundation
 import HaebitLogger
+import HaebitCommonModels
 
 @MainActor
-class DemoLogRegisterViewModel: ObservableObject {
+class DemoConfigViewModel: ObservableObject {
     private let logger: HaebitLogger
+    private let preferenceProvider: DemoLoggerPreferenceProvider
     
     private let imageDirectory = URL.homeDirectory.appending(path: "Documents/FilmLogFeatureDemo/Images")
     @Published var imageData: Data?
@@ -24,11 +26,17 @@ class DemoLogRegisterViewModel: ObservableObject {
     @Published var aperture: Float = 11
     @Published var memo: String = ""
     @Published var isLoading = false
+    @Published var perforationShape: PerforationShape
     
     var isRegisterable: Bool { imageData != nil }
     
-    init(logger: HaebitLogger) {
+    init(
+        logger: HaebitLogger,
+        preferenceProvider: DemoLoggerPreferenceProvider
+    ) {
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
+        self.perforationShape = preferenceProvider.perforationShape
         try? createDirectoryIfNeeded(for: imageDirectory.path)
     }
     
@@ -65,6 +73,10 @@ class DemoLogRegisterViewModel: ObservableObject {
                 print("Error Occurred!: \(error.localizedDescription)")
             }
         }
+    }
+    
+    func onClose() {
+        preferenceProvider.perforationShape = perforationShape
     }
     
     private func clear() {

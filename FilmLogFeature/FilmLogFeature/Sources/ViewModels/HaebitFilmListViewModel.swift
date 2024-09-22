@@ -30,7 +30,7 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
     var subTitlePublisher: AnyPublisher<String, Never> { $subTitle.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var filmsPublisher: AnyPublisher<[Film], Never> { $films.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
     var isTitleUpdatingPublisher: AnyPublisher<Bool, Never> { $isTitleUpdating.receive(on: DispatchQueue.main).eraseToAnyPublisher() }
-    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShape }
+    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { preferenceProvider.perforationShapePublisher }
 
     private var cancellables: Set<AnyCancellable> = []
     
@@ -77,7 +77,7 @@ class HaebitFilmListViewModel: HaebitFilmCarouselViewModelProtocol {
             }
             .store(in: &cancellables)
         
-        preferenceProvider.perforationShape
+        preferenceProvider.perforationShapePublisher
             .assign(to: &$perforationShape)
     }
     
