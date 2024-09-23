@@ -23,12 +23,14 @@ let plist: InfoPlist = .extendingDefault(
 let releasedDependencies: [TargetDependency] = [
     .project(target: "LightMeterFeature", path: "LightMeterFeature"),
     .project(target: "FilmLogFeature", path: "FilmLogFeature"),
+    .project(target: "ConfigFeature", path: "ConfigFeature"),
     .external(name: "Obscura"),
 ]
 
 let devDependencies: [TargetDependency] = [
     .project(target: "LightMeterFeature", path: "LightMeterFeature"),
     .project(target: "FilmLogFeature", path: "FilmLogFeature"),
+    .project(target: "ConfigFeature", path: "ConfigFeature"),
     .project(target: "Obscura", path: "../../Modules/Obscura"),
 ]
 

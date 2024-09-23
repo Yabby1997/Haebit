@@ -121,6 +121,21 @@ execute_option() {
             generate_target_without_cache "FilmLogFeatureDemo"
             cd - || exit
             ;;
+        7)
+            cd ConfigFeature || exit
+            fetch_dependencies
+            disable_cache "ConfigFeature.xcframework"
+            cache_except "ConfigFeature"
+            generate_target "ConfigFeatureDemo"
+            restore_cache "ConfigFeature"
+            cd - || exit
+            ;;
+        8)
+            cd ConfigFeature || exit
+            fetch_dependencies
+            generate_target_without_cache "ConfigFeatureDemo"
+            cd - || exit
+            ;;
         *)
             echo "Invalid option. Exiting."
             exit 1
@@ -135,6 +150,8 @@ echo "3. LightMeterFeature"
 echo "4. LightMeterFeature (without cache)"
 echo "5. FilmLogFeature"
 echo "6. FilmLogFeature (without cache)"
+echo "7. ConfigFeature"
+echo "8. ConfigFeature (without cache)"
 echo ""
 read -p "Enter your target: " choice
 execute_option $choice
