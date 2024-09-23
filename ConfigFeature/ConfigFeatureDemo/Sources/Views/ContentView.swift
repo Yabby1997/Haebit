@@ -7,10 +7,11 @@
 //
 
 import SwiftUI
+import ConfigFeature
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, World!")
+        HaebitConfigView()
     }
 }
 

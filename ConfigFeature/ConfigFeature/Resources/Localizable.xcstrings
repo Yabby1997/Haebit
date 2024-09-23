@@ -1,7 +1,90 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1.4.0" : {
 
+    },
+    "3 values" : {
+
+    },
+    "4 values" : {
+
+    },
+    "8 values" : {
+
+    },
+    "12 values" : {
+
+    },
+    "Aperture Ring" : {
+
+    },
+    "Apertures" : {
+
+    },
+    "App Version" : {
+
+    },
+    "AppStore" : {
+
+    },
+    "Bell and Howell" : {
+
+    },
+    "Contact" : {
+
+    },
+    "Design" : {
+
+    },
+    "Feedbacks" : {
+
+    },
+    "Focal Length Ring" : {
+
+    },
+    "Focal Lengths" : {
+
+    },
+    "Heavy" : {
+
+    },
+    "illumeter is developed without profits.\nHow about buy me a roll of films?" : {
+
+    },
+    "ISO Dial" : {
+
+    },
+    "ISO Values" : {
+
+    },
+    "OpenSource" : {
+
+    },
+    "Others" : {
+
+    },
+    "Perforation Shape" : {
+
+    },
+    "Review on AppStore" : {
+
+    },
+    "Rigid" : {
+
+    },
+    "Shutter Speed Dial" : {
+
+    },
+    "Shutter Speeds" : {
+
+    },
+    "Soft" : {
+
+    },
+    "Values" : {
+
+    }
   },
   "version" : "1.0"
 }
