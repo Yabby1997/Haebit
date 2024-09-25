@@ -4,67 +4,79 @@
     "1.4.0" : {
 
     },
-    "3 values" : {
+    "8 items" : {
 
     },
-    "4 values" : {
+    "12 items" : {
 
     },
-    "8 values" : {
+    "50mm" : {
 
     },
-    "12 values" : {
+    "400" : {
+
+    },
+    "Aperture" : {
 
     },
     "Aperture Ring" : {
 
     },
-    "Apertures" : {
+    "App Version" : {
 
     },
-    "App Version" : {
+    "Appearance" : {
 
     },
     "AppStore" : {
 
     },
+    "At least a type of exposure related value should have more than two items." : {
+
+    },
     "Bell and Howell" : {
+
+    },
+    "Buy me a film" : {
 
     },
     "Contact" : {
 
     },
-    "Design" : {
+    "Control" : {
 
     },
-    "Feedbacks" : {
+    "Feedback" : {
+
+    },
+    "Focal Length" : {
 
     },
     "Focal Length Ring" : {
 
     },
-    "Focal Lengths" : {
+    "Having fun with illumeter?" : {
 
     },
     "Heavy" : {
 
     },
-    "illumeter is developed without profits.\nHow about buy me a roll of films?" : {
+    "If so, consider to buy me a roll of film 🎞️. It would be very pleasant for me" : {
+
+    },
+    "ISO" : {
 
     },
     "ISO Dial" : {
 
     },
-    "ISO Values" : {
-
-    },
     "OpenSource" : {
 
     },
-    "Others" : {
+    "Other" : {
 
     },
-    "Perforation Shape" : {
+    "Perforation" : {
 
     },
     "Review on AppStore" : {
@@ -73,16 +85,13 @@
     "Rigid" : {
 
     },
+    "Shutter Speed" : {
+
+    },
     "Shutter Speed Dial" : {
 
     },
-    "Shutter Speeds" : {
-
-    },
     "Soft" : {
-
-    },
-    "Values" : {
 
     }
   },
