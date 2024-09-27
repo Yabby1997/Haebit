@@ -22,6 +22,17 @@ struct HaebitAppearanceConfigSection: View {
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
+            NavigationLink {
+                Text("Film Canister")
+            } label: {
+                HStack {
+                    Text("Film Canister")
+                        .font(.system(size: 16, weight: .semibold))
+                    Spacer()
+                    Text("XR2 Super")
+                        .font(.system(size: 14, design: .monospaced))
+                }
+            }
         } header: {
             HStack {
                 Image(systemName: "sparkles")
