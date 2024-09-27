@@ -31,6 +31,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
     @Published var shutterSpeedFeedbackStyle: FeedbackStyle
     @Published var isoFeedbackStyle: FeedbackStyle
     @Published var focalLengthFeedbackStyle: FeedbackStyle
+    @Published var filmCanister: FilmCanister
     
     init(
         camera: MockLightMeterCamera,
@@ -55,6 +56,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
         self.shutterSpeedFeedbackStyle = preferenceProvider.shutterSpeedFeedbackStyle
         self.isoFeedbackStyle = preferenceProvider.isoFeedbackStyle
         self.focalLengthFeedbackStyle = preferenceProvider.focalLengthFeedbackStyle
+        self.filmCanister = preferenceProvider.filmCanister
         Task {
             await camera.setCamera(isOn: false)
         }
@@ -88,6 +90,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
             preferenceProvider.shutterSpeedFeedbackStyle = shutterSpeedFeedbackStyle
             preferenceProvider.isoFeedbackStyle = isoFeedbackStyle
             preferenceProvider.focalLengthFeedbackStyle = focalLengthFeedbackStyle
+            preferenceProvider.filmCanister = filmCanister
             await camera.setCamera(isOn: true)
         }
     }

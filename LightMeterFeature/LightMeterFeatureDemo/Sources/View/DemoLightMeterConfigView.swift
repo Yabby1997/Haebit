@@ -8,6 +8,7 @@
 
 import PhotosUI
 import SwiftUI
+import HaebitCommonModels
 
 @MainActor
 struct DemoLightMeterConfigView: View {
@@ -29,7 +30,7 @@ struct DemoLightMeterConfigView: View {
                         }
                     }
                 }
-                Section("Exposure Value") {
+                Section("Exposure") {
                     VStack {
                         HStack {
                             Text("APT")
@@ -52,7 +53,7 @@ struct DemoLightMeterConfigView: View {
                     }
                     .keyboardType(.decimalPad)
                 }
-                Section("Exposure Lock") {
+                Section("Lock") {
                     VStack {
                         HStack {
                             Text("COD")
@@ -75,7 +76,7 @@ struct DemoLightMeterConfigView: View {
                         }
                     }
                 }
-                Section("Values") {
+                Section("Control") {
                     VStack {
                         HStack {
                             Text("APT")
@@ -103,7 +104,7 @@ struct DemoLightMeterConfigView: View {
                         }
                     }
                 }
-                Section("Feedbacks") {
+                Section("Feedback") {
                     VStack {
                         HStack {
                             Text("APT")
@@ -148,6 +149,21 @@ struct DemoLightMeterConfigView: View {
                                 }
                             }
                             .pickerStyle(.segmented)
+                        }
+                    }
+                }
+                Section("Appearance") {
+                    VStack {
+                        HStack {
+                            Text("Film Canister")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.filmCanister) {
+                                ForEach(FilmCanister.allCases, id: \.description) { filmCanister in
+                                    Text(filmCanister.description).tag(filmCanister)
+                                }
+                            }
+                            .pickerStyle(.wheel)
                         }
                     }
                 }

@@ -62,10 +62,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
     @Published public var lightMeterMode: LightMeterMode
-    @Published public var apertureValues: [ApertureValue] = []
-    @Published public var shutterSpeedValues: [ShutterSpeedValue] = []
+    @Published public var apertures: [ApertureValue] = []
+    @Published public var shutterSpeeds: [ShutterSpeedValue] = []
     @Published public var isoValues: [IsoValue] = []
-    @Published public var focalLengthValues: [FocalLengthValue] = []
+    @Published public var focalLengths: [FocalLengthValue] = []
     @Published public var aperture: ApertureValue
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
@@ -74,6 +74,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeedRingFeedbackStyle: FeedbackStyle = .light
     @Published public var isoRingFeedbackStyle: FeedbackStyle = .light
     @Published public var focalRingFeedbackStyle: FeedbackStyle = .light
+    @Published public var filmCanister: FilmCanister = .kodakUltramax400
     @Published public var lockPoint: CGPoint? = nil
     @Published public var isLocked: Bool = false
     @Published public private(set) var isCapturing = false
@@ -114,47 +115,51 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     private func bind() {
         cancellables = []
         
-        preferenceProvider.apertureValues
+        preferenceProvider.aperturesPublisher
             .receive(on: DispatchQueue.main)
-            .assign(to: &$apertureValues)
+            .assign(to: &$apertures)
         
-        preferenceProvider.shutterSpeedValues
+        preferenceProvider.shutterSpeedsPublisher
             .receive(on: DispatchQueue.main)
-            .assign(to: &$shutterSpeedValues)
+            .assign(to: &$shutterSpeeds)
         
-        preferenceProvider.isoValues
+        preferenceProvider.isoValuesPublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$isoValues)
         
-        preferenceProvider.apertureRingFeedbackStyle
+        preferenceProvider.apertureRingFeedbackStylePublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$apertureRingFeedbackStyle)
         
-        preferenceProvider.shutterSpeedRingFeedbackStyle
+        preferenceProvider.shutterSpeedRingFeedbackStylePublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$shutterSpeedRingFeedbackStyle)
         
-        preferenceProvider.isoRingFeedbackStyle
+        preferenceProvider.isoRingFeedbackStylePublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$isoRingFeedbackStyle)
         
-        $isCameraRunning.combineLatest(preferenceProvider.apertureValues)
+        preferenceProvider.filmCanisterPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$filmCanister)
+        
+        $isCameraRunning.combineLatest(preferenceProvider.aperturesPublisher)
             .filter { $0.0 }
-            .compactMap { [weak self] _, apertureValues in
+            .compactMap { [weak self] _, apertures in
                 guard let value = self?.aperture.value else { return nil }
-                return apertureValues.first { $0.value == value.nearest(among: apertureValues.map { $0.value }) }
+                return apertures.first { $0.value == value.nearest(among: apertures.map { $0.value }) }
             }
             .assign(to: &$aperture)
         
-        $isCameraRunning.combineLatest(preferenceProvider.shutterSpeedValues)
+        $isCameraRunning.combineLatest(preferenceProvider.shutterSpeedsPublisher)
             .filter { $0.0 }
-            .compactMap { [weak self] _, shutterSpeedValues in
+            .compactMap { [weak self] _, shutterSpeeds in
                 guard let value = self?.shutterSpeed.value else { return nil }
-                return shutterSpeedValues.first { $0.value == value.nearest(among: shutterSpeedValues.map { $0.value }) }
+                return shutterSpeeds.first { $0.value == value.nearest(among: shutterSpeeds.map { $0.value }) }
             }
             .assign(to: &$shutterSpeed)
         
-        $isCameraRunning.combineLatest(preferenceProvider.isoValues)
+        $isCameraRunning.combineLatest(preferenceProvider.isoValuesPublisher)
             .filter { $0.0 }
             .compactMap { [weak self] _, isoValues in
                 guard let self else { return nil }
@@ -163,12 +168,12 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             }
             .assign(to: &$iso)
         
-        preferenceProvider.focalLengthValues.combineLatest(camera.maxZoomFactor)
-            .map { focalLengthValues, maxZoomFactor in
-                focalLengthValues.filter { $0.zoomFactor <= maxZoomFactor }
+        preferenceProvider.focalLengthsPublisher.combineLatest(camera.maxZoomFactor)
+            .map { focalLengths, maxZoomFactor in
+                focalLengths.filter { $0.zoomFactor <= maxZoomFactor }
             }
             .receive(on: DispatchQueue.main)
-            .assign(to: &$focalLengthValues)
+            .assign(to: &$focalLengths)
         
         reviewRequestValidator.shouldRequestReviewPublisher
             .receive(on: DispatchQueue.main)
@@ -202,8 +207,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                     iso: Float(iso.value),
                     shutterSpeed: shutterSpeed.value
                 )
-                    .nearest(among: apertureValues.map { $0.value } )
-                return apertureValues.first { $0.value == aperture }
+                    .nearest(among: apertures.map { $0.value } )
+                return apertures.first { $0.value == aperture }
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -226,8 +231,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                     iso: Float(iso.value),
                     aperture: aperture.value
                 )
-                    .nearest(among: shutterSpeedValues.map { $0.value } )
-                return shutterSpeedValues.first { $0.value == value }
+                    .nearest(among: shutterSpeeds.map { $0.value } )
+                return shutterSpeeds.first { $0.value == value }
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -312,20 +317,20 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$lockPoint)
         
-        $apertureValues
+        preferenceProvider.aperturesPublisher
             .map { $0.count == 1 }
             .assign(to: &$isApertureFixed)
         
-        $apertureValues
+        preferenceProvider.aperturesPublisher
             .filter { $0.count == 1 }
             .compactMap { $0.first }
             .assign(to: &$aperture)
         
-        $shutterSpeedValues
+        $shutterSpeeds
             .map { $0.count == 1 }
             .assign(to: &$isShutterSpeedFixed)
         
-        $shutterSpeedValues
+        $shutterSpeeds
             .filter { $0.count == 1 }
             .compactMap { $0.first }
             .assign(to: &$shutterSpeed)
@@ -339,11 +344,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .compactMap { $0.first }
             .assign(to: &$iso)
         
-        $focalLengthValues
+        preferenceProvider.focalLengthsPublisher
             .map { $0.count == 1 }
             .assign(to: &$isFocalLengthFixed)
         
-        $focalLengthValues
+        preferenceProvider.focalLengthsPublisher
             .filter { $0.count == 1 }
             .compactMap { $0.first }
             .assign(to: &$focalLength)

@@ -17,7 +17,7 @@ struct ShutterSpeedRing: View {
         if viewModel.isShutterSpeedFixed == false {
             HaebitApertureRing(
                 selection: $viewModel.shutterSpeed,
-                entries: $viewModel.shutterSpeedValues,
+                entries: $viewModel.shutterSpeeds,
                 feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { shutterSpeed in

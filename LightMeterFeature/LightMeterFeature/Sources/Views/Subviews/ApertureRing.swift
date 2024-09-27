@@ -16,7 +16,7 @@ struct ApertureRing: View {
         if viewModel.isApertureFixed == false {
             HaebitApertureRing(
                 selection: $viewModel.aperture,
-                entries: $viewModel.apertureValues,
+                entries: $viewModel.apertures,
                 feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { aperture in

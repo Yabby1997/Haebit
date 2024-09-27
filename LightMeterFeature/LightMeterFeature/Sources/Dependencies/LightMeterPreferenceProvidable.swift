@@ -11,12 +11,13 @@ import Foundation
 import HaebitCommonModels
 
 public protocol LightMeterPreferenceProvidable: AnyObject {
-    var apertureValues: AnyPublisher<[ApertureValue], Never> { get }
-    var shutterSpeedValues: AnyPublisher<[ShutterSpeedValue], Never> { get }
-    var isoValues: AnyPublisher<[IsoValue], Never> { get }
-    var focalLengthValues: AnyPublisher<[FocalLengthValue], Never> { get }
-    var apertureRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
-    var shutterSpeedRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
-    var isoRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
-    var focalLengthRingFeedbackStyle: AnyPublisher<FeedbackStyle, Never> { get }
+    var aperturesPublisher: AnyPublisher<[ApertureValue], Never> { get }
+    var shutterSpeedsPublisher: AnyPublisher<[ShutterSpeedValue], Never> { get }
+    var isoValuesPublisher: AnyPublisher<[IsoValue], Never> { get }
+    var focalLengthsPublisher: AnyPublisher<[FocalLengthValue], Never> { get }
+    var apertureRingFeedbackStylePublisher: AnyPublisher<FeedbackStyle, Never> { get }
+    var shutterSpeedRingFeedbackStylePublisher: AnyPublisher<FeedbackStyle, Never> { get }
+    var isoRingFeedbackStylePublisher: AnyPublisher<FeedbackStyle, Never> { get }
+    var focalLengthRingFeedbackStylePublisher: AnyPublisher<FeedbackStyle, Never> { get }
+    var filmCanisterPublisher: AnyPublisher<FilmCanister, Never> { get }
 }

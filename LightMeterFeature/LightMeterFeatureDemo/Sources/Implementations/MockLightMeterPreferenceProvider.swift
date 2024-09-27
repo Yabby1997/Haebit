@@ -20,14 +20,15 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
     @Published var shutterSpeedFeedbackStyle: FeedbackStyle = .light
     @Published var isoFeedbackStyle: FeedbackStyle = .light
     @Published var focalLengthFeedbackStyle: FeedbackStyle = .soft
+    @Published var filmCanister: FilmCanister = .fujiXtra400
 
-    var apertureValues: AnyPublisher<[ApertureValue], Never> {
+    var aperturesPublisher: AnyPublisher<[ApertureValue], Never> {
         $apertures
             .map { $0.components(separatedBy: ",").compactMap { Float($0) }.compactMap { ApertureValue($0) } }
             .eraseToAnyPublisher()
     }
     
-    var shutterSpeedValues: AnyPublisher<[ShutterSpeedValue], Never> {
+    var shutterSpeedsPublisher: AnyPublisher<[ShutterSpeedValue], Never> {
         $shutterSpeeds
             .map {
                 $0.components(separatedBy: ",")
@@ -42,32 +43,36 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
             .eraseToAnyPublisher()
     }
     
-    var isoValues: AnyPublisher<[IsoValue], Never> {
+    var isoValuesPublisher: AnyPublisher<[IsoValue], Never> {
         $isos
             .map { $0.components(separatedBy: ",").compactMap { UInt32($0) }.compactMap { IsoValue($0) } }
             .eraseToAnyPublisher()
     }
     
-    var focalLengthValues: AnyPublisher<[FocalLengthValue], Never> {
+    var focalLengthsPublisher: AnyPublisher<[FocalLengthValue], Never> {
         $focalLengths
             .map { $0.components(separatedBy: ",").compactMap { UInt32($0) }.compactMap { FocalLengthValue($0) } }
             .eraseToAnyPublisher()
     }
     
-    var apertureRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+    var apertureRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
         $apertureFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
     }
     
-    var shutterSpeedRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+    var shutterSpeedRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
         $shutterSpeedFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
     }
     
-    var isoRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+    var isoRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
         $isoFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
     }
     
-    var focalLengthRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
+    var focalLengthRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> {
         $focalLengthFeedbackStyle.map { $0.lightMeterFeatureFeedbackStyle }.eraseToAnyPublisher()
+    }
+    
+    var filmCanisterPublisher: AnyPublisher<FilmCanister, Never> {
+        $filmCanister.eraseToAnyPublisher()
     }
 }
 

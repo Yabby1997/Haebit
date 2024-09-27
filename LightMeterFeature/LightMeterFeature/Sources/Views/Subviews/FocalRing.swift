@@ -16,7 +16,7 @@ struct FocalRing: View {
         if viewModel.isFocalLengthFixed == false {
             HaebitApertureRing(
                 selection: $viewModel.focalLength,
-                entries: $viewModel.focalLengthValues,
+                entries: $viewModel.focalLengths,
                 feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(true)
             ) {
