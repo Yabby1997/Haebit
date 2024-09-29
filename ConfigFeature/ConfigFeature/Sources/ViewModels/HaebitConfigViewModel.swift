@@ -12,6 +12,7 @@ import HaebitCommonModels
 @MainActor
 final class HaebitConfigViewModel: ObservableObject {
     private let appStoreOpener: any AppStoreOpener
+    private let appVersionProvider: any AppVersionProvidable
     @Published var currentHeaderType: HeaderType = .tipJar
     @Published var apertures: [ApertureValue] = [.init(1.4), .init(2)].compactMap { $0 }
     @Published var shutterSpeeds: [ShutterSpeedValue] = [.init(denominator: 2000)].compactMap { $0 }
@@ -23,11 +24,15 @@ final class HaebitConfigViewModel: ObservableObject {
     @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .soft
     @Published var perforationShape: PerforationShape = .ks
     @Published var filmCanister: FilmCanister = .kodakUltramax400
-    let appVersion: String = "1.4.0"
-    let isLatestVersion: Bool = true
+    @Published var isLatestVersion: Bool = false
+    @Published var appVersion: String = "1.0.0"
     
-    init(appStoreOpener: any AppStoreOpener) {
+    init(
+        appStoreOpener: any AppStoreOpener,
+        appVersionProvider: any AppVersionProvidable
+    ) {
         self.appStoreOpener = appStoreOpener
+        self.appVersionProvider = appVersionProvider
         bind()
     }
     
@@ -37,6 +42,13 @@ final class HaebitConfigViewModel: ObservableObject {
             .combineLatest($currentHeaderType)
             .map { $1.next }
             .assign(to: &$currentHeaderType)
+    }
+    
+    func onAppear() {
+        Task {
+            appVersion = await appVersionProvider.currentVersion
+            isLatestVersion = (try? await appVersionProvider.checkLatestVersion()) == appVersion
+        }
     }
     
     func didTapReview() {

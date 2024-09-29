@@ -6,8 +6,8 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
-import Foundation
 import ConfigFeature
+import Foundation
 
 struct MockAppStoreOpener: AppStoreOpener {
     func openWriteReview() {

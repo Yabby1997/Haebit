@@ -17,7 +17,7 @@ struct RealAppStoreOpener: AppStoreOpener {
         self.baseURL = URL(string: "itms-apps://itunes.apple.com")?
             .appending(path: locale)
             .appending(path: "app")
-            .appending(path: appID)
+            .appending(path: "id" + appID)
         
     }
     

@@ -13,8 +13,14 @@ public struct HaebitConfigView: View {
     @StateObject private var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
     
-    public init(appStoreOpener: any AppStoreOpener) {
-        let viewModel = HaebitConfigViewModel(appStoreOpener: appStoreOpener)
+    public init(
+        appStoreOpener: any AppStoreOpener,
+        appVersionProvider: any AppVersionProvidable
+    ) {
+        let viewModel = HaebitConfigViewModel(
+            appStoreOpener: appStoreOpener,
+            appVersionProvider: appVersionProvider
+        )
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -29,6 +35,7 @@ public struct HaebitConfigView: View {
                     HaebitOtherConfigSection(viewModel: viewModel)
                 }
             }
+            .onAppear(perform: viewModel.onAppear)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: NavigatablePages.self, destination: navigate(to:))
             .toolbarBackground(.hidden, for: .navigationBar)

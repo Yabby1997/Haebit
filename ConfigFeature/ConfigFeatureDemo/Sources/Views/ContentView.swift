@@ -14,8 +14,9 @@ struct ContentView: View {
         HaebitConfigView(
             appStoreOpener: RealAppStoreOpener(
                 locale: Locale.current.region?.identifier ?? "kr",
-                appID: "id6474086258"
-            )
+                appID: "6474086258"
+            ),
+            appVersionProvider: MockAppVersionProvider()
         )
     }
 }
