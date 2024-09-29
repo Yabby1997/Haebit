@@ -9,16 +9,21 @@
 import SwiftUI
 
 public struct HaebitConfigView: View {
-    public init() {}
+    @StateObject var viewModel: HaebitConfigViewModel
+    
+    public init() {
+        let viewModel = HaebitConfigViewModel()
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     public var body: some View {
         NavigationStack {
             List {
                 HaebitConfigHeaderSection()
-                HaebitControlConfigSection()
-                HaebitFeedbackConfigSection()
-                HaebitAppearanceConfigSection()
-                HaebitOtherConfigSection()
+                HaebitControlConfigSection(viewModel: viewModel)
+                HaebitFeedbackConfigSection(viewModel: viewModel)
+                HaebitAppearanceConfigSection(viewModel: viewModel)
+                HaebitOtherConfigSection(viewModel: viewModel)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)

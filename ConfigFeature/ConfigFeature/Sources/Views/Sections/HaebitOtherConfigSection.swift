@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct HaebitOtherConfigSection: View {
+    @StateObject var viewModel: HaebitConfigViewModel
+    
     var body: some View {
         Section {
             NavigationLink {
@@ -36,10 +38,11 @@ struct HaebitOtherConfigSection: View {
                     .font(.system(size: 16, weight: .semibold))
             }
             HStack {
-                Text("App Version")
+                Text("Version \(viewModel.appVersion)"
+                )
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
-                Text("1.4.0")
+                Text(viewModel.isLatestVersion ? "Latest" : "Update Available")
                     .font(.system(size: 14, design: .monospaced))
             }
         } header: {
@@ -50,8 +53,4 @@ struct HaebitOtherConfigSection: View {
             .font(.system(size: 14, weight: .bold))
         }
     }
-}
-
-#Preview {
-    HaebitOtherConfigSection()
 }

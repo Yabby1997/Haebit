@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct HaebitAppearanceConfigSection: View {
+    @StateObject var viewModel: HaebitConfigViewModel
+
     var body: some View {
         Section {
             NavigationLink {
@@ -18,7 +20,7 @@ struct HaebitAppearanceConfigSection: View {
                     Text("Perforation")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("Bell and Howell")
+                    Text(viewModel.perforationShape.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -29,7 +31,7 @@ struct HaebitAppearanceConfigSection: View {
                     Text("Film Canister")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("XR2 Super")
+                    Text(viewModel.filmCanister.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -41,8 +43,4 @@ struct HaebitAppearanceConfigSection: View {
             .font(.system(size: 14, weight: .bold))
         }
     }
-}
-
-#Preview {
-    HaebitAppearanceConfigSection()
 }

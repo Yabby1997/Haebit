@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct HaebitControlConfigSection: View {
+    @StateObject var viewModel: HaebitConfigViewModel
+
     var body: some View {
         Section {
             NavigationLink {
@@ -18,8 +20,16 @@ struct HaebitControlConfigSection: View {
                     Text("Aperture")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("12 items")
+                    if viewModel.apertures.count == 1, let singleValue = viewModel.apertures.first {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                            Text("\(singleValue.description)")
+                        }
                         .font(.system(size: 14, design: .monospaced))
+                    } else {
+                        Text("\(viewModel.apertures.count) items")
+                            .font(.system(size: 14, design: .monospaced))
+                    }
                 }
             }
             NavigationLink {
@@ -29,8 +39,16 @@ struct HaebitControlConfigSection: View {
                     Text("Shutter Speed")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("8 items")
+                    if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                            Text("\(singleValue.description)")
+                        }
                         .font(.system(size: 14, design: .monospaced))
+                    } else {
+                        Text("\(viewModel.shutterSpeeds.count) items")
+                            .font(.system(size: 14, design: .monospaced))
+                    }
                 }
             }
             NavigationLink {
@@ -40,11 +58,16 @@ struct HaebitControlConfigSection: View {
                     Text("ISO")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    HStack {
-                        Image(systemName: "lock.fill")
-                        Text("400")
+                    if viewModel.isoValues.count == 1, let singleValue = viewModel.isoValues.first {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                            Text("\(singleValue.description)")
+                        }
+                        .font(.system(size: 14, design: .monospaced))
+                    } else {
+                        Text("\(viewModel.isoValues.count) items")
+                            .font(.system(size: 14, design: .monospaced))
                     }
-                    .font(.system(size: 14, design: .monospaced))
                 }
             }
             NavigationLink {
@@ -54,11 +77,16 @@ struct HaebitControlConfigSection: View {
                     Text("Focal Length")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    HStack {
-                        Image(systemName: "lock.fill")
-                        Text("50mm")
+                    if viewModel.focalLenghts.count == 1, let singleValue = viewModel.focalLenghts.first {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                            Text("\(singleValue.title)")
+                        }
+                        .font(.system(size: 14, design: .monospaced))
+                    } else {
+                        Text("\(viewModel.focalLenghts.count) items")
+                            .font(.system(size: 14, design: .monospaced))
                     }
-                    .font(.system(size: 14, design: .monospaced))
                 }
             }
         } header: {
@@ -71,8 +99,4 @@ struct HaebitControlConfigSection: View {
             Text("At least a type of exposure related value should have more than two items.")
         }
     }
-}
-
-#Preview {
-    HaebitControlConfigSection()
 }

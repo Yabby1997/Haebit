@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct HaebitFeedbackConfigSection: View {
+    @StateObject var viewModel: HaebitConfigViewModel
+    
     var body: some View {
         Section {
             NavigationLink {
@@ -18,7 +20,7 @@ struct HaebitFeedbackConfigSection: View {
                     Text("Aperture Ring")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("Rigid")
+                    Text(viewModel.apertureRingFeedbackStyle.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -29,7 +31,7 @@ struct HaebitFeedbackConfigSection: View {
                     Text("Shutter Speed Dial")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("Heavy")
+                    Text(viewModel.shutterSpeedDialFeedbackStyle.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -40,7 +42,7 @@ struct HaebitFeedbackConfigSection: View {
                     Text("ISO Dial")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("Heavy")
+                    Text(viewModel.isoDialFeedbackStyle.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -51,7 +53,7 @@ struct HaebitFeedbackConfigSection: View {
                     Text("Focal Length Ring")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    Text("Soft")
+                    Text(viewModel.focalLengthRingFeedbackStyle.description)
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
@@ -63,8 +65,4 @@ struct HaebitFeedbackConfigSection: View {
             .font(.system(size: 14, weight: .bold))
         }
     }
-}
-
-#Preview {
-    HaebitFeedbackConfigSection()
 }
