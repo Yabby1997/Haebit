@@ -11,7 +11,12 @@ import ConfigFeature
 
 struct ContentView: View {
     var body: some View {
-        HaebitConfigView()
+        HaebitConfigView(
+            appStoreOpener: RealAppStoreOpener(
+                locale: Locale.current.region?.identifier ?? "kr",
+                appID: "id6474086258"
+            )
+        )
     }
 }
 

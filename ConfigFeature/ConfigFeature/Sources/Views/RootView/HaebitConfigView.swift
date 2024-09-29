@@ -9,23 +9,28 @@
 import SwiftUI
 
 public struct HaebitConfigView: View {
-    @StateObject var viewModel: HaebitConfigViewModel
+    @State private var navigationPath = NavigationPath()
+    @StateObject private var viewModel: HaebitConfigViewModel
+    @Environment(\.dismiss) private var dismiss
     
-    public init() {
-        let viewModel = HaebitConfigViewModel()
+    public init(appStoreOpener: any AppStoreOpener) {
+        let viewModel = HaebitConfigViewModel(appStoreOpener: appStoreOpener)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
     public var body: some View {
-        NavigationStack {
-            List {
-                HaebitConfigHeaderSection()
-                HaebitControlConfigSection(viewModel: viewModel)
-                HaebitFeedbackConfigSection(viewModel: viewModel)
-                HaebitAppearanceConfigSection(viewModel: viewModel)
-                HaebitOtherConfigSection(viewModel: viewModel)
+        NavigationStack(path: $navigationPath) {
+            ScrollViewReader { proxy in
+                List {
+                    HaebitConfigHeaderSection(navigationPath: $navigationPath, viewModel: viewModel)
+                    HaebitControlConfigSection(viewModel: viewModel)
+                    HaebitFeedbackConfigSection(viewModel: viewModel)
+                    HaebitAppearanceConfigSection(viewModel: viewModel)
+                    HaebitOtherConfigSection(viewModel: viewModel)
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: NavigatablePages.self, destination: navigate(to:))
             .toolbarBackground(.hidden, for: .navigationBar)
             .ignoresSafeArea(.all)
             .scrollIndicators(.hidden)
@@ -33,7 +38,7 @@ public struct HaebitConfigView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        print("Close")
+                        dismiss()
                     } label: {
                         Image(systemName: "xmark")
                             .foregroundStyle(.white)
@@ -42,8 +47,11 @@ public struct HaebitConfigView: View {
             }
         }
     }
-}
-
-#Preview {
-    HaebitConfigView()
+    
+    private func navigate(to page: NavigatablePages) -> some View {
+        switch page {
+        case .tipJar: return Text("Buy me a film")
+        case .filmCanister: return Text("Film Canister")
+        }
+    }
 }
