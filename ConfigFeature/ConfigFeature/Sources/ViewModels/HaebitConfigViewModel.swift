@@ -85,4 +85,15 @@ final class HaebitConfigViewModel: ObservableObject {
     func deleteApertures(at offsets: IndexSet) {
         apertureEntries.remove(atOffsets: offsets)
     }
+    
+    func add(apertureValue string: String) {
+        guard let decimalValue = Float(string),
+              let apertureValue = ApertureValue(decimalValue) else { return }
+        if let index = (apertureEntries.firstIndex { $0.value == apertureValue }) {
+            apertureEntries[index].isActive = true
+        } else {
+            apertureEntries.append(.init(value: apertureValue, isActive: true))
+            apertureEntries.sort(by: { $0.value.value < $1.value.value })
+        }
+    }
 }
