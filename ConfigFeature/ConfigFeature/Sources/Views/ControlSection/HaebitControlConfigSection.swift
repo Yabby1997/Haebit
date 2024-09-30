@@ -33,7 +33,7 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("Shutter Speed")
+                HaebitShutterSpeedEntriesView(viewModel: viewModel)
             } label: {
                 HStack {
                     Text("Shutter Speed")
@@ -52,7 +52,7 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("ISO")
+                HaebitIsoEntriesView(viewModel: viewModel)
             } label: {
                 HStack {
                     Text("ISO")
@@ -71,20 +71,20 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("Focal Length")
+                HaebitFocalLengthEntriesView(viewModel: viewModel)
             } label: {
                 HStack {
                     Text("Focal Length")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
-                    if viewModel.focalLenghts.count == 1, let singleValue = viewModel.focalLenghts.first {
+                    if viewModel.focalLengths.count == 1, let singleValue = viewModel.focalLengths.first {
                         HStack {
                             Text("\(singleValue.title)")
                             Image(systemName: "lock.fill")
                         }
                         .font(.system(size: 14, design: .monospaced))
                     } else {
-                        Text("\(viewModel.focalLenghts.count) items")
+                        Text("\(viewModel.focalLengths.count) items")
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -96,7 +96,9 @@ struct HaebitControlConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            Text("At least a type of exposure related value should have more than two items.")
+            VStack {
+                Text("At least a type of exposure related value should have more than two items.")
+            }
         }
     }
 }

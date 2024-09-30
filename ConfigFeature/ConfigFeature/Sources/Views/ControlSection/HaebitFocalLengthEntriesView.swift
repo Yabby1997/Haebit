@@ -1,15 +1,15 @@
 //
-//  HaebitApertureEntriesConfigView.swift
+//  HaebitFocalLengthEntriesView.swift
 //  ConfigFeature
 //
-//  Created by Seunghun on 9/30/24.
+//  Created by Seunghun on 10/1/24.
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
 import SwiftUI
 import HaebitCommonModels
 
-struct HaebitApertureEntriesConfigView: View {
+struct HaebitFocalLengthEntriesView: View {
     @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var isPresenting = false
@@ -19,20 +19,20 @@ struct HaebitApertureEntriesConfigView: View {
     var body: some View {
         List {
             Section {
-                ForEach($viewModel.apertureEntries, id: \.self) { $apertureEntry in
+                ForEach($viewModel.focalLengthEntries, id: \.self) { $focalLengthEntry in
                     HStack {
-                        Text(apertureEntry.value.title)
+                        Text(focalLengthEntry.value.title)
                             .font(.system(size: 24, weight: .bold, design: .monospaced))
-                            .foregroundStyle(apertureEntry.isActive ? .white : .gray)
+                            .foregroundStyle(focalLengthEntry.isActive ? .white : .gray)
                         Spacer()
-                        Toggle(isOn: $apertureEntry.isActive, label: {})
+                        Toggle(isOn: $focalLengthEntry.isActive, label: {})
                             .labelsHidden()
-                            .disabled(!viewModel.isToggleable(aperture: apertureEntry))
+                            .disabled(!viewModel.isToggleable(focalLength: focalLengthEntry))
                     }
-                    .deleteDisabled(!viewModel.isDeletable(aperture: apertureEntry))
+                    .deleteDisabled(!viewModel.isDeletable(focalLength: focalLengthEntry))
                 }
                 .onDelete { offset in
-                    viewModel.deleteApertures(at: offset)
+                    viewModel.deleteFocalLength(at: offset)
                 }
             } footer: {
                 Text("At least one value should be exist and active.")
@@ -40,8 +40,8 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Aperture Entries")
-        .animation(.easeInOut, value: viewModel.apertureEntries.count)
+        .navigationTitle("Focal Length Entries")
+        .animation(.easeInOut, value: viewModel.focalLengthEntries.count)
         .scrollIndicators(.hidden)
         .headerProminence(.increased)
         .toolbar {
@@ -66,15 +66,15 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Aperture Value")
+                Text("New Focal Length Value")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,
                     isEditing: $isEditing,
-                    format: .decimal,
-                    maxDigitCount: 3,
-                    prefix: "ƒ",
-                    placeholder: "ƒ1.4",
+                    format: .integer,
+                    maxDigitCount: 5,
+                    suffix: "mm",
+                    placeholder: "50mm",
                     font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)
                 )
             }
@@ -82,10 +82,10 @@ struct HaebitApertureEntriesConfigView: View {
             .padding(.top, 8)
             .onAppear { isEditing = true }
             .onDisappear {
-                let value = Float(numberString)
+                let value = UInt32(numberString)
                 numberString = ""
-                guard let value, let aperture = ApertureValue(value) else { return }
-                viewModel.add(aperture: aperture)
+                guard let value, let focalLength = FocalLengthValue(value) else { return }
+                viewModel.add(focalLength: focalLength)
             }
         }
     }

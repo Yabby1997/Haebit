@@ -1,5 +1,5 @@
 //
-//  HaebitApertureEntriesConfigView.swift
+//  HaebitIsoEntriesView.swift
 //  ConfigFeature
 //
 //  Created by Seunghun on 9/30/24.
@@ -9,7 +9,7 @@
 import SwiftUI
 import HaebitCommonModels
 
-struct HaebitApertureEntriesConfigView: View {
+struct HaebitIsoEntriesView: View {
     @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var isPresenting = false
@@ -19,20 +19,20 @@ struct HaebitApertureEntriesConfigView: View {
     var body: some View {
         List {
             Section {
-                ForEach($viewModel.apertureEntries, id: \.self) { $apertureEntry in
+                ForEach($viewModel.isoEntries, id: \.self) { $isoEntry in
                     HStack {
-                        Text(apertureEntry.value.title)
-                            .font(.system(size: 24, weight: .bold, design: .monospaced))
-                            .foregroundStyle(apertureEntry.isActive ? .white : .gray)
+                        Text(isoEntry.value.title)
+                            .font(.system(size: 24, weight: .bold, design: .serif))
+                            .foregroundStyle(isoEntry.isActive ? .white : .gray)
                         Spacer()
-                        Toggle(isOn: $apertureEntry.isActive, label: {})
+                        Toggle(isOn: $isoEntry.isActive, label: {})
                             .labelsHidden()
-                            .disabled(!viewModel.isToggleable(aperture: apertureEntry))
+                            .disabled(!viewModel.isToggleable(iso: isoEntry))
                     }
-                    .deleteDisabled(!viewModel.isDeletable(aperture: apertureEntry))
+                    .deleteDisabled(!viewModel.isDeletable(iso: isoEntry))
                 }
                 .onDelete { offset in
-                    viewModel.deleteApertures(at: offset)
+                    viewModel.deleteIso(at: offset)
                 }
             } footer: {
                 Text("At least one value should be exist and active.")
@@ -40,8 +40,8 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Aperture Entries")
-        .animation(.easeInOut, value: viewModel.apertureEntries.count)
+        .navigationTitle("ISO Entries")
+        .animation(.easeInOut, value: viewModel.isoEntries.count)
         .scrollIndicators(.hidden)
         .headerProminence(.increased)
         .toolbar {
@@ -66,26 +66,25 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Aperture Value")
+                Text("New ISO Value")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,
                     isEditing: $isEditing,
-                    format: .decimal,
-                    maxDigitCount: 3,
-                    prefix: "ƒ",
-                    placeholder: "ƒ1.4",
-                    font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)
+                    format: .integer,
+                    maxDigitCount: 5,
+                    placeholder: "200",
+                    font: .systemFont(ofSize: 40, weight: .bold, design: .serif)
                 )
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)
             .onAppear { isEditing = true }
             .onDisappear {
-                let value = Float(numberString)
+                let value = UInt32(numberString)
                 numberString = ""
-                guard let value, let aperture = ApertureValue(value) else { return }
-                viewModel.add(aperture: aperture)
+                guard let value, let isoValue = IsoValue(value) else { return }
+                viewModel.add(iso: isoValue)
             }
         }
     }
