@@ -22,8 +22,8 @@ struct HaebitControlConfigSection: View {
                     Spacer()
                     if viewModel.apertures.count == 1, let singleValue = viewModel.apertures.first {
                         HStack {
-                            Image(systemName: "lock.fill")
                             Text("\(singleValue.description)")
+                            Image(systemName: "lock.fill")
                         }
                         .font(.system(size: 14, design: .monospaced))
                     } else {
@@ -41,8 +41,8 @@ struct HaebitControlConfigSection: View {
                     Spacer()
                     if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
                         HStack {
-                            Image(systemName: "lock.fill")
                             Text("\(singleValue.description)")
+                            Image(systemName: "lock.fill")
                         }
                         .font(.system(size: 14, design: .monospaced))
                     } else {
@@ -60,8 +60,8 @@ struct HaebitControlConfigSection: View {
                     Spacer()
                     if viewModel.isoValues.count == 1, let singleValue = viewModel.isoValues.first {
                         HStack {
-                            Image(systemName: "lock.fill")
                             Text("\(singleValue.description)")
+                            Image(systemName: "lock.fill")
                         }
                         .font(.system(size: 14, design: .monospaced))
                     } else {
@@ -79,8 +79,8 @@ struct HaebitControlConfigSection: View {
                     Spacer()
                     if viewModel.focalLenghts.count == 1, let singleValue = viewModel.focalLenghts.first {
                         HStack {
-                            Image(systemName: "lock.fill")
                             Text("\(singleValue.title)")
+                            Image(systemName: "lock.fill")
                         }
                         .font(.system(size: 14, design: .monospaced))
                     } else {
