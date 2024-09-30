@@ -14,7 +14,7 @@ struct HaebitControlConfigSection: View {
     var body: some View {
         Section {
             NavigationLink {
-                Text("Aperture")
+                HaebitApertureEntriesConfigView(viewModel: viewModel)
             } label: {
                 HStack {
                     Text("Aperture")

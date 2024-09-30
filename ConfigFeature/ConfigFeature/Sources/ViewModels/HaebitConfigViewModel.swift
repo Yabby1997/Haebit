@@ -14,7 +14,18 @@ final class HaebitConfigViewModel: ObservableObject {
     private let appStoreOpener: any AppStoreOpener
     private let appVersionProvider: any AppVersionProvidable
     @Published var currentHeaderType: HeaderType = .tipJar
-    @Published var apertures: [ApertureValue] = [.init(1.4), .init(2)].compactMap { $0 }
+    @Published var apertureEntries: [ApertureEntry] = [
+        .init(value: .init(1.4)!, isActive: true),
+        .init(value: .init(2)!, isActive: false),
+        .init(value: .init(2.8)!, isActive: false),
+        .init(value: .init(4)!, isActive: true),
+        .init(value: .init(5.6)!, isActive: false),
+        .init(value: .init(8)!, isActive: false),
+        .init(value: .init(11)!, isActive: true),
+        .init(value: .init(16)!, isActive: false),
+        .init(value: .init(22)!, isActive: false),
+    ]
+    @Published var apertures: [ApertureValue] = []
     @Published var shutterSpeeds: [ShutterSpeedValue] = [.init(denominator: 2000)].compactMap { $0 }
     @Published var isoValues: [IsoValue] = [.init(100), .init(200), .init(400), .init(800)].compactMap { $0 }
     @Published var focalLenghts: [FocalLengthValue] = [.init(50)].compactMap { $0 }
@@ -42,6 +53,10 @@ final class HaebitConfigViewModel: ObservableObject {
             .combineLatest($currentHeaderType)
             .map { $1.next }
             .assign(to: &$currentHeaderType)
+        
+        $apertureEntries
+            .map { $0.filter { $0.isActive }.map { $0.value } }
+            .assign(to: &$apertures)
     }
     
     func onAppear() {
@@ -57,5 +72,17 @@ final class HaebitConfigViewModel: ObservableObject {
     
     func didTapAppVersion() {
         appStoreOpener.openAppPage()
+    }
+    
+    func isToggleable(aperture entry: ApertureEntry) -> Bool {
+        entry.isActive == false || apertureEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+    }
+    
+    func isDeletable(aperture entry: ApertureEntry) -> Bool {
+        apertureEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+    }
+    
+    func deleteApertures(at offsets: IndexSet) {
+        apertureEntries.remove(atOffsets: offsets)
     }
 }

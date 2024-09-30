@@ -19,6 +19,9 @@
     "At least a type of exposure related value should have more than two items." : {
 
     },
+    "At least one value should be exist and active." : {
+
+    },
     "Buy me a film" : {
 
     },
