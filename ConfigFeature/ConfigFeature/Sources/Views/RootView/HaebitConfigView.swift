@@ -41,7 +41,7 @@ public struct HaebitConfigView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: NavigatablePages.self, destination: navigate(to:))
             .toolbarBackground(.hidden, for: .navigationBar)
-            .ignoresSafeArea(.all)
+            .ignoresSafeArea(.container, edges: .top)
             .scrollIndicators(.hidden)
             .headerProminence(.increased)
             .toolbar {
