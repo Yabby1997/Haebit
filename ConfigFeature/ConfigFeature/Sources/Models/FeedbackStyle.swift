@@ -8,16 +8,16 @@
 
 import Foundation
 
-enum FeedbackStyle: CaseIterable, Identifiable {
+public enum FeedbackStyle: CaseIterable, Identifiable, Sendable {
     case heavy
     case medium
     case light
     case rigid
     case soft
     
-    var id: String { description }
+    public var id: String { description }
     
-    var description: String {
+    public var description: String {
         switch self {
         case .heavy: return "Heavy"
         case .medium: return "Medium"

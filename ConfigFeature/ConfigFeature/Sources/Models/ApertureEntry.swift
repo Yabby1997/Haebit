@@ -9,7 +9,12 @@
 import Foundation
 import HaebitCommonModels
 
-struct ApertureEntry: Hashable {
+public struct ApertureEntry: Hashable, Sendable {
     let value: ApertureValue
     var isActive: Bool
+    
+    public init(value: ApertureValue, isActive: Bool) {
+        self.value = value
+        self.isActive = isActive
+    }
 }

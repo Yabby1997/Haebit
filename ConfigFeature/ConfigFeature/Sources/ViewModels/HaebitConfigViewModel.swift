@@ -6,88 +6,60 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
+import Combine
 import Foundation
 import HaebitCommonModels
 
 @MainActor
 final class HaebitConfigViewModel: ObservableObject {
+    private let configRepository: any HaebitConfigRepository
     private let appStoreOpener: any AppStoreOpener
     private let appVersionProvider: any AppVersionProvidable
     @Published var currentHeaderType: HeaderType = .tipJar
-    @Published var apertureEntries: [ApertureEntry] = [
-        .init(value: .init(1.4)!, isActive: true),
-        .init(value: .init(2)!, isActive: false),
-        .init(value: .init(2.8)!, isActive: false),
-        .init(value: .init(4)!, isActive: true),
-        .init(value: .init(5.6)!, isActive: false),
-        .init(value: .init(8)!, isActive: false),
-        .init(value: .init(11)!, isActive: true),
-        .init(value: .init(16)!, isActive: false),
-        .init(value: .init(22)!, isActive: false),
-    ]
+    @Published var apertureEntries: [ApertureEntry] = []
     @Published var apertures: [ApertureValue] = []
-    @Published var shutterSpeedEntries: [ShutterSpeedEntry] = [
-        .init(value: .init(denominator: 8000)!, isActive: false),
-        .init(value: .init(denominator: 4000)!, isActive: false),
-        .init(value: .init(denominator: 2000)!, isActive: true),
-        .init(value: .init(denominator: 1000)!, isActive: true),
-        .init(value: .init(denominator: 500)!, isActive: true),
-        .init(value: .init(denominator: 250)!, isActive: true),
-        .init(value: .init(denominator: 125)!, isActive: true),
-        .init(value: .init(denominator: 60)!, isActive: true),
-        .init(value: .init(denominator: 30)!, isActive: true),
-        .init(value: .init(denominator: 16)!, isActive: false),
-        .init(value: .init(denominator: 8)!, isActive: false),
-        .init(value: .init(denominator: 4)!, isActive: false),
-        .init(value: .init(denominator: 2)!, isActive: false),
-        .init(value: .init(denominator: 1)!, isActive: false),
-    ]
+    @Published var shutterSpeedEntries: [ShutterSpeedEntry] = []
     @Published var shutterSpeeds: [ShutterSpeedValue] = []
-    @Published var isoEntries: [IsoEntry] = [
-        .init(value: .init(25)!, isActive: false),
-        .init(value: .init(50)!, isActive: false),
-        .init(value: .init(100)!, isActive: false),
-        .init(value: .init(200)!, isActive: true),
-        .init(value: .init(400)!, isActive: true),
-        .init(value: .init(800)!, isActive: true),
-        .init(value: .init(1600)!, isActive: false),
-        .init(value: .init(3200)!, isActive: false),
-        .init(value: .init(6400)!, isActive: false),
-    ]
+    @Published var isoEntries: [IsoEntry] = []
     @Published var isoValues: [IsoValue] = []
-    @Published var focalLengthEntries: [FocalLengthEntry] = [
-        .init(value: .init(11)!, isActive: false),
-        .init(value: .init(22)!, isActive: false),
-        .init(value: .init(28)!, isActive: true),
-        .init(value: .init(35)!, isActive: true),
-        .init(value: .init(44)!, isActive: true),
-        .init(value: .init(50)!, isActive: true),
-        .init(value: .init(70)!, isActive: true),
-        .init(value: .init(85)!, isActive: false),
-        .init(value: .init(100)!, isActive: true),
-        .init(value: .init(135)!, isActive: true),
-        .init(value: .init(150)!, isActive: false),
-        .init(value: .init(200)!, isActive: true),
-        .init(value: .init(300)!, isActive: false),
-        .init(value: .init(400)!, isActive: false),
-    ]
+    @Published var focalLengthEntries: [FocalLengthEntry] = []
     @Published var focalLengths: [FocalLengthValue] = []
-    @Published var apertureRingFeedbackStyle: FeedbackStyle = .heavy
-    @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle = .heavy
-    @Published var isoDialFeedbackStyle: FeedbackStyle = .heavy
-    @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .soft
+    @Published var apertureRingFeedbackStyle: FeedbackStyle = .medium
+    @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle = .medium
+    @Published var isoDialFeedbackStyle: FeedbackStyle = .medium
+    @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .medium
     @Published var perforationShape: PerforationShape = .ks
     @Published var filmCanister: FilmCanister = .kodakUltramax400
     @Published var isLatestVersion: Bool = false
     @Published var appVersion: String = "1.0.0"
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     init(
+        configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
         appVersionProvider: any AppVersionProvidable
     ) {
+        self.configRepository = configRepository
         self.appStoreOpener = appStoreOpener
         self.appVersionProvider = appVersionProvider
+        load()
         bind()
+    }
+    
+    private func load() {
+        Task {
+            apertureEntries = await configRepository.apertureEntries
+            shutterSpeedEntries = await configRepository.shutterSpeedEntries
+            isoEntries = await configRepository.isoEntries
+            focalLengthEntries = await configRepository.focalLengthEntries
+            apertureRingFeedbackStyle = await configRepository.apertureRingFeedbackStyle
+            shutterSpeedDialFeedbackStyle = await configRepository.shutterSpeedDialFeedbackStyle
+            isoDialFeedbackStyle = await configRepository.isoDialFeedbackStyle
+            focalLengthRingFeedbackStyle = await configRepository.focalLengthRingFeedbackStyle
+            perforationShape = await configRepository.perforationShape
+            filmCanister = await configRepository.filmCanister
+        }
     }
     
     private func bind() {
@@ -112,6 +84,46 @@ final class HaebitConfigViewModel: ObservableObject {
         $focalLengthEntries
             .map { $0.filter { $0.isActive }.map { $0.value } }
             .assign(to: &$focalLengths)
+        
+        $apertureEntries
+            .dropFirst(2)
+            .removeDuplicates()
+            .sink { [weak self] entries in
+                Task {
+                    await self?.configRepository.saveAperture(entries: entries)
+                }
+            }
+            .store(in: &cancellables)
+        
+        $shutterSpeedEntries
+            .dropFirst(2)
+            .removeDuplicates()
+            .sink { [weak self] entries in
+                Task {
+                    await self?.configRepository.saveShutterSpeed(entries: entries)
+                }
+            }
+            .store(in: &cancellables)
+        
+        $isoEntries
+            .dropFirst(2)
+            .removeDuplicates()
+            .sink { [weak self] entries in
+                Task {
+                    await self?.configRepository.saveIso(entries: entries)
+                }
+            }
+            .store(in: &cancellables)
+        
+        $focalLengthEntries
+            .dropFirst(2)
+            .removeDuplicates()
+            .sink { [weak self] entries in
+                Task {
+                    await self?.configRepository.saveFocalLength(entries: entries)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func onAppear() {

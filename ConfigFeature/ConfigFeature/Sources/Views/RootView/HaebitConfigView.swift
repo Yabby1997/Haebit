@@ -14,10 +14,12 @@ public struct HaebitConfigView: View {
     @Environment(\.dismiss) private var dismiss
     
     public init(
+        configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
         appVersionProvider: any AppVersionProvidable
     ) {
         let viewModel = HaebitConfigViewModel(
+            configRepository: configRepository,
             appStoreOpener: appStoreOpener,
             appVersionProvider: appVersionProvider
         )
