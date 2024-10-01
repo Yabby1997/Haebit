@@ -7,6 +7,9 @@
     "%@ items" : {
 
     },
+    "•" : {
+
+    },
     "Aperture" : {
 
     },
@@ -14,12 +17,6 @@
 
     },
     "Appearance" : {
-
-    },
-    "At least a type of exposure related value should have more than two items." : {
-
-    },
-    "At least one value should be exist and active." : {
 
     },
     "Buy me a film" : {
@@ -49,16 +46,7 @@
     "ISO Dial" : {
 
     },
-    "New Aperture Value" : {
-
-    },
-    "New Focal Length Value" : {
-
-    },
-    "New ISO Value" : {
-
-    },
-    "New Shutter Speed Value" : {
+    "New Entry" : {
 
     },
     "OpenSource" : {

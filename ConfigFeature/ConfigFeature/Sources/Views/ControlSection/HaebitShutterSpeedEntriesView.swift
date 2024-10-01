@@ -62,7 +62,10 @@ struct HaebitShutterSpeedEntriesView: View {
                     viewModel.deleteShutterSpeeds(at: offset)
                 }
             } footer: {
-                Text("At least one value should be exist and active.")
+                VStack(alignment: .leading) {
+                    BulletedText("At least one entry should be exist and active.")
+                    BulletedText("If aperture and ISO has only one entry, at least two entries should be exist and active.")
+                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -93,7 +96,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Shutter Speed Value")
+                Text("New Entry")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

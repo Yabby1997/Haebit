@@ -35,7 +35,10 @@ struct HaebitApertureEntriesConfigView: View {
                     viewModel.deleteApertures(at: offset)
                 }
             } footer: {
-                Text("At least one value should be exist and active.")
+                VStack(alignment: .leading) {
+                    BulletedText("At least one entry should be exist and active.")
+                    BulletedText("If shutter speed and ISO has only one entry, at least two entries should be exist and active.")
+                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -66,7 +69,7 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Aperture Value")
+                Text("New Entry")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

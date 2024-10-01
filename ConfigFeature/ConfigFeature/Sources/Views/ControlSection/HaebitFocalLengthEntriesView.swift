@@ -35,7 +35,11 @@ struct HaebitFocalLengthEntriesView: View {
                     viewModel.deleteFocalLength(at: offset)
                 }
             } footer: {
-                Text("At least one value should be exist and active.")
+                VStack(alignment: .leading) {
+                    BulletedText("At least one entry should be exist and active.")
+                    BulletedText("Some entries may not be displayed if iPhone is  won't support it.")
+                    BulletedText("If no entries available for iPhone camera, it will be automatically fallback to default focal length.")
+                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -66,7 +70,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Focal Length Value")
+                Text("New Entry")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

@@ -96,8 +96,8 @@ struct HaebitControlConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            VStack {
-                Text("At least a type of exposure related value should have more than two items.")
+            VStack(alignment: .leading) {
+                BulletedText("Types with only one entry will be locked and won't be displayed as a control.")
             }
         }
     }
