@@ -80,6 +80,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public private(set) var isCapturing = false
     @Published private var location: Coordinate? = nil
     @Published private var isCameraRunning = false
+    private let fallbackFocalLength: UInt32
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -90,17 +91,19 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         logger: HaebitLightMeterLoggable,
         preferenceProvider: LightMeterPreferenceProvidable,
         statePersistence: LightMeterStatePersistenceProtocol,
+        fallbackFocalLength: UInt32 = 28,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
         feedbackProvider: LightMeterFeedbackProvidable = LightMeterHapticFeedbackProvider()
     ) {
         self.camera = camera
         self.logger = logger
+        self.preferenceProvider = preferenceProvider
         self.statePersistence = statePersistence
+        self.fallbackFocalLength = fallbackFocalLength
         self.reviewRequestValidator = reviewRequestValidator
         self.gpsAccessValidator = gpsAccessValidator
         self.feedbackProvider = feedbackProvider
-        self.preferenceProvider = preferenceProvider
         previewLayer = camera.previewLayer
         lightMeterMode = statePersistence.mode
         aperture = statePersistence.aperture
@@ -127,6 +130,19 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$isoValues)
         
+        preferenceProvider.focalLengthsPublisher.combineLatest(camera.minZoomFactor, camera.maxZoomFactor)
+            .map { [weak self] focalLengths, minZoomFactor, maxZoomFactor -> [FocalLengthValue] in
+                guard let self else { return [] }
+                let filtered = focalLengths
+                    .filter { $0.zoomFactor >= minZoomFactor }
+                    .filter { $0.zoomFactor <= maxZoomFactor }
+                return filtered.isEmpty
+                    ? [FocalLengthValue(fallbackFocalLength)].compactMap { $0 }
+                    : filtered
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$focalLengths)
+        
         preferenceProvider.apertureRingFeedbackStylePublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$apertureRingFeedbackStyle)
@@ -143,37 +159,35 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$filmCanister)
         
-        $isCameraRunning.combineLatest(preferenceProvider.aperturesPublisher)
-            .filter { $0.0 }
-            .compactMap { [weak self] _, apertures in
+        $apertures
+            .compactMap { [weak self] apertures in
                 guard let value = self?.aperture.value else { return nil }
                 return apertures.first { $0.value == value.nearest(among: apertures.map { $0.value }) }
             }
             .assign(to: &$aperture)
         
-        $isCameraRunning.combineLatest(preferenceProvider.shutterSpeedsPublisher)
-            .filter { $0.0 }
-            .compactMap { [weak self] _, shutterSpeeds in
+        $shutterSpeeds
+            .compactMap { [weak self] shutterSpeeds in
                 guard let value = self?.shutterSpeed.value else { return nil }
                 return shutterSpeeds.first { $0.value == value.nearest(among: shutterSpeeds.map { $0.value }) }
             }
             .assign(to: &$shutterSpeed)
         
-        $isCameraRunning.combineLatest(preferenceProvider.isoValuesPublisher)
-            .filter { $0.0 }
-            .compactMap { [weak self] _, isoValues in
+        $isoValues
+            .compactMap { [weak self] isoValues in
                 guard let self else { return nil }
                 let value = Float(iso.value)
                 return isoValues.first { Float($0.value) == value.nearest(among: isoValues.compactMap { Float($0.value) }) }
             }
             .assign(to: &$iso)
         
-        preferenceProvider.focalLengthsPublisher.combineLatest(camera.maxZoomFactor)
-            .map { focalLengths, maxZoomFactor in
-                focalLengths.filter { $0.zoomFactor <= maxZoomFactor }
+        $focalLengths
+            .compactMap { [weak self] focalLengths in
+                guard let self else { return nil }
+                let value = Float(focalLength.value)
+                return focalLengths.first { Float($0.value) == value.nearest(among: focalLengths.compactMap { Float($0.value) }) }
             }
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$focalLengths)
+            .assign(to: &$focalLength)
         
         reviewRequestValidator.shouldRequestReviewPublisher
             .receive(on: DispatchQueue.main)
@@ -262,7 +276,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$iso)
         
-        $focalLength
+        $focalLength.combineLatest(camera.isRunning)
+            .filter { $0.1 }
+            .map { $0.0 }
+            .removeDuplicates()
             .sink { [weak self] focalLength in
                 try? self?.zoomCamera(factor: focalLength.zoomFactor)
             }
@@ -317,11 +334,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$lockPoint)
         
-        preferenceProvider.aperturesPublisher
+        $apertures
             .map { $0.count == 1 }
             .assign(to: &$isApertureFixed)
         
-        preferenceProvider.aperturesPublisher
+        $apertures
             .filter { $0.count == 1 }
             .compactMap { $0.first }
             .assign(to: &$aperture)
@@ -344,11 +361,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .compactMap { $0.first }
             .assign(to: &$iso)
         
-        preferenceProvider.focalLengthsPublisher
+        $focalLengths
             .map { $0.count == 1 }
             .assign(to: &$isFocalLengthFixed)
         
-        preferenceProvider.focalLengthsPublisher
+        $focalLengths
             .filter { $0.count == 1 }
             .compactMap { $0.first }
             .assign(to: &$focalLength)

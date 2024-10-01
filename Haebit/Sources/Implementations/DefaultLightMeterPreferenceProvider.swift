@@ -48,16 +48,16 @@ final class DefaultLightMeterPreferenceProvider: LightMeterPreferenceProvidable 
     
     @Published private var _focalLengthValues: [FocalLengthValue] = [
         .init(50),
-        .init(70),
-        .init(135),
+        .init(300),
     ].compactMap { $0 }
     
-    var apertureValues: AnyPublisher<[ApertureValue], Never> { $_apertureValues.compactMap { $0 }.eraseToAnyPublisher() }
-    var shutterSpeedValues: AnyPublisher<[ShutterSpeedValue], Never> { $_shutterSpeedValues.compactMap { $0 }.eraseToAnyPublisher() }
-    var isoValues: AnyPublisher<[IsoValue], Never> { $_isoValues.compactMap { $0 }.eraseToAnyPublisher() }
-    var focalLengthValues: AnyPublisher<[FocalLengthValue], Never> { $_focalLengthValues.compactMap { $0 }.eraseToAnyPublisher() }
-    var apertureRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
-    var shutterSpeedRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
-    var isoRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
-    var focalLengthRingFeedbackStyle: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.soft).eraseToAnyPublisher() }
+    var aperturesPublisher: AnyPublisher<[ApertureValue], Never> { $_apertureValues.compactMap { $0 }.eraseToAnyPublisher() }
+    var shutterSpeedsPublisher: AnyPublisher<[ShutterSpeedValue], Never> { $_shutterSpeedValues.compactMap { $0 }.eraseToAnyPublisher() }
+    var isoValuesPublisher: AnyPublisher<[IsoValue], Never> { $_isoValues.compactMap { $0 }.eraseToAnyPublisher() }
+    var focalLengthsPublisher: AnyPublisher<[FocalLengthValue], Never> { $_focalLengthValues.compactMap { $0 }.eraseToAnyPublisher() }
+    var apertureRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
+    var shutterSpeedRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
+    var isoRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.light).eraseToAnyPublisher() }
+    var focalLengthRingFeedbackStylePublisher: AnyPublisher<LightMeterFeature.FeedbackStyle, Never> { Just(.soft).eraseToAnyPublisher() }
+    var filmCanisterPublisher: AnyPublisher<HaebitCommonModels.FilmCanister, Never> { Just(.cinestill400D).eraseToAnyPublisher() }
 }

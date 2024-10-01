@@ -10,7 +10,7 @@ import HaebitCommonModels
 import UIKit
 
 public extension UIDevice {
-    nonisolated static var focalLength: CGFloat {
+    nonisolated static var focalLength: UInt32 {
         var systemInfo = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)
@@ -37,5 +37,5 @@ public extension UIDevice {
 }
 
 extension FocalLengthValue {
-    var zoomFactor: CGFloat { CGFloat(value) / UIDevice.focalLength }
+    var zoomFactor: CGFloat { CGFloat(value) / CGFloat(UIDevice.focalLength) }
 }

@@ -28,6 +28,8 @@ public protocol LightMeterCamera: Actor {
     
     /// A `Bool` value indicating whether the camera is running.
     nonisolated var isRunning: AnyPublisher<Bool, Never> { get }
+    /// A `CGFloat` value indicating the minimum zoom factor.
+    nonisolated var minZoomFactor: AnyPublisher<CGFloat, Never> { get }
     /// A `CGFloat` value indicating the maximum zoom factor.
     nonisolated var maxZoomFactor: AnyPublisher<CGFloat, Never> { get }
     /// A `Bool` value indicating whether the HDR mode is enabled.

@@ -24,10 +24,14 @@ struct HaebitApp: App {
                     logger: logger,
                     preferenceProvider: DefaultLightMeterPreferenceProvider(),
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
-                    reviewRequestValidator: DefaultReviewRequestValidator(), 
+                    fallbackFocalLength: UIDevice.focalLength,
+                    reviewRequestValidator: DefaultReviewRequestValidator(),
                     gpsAccessValidator: DefaultGPSAccessValidator()
                 ),
-                logView: HaebitFilmLogView(logger: logger)
+                logView: HaebitFilmLogView(
+                    logger: logger,
+                    preferenceProvider: DefaultLoggerPreferenceProvider()
+                )
             )
             .environmentObject(
                 LightMeterControlViewDependencies(

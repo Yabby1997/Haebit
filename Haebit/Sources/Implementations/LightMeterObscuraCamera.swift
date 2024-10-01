@@ -32,6 +32,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     nonisolated public let previewLayer: CALayer
     nonisolated public let isRunning: AnyPublisher<Bool, Never>
+    nonisolated public let minZoomFactor: AnyPublisher<CGFloat, Never>
     nonisolated public let maxZoomFactor: AnyPublisher<CGFloat, Never>
     nonisolated public let isHDREnabled: AnyPublisher<Bool, Never>
     nonisolated public let iso: AnyPublisher<Float, Never>
@@ -47,6 +48,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     init() {
         self.previewLayer = camera.previewLayer
         self.isRunning = camera.isRunning
+        self.minZoomFactor = camera.minZoomFactor
         self.maxZoomFactor = camera.maxZoomFactor
         self.isHDREnabled = camera.isHDREnabled
         self.iso = camera.iso
