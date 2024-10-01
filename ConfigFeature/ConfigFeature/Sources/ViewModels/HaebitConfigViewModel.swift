@@ -130,31 +130,34 @@ final class HaebitConfigViewModel: ObservableObject {
     }
     
     func isToggleable(aperture entry: ApertureEntry) -> Bool {
-        entry.isActive == false || apertureEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        entry.isActive == false || isDeletable(aperture: entry)
     }
     
     func isToggleable(shutterSpeed entry: ShutterSpeedEntry) -> Bool {
-        entry.isActive == false || shutterSpeedEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        entry.isActive == false || isDeletable(shutterSpeed: entry)
     }
     
     func isToggleable(iso entry: IsoEntry) -> Bool {
-        entry.isActive == false || isoEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        entry.isActive == false || isDeletable(iso: entry)
     }
     
     func isToggleable(focalLength entry: FocalLengthEntry) -> Bool {
-        entry.isActive == false || focalLengthEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        entry.isActive == false || isDeletable(focalLength: entry)
     }
     
     func isDeletable(aperture entry: ApertureEntry) -> Bool {
-        apertureEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        let minimumEntryCount = (shutterSpeeds.count == 1 && isoValues.count == 1) ? 2 : 1
+        return apertureEntries.filter { $0 != entry }.count { $0.isActive } >= minimumEntryCount
     }
     
     func isDeletable(shutterSpeed entry: ShutterSpeedEntry) -> Bool {
-        shutterSpeedEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        let minimumEntryCount = (apertures.count == 1 && isoValues.count == 1) ? 2 : 1
+        return shutterSpeedEntries.filter { $0 != entry }.count { $0.isActive } >= minimumEntryCount
     }
     
     func isDeletable(iso entry: IsoEntry) -> Bool {
-        isoEntries.filter { $0 != entry }.count { $0.isActive } > .zero
+        let minimumEntryCount = (apertures.count == 1 && shutterSpeeds.count == 1) ? 2 : 1
+        return isoEntries.filter { $0 != entry }.count { $0.isActive } >= minimumEntryCount
     }
     
     func isDeletable(focalLength entry: FocalLengthEntry) -> Bool {
