@@ -10,8 +10,8 @@ import Foundation
 import HaebitCommonModels
 
 public struct FocalLengthEntry: Hashable, Sendable {
-    let value: FocalLengthValue
-    var isActive: Bool
+    public let value: FocalLengthValue
+    public var isActive: Bool
     
     public init(value: FocalLengthValue, isActive: Bool) {
         self.value = value

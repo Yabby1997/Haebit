@@ -10,8 +10,8 @@ import Foundation
 import HaebitCommonModels
 
 public struct ShutterSpeedEntry: Hashable, Sendable {
-    let value: ShutterSpeedValue
-    var isActive: Bool
+    public let value: ShutterSpeedValue
+    public var isActive: Bool
     
     public init(value: ShutterSpeedValue, isActive: Bool = false) {
         self.value = value
