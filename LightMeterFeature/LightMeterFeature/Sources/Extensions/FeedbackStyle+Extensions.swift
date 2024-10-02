@@ -1,20 +1,13 @@
 //
-//  FeedbackStyle.swift
+//  FeedbackStyle+Extensions.swift
 //  LightMeterFeature
 //
-//  Created by Seunghun on 7/20/24.
+//  Created by Seunghun on 10/2/24.
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
+import HaebitCommonModels
 import UIKit
-
-public enum FeedbackStyle {
-    case heavy
-    case medium
-    case light
-    case rigid
-    case soft
-}
 
 extension FeedbackStyle {
     var impactGeneratorFeedbackSyle: UIImpactFeedbackGenerator.FeedbackStyle {
