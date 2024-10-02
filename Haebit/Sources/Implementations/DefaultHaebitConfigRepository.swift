@@ -7,116 +7,81 @@
 //
 
 
-@preconcurrency
-import Combine
 import ConfigFeature
 import Foundation
 import HaebitCommonModels
 import LightMeterFeature
 
-actor DefaultHaebitConfigRepository: HaebitConfigRepository, @preconcurrency LightMeterPreferenceProvidable {
-    @Published private(set) var apertureEntries: [ApertureEntry] = [
-        .init(value: .init(1.4)!, isActive: true),
-        .init(value: .init(2)!, isActive: false),
-        .init(value: .init(2.8)!, isActive: false),
-        .init(value: .init(4)!, isActive: true),
-        .init(value: .init(5.6)!, isActive: false),
-        .init(value: .init(8)!, isActive: false),
-        .init(value: .init(11)!, isActive: true),
-        .init(value: .init(16)!, isActive: false),
-        .init(value: .init(22)!, isActive: false),
-    ]
+final class DefaultHaebitConfigRepository: HaebitConfigRepository {
+    fileprivate enum UserDefaultKey: String, CaseIterable {
+        case apertureEntries = "DefaultHeabitConfigRepository.apertureEntries"
+        case shutterSpeedEntries = "DefaultHeabitConfigRepository.shutterSpeedEntries"
+        case isoEntries = "DefaultHeabitConfigRepository.isoEntries"
+        case focalLengthEntries = "DefaultHeabitConfigRepository.focalLengthEntries"
+        case apertureRingFeedbackStyle = "DefaultHeabitConfigRepository.apertureRingFeedbackStyle"
+        case shutterSpeedDialFeedbackStyle = "DefaultHeabitConfigRepository.shutterSpeedDialFeedbackStyle"
+        case isoDialFeedbackStyle = "DefaultHeabitConfigRepository.isoDialFeedbackStyle"
+        case focalLengthRingFeedbackStyle = "DefaultHeabitConfigRepository.focalLengthRingFeedbackStyle"
+        case perforationShape = "DefaultHeabitConfigRepository.perforationShape"
+        case filmCanister = "DefaultHeabitConfigRepository.filmCanister"
+    }
     
-    @Published private(set) var shutterSpeedEntries: [ShutterSpeedEntry] = [
-        .init(value: .init(denominator: 8000)!, isActive: false),
-        .init(value: .init(denominator: 4000)!, isActive: false),
-        .init(value: .init(denominator: 2000)!, isActive: true),
-        .init(value: .init(denominator: 1000)!, isActive: true),
-        .init(value: .init(denominator: 500)!, isActive: true),
-        .init(value: .init(denominator: 250)!, isActive: true),
-        .init(value: .init(denominator: 125)!, isActive: true),
-        .init(value: .init(denominator: 60)!, isActive: true),
-        .init(value: .init(denominator: 30)!, isActive: true),
-        .init(value: .init(denominator: 16)!, isActive: true),
-        .init(value: .init(denominator: 8)!, isActive: true),
-        .init(value: .init(denominator: 4)!, isActive: true),
-        .init(value: .init(denominator: 2)!, isActive: true),
-        .init(value: .init(denominator: 1)!, isActive: true),
-    ]
+    @UserDefault(
+        key: UserDefaultKey.apertureEntries.rawValue,
+        defaultValue: [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22]
+            .compactMap { ApertureValue($0) }
+            .map { ApertureEntry(value: $0, isActive: true) }
+    )
+    var apertureEntries: [ApertureEntry]
     
-    @Published private(set) var isoEntries: [IsoEntry] = [
-        .init(value: .init(25)!, isActive: false),
-        .init(value: .init(50)!, isActive: false),
-        .init(value: .init(100)!, isActive: false),
-        .init(value: .init(200)!, isActive: true),
-        .init(value: .init(400)!, isActive: true),
-        .init(value: .init(800)!, isActive: true),
-        .init(value: .init(1600)!, isActive: false),
-        .init(value: .init(3200)!, isActive: false),
-        .init(value: .init(6400)!, isActive: false),
-    ]
+    @UserDefault(
+        key: UserDefaultKey.shutterSpeedEntries.rawValue,
+        defaultValue: [8000, 4000, 2000, 1000, 500, 250, 125, 60, 30, 15, 8, 4, 2]
+            .compactMap { ShutterSpeedValue(denominator: $0) }
+            .map { ShutterSpeedEntry(value: $0, isActive: true) }
+        + [1, 2, 4, 8, 16, 30, 60]
+            .compactMap { ShutterSpeedValue(numerator: $0) }
+            .map { ShutterSpeedEntry(value: $0, isActive: true) }
+    )
+    var shutterSpeedEntries: [ShutterSpeedEntry]
     
-    @Published private(set) var focalLengthEntries: [ConfigFeature.FocalLengthEntry] = [
-        .init(value: .init(11)!, isActive: true),
-        .init(value: .init(22)!, isActive: false),
-        .init(value: .init(26)!, isActive: false),
-        .init(value: .init(28)!, isActive: true),
-        .init(value: .init(35)!, isActive: false),
-        .init(value: .init(50)!, isActive: true),
-        .init(value: .init(75)!, isActive: true),
-        .init(value: .init(80)!, isActive: false),
-        .init(value: .init(100)!, isActive: true),
-        .init(value: .init(135)!, isActive: true),
-        .init(value: .init(150)!, isActive: true),
-        .init(value: .init(200)!, isActive: true),
-        .init(value: .init(300)!, isActive: false),
-    ]
+    @UserDefault(
+        key: UserDefaultKey.isoEntries.rawValue,
+        defaultValue: [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+            .compactMap { IsoValue($0) }
+            .map { IsoEntry(value: $0, isActive: true) }
+    )
+    var isoEntries: [IsoEntry]
     
+    @UserDefault(
+        key: UserDefaultKey.focalLengthEntries.rawValue,
+        defaultValue: [28, 35, 40, 50, 70, 85, 100, 135, 170, 200]
+            .compactMap { FocalLengthValue($0) }
+            .map { FocalLengthEntry(value: $0, isActive: true) }
+    )
+    var focalLengthEntries: [ConfigFeature.FocalLengthEntry]
+    
+    @UserDefault(key: UserDefaultKey.apertureRingFeedbackStyle.rawValue, defaultValue: .rigid)
+    var apertureRingFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.shutterSpeedDialFeedbackStyle.rawValue, defaultValue: .rigid)
+    var shutterSpeedDialFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.isoDialFeedbackStyle.rawValue, defaultValue: .rigid)
+    var isoDialFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.focalLengthRingFeedbackStyle.rawValue, defaultValue: .rigid)
+    var focalLengthRingFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.perforationShape.rawValue, defaultValue: .ks)
+    var perforationShape: PerforationShape
+    @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .fujiXtra400)
+    var filmCanister: FilmCanister
+    
+    func reset() {
+        UserDefaultKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
+    }
+}
+
+extension DefaultHaebitConfigRepository: LightMeterPreferenceProvidable {
     var apertures: [ApertureValue] { apertureEntries.filter { $0.isActive }.map { $0.value } }
     var shutterSpeeds: [ShutterSpeedValue] { shutterSpeedEntries.filter { $0.isActive }.map { $0.value } }
     var isoValues: [IsoValue] { isoEntries.filter { $0.isActive }.map { $0.value } }
     var focalLengths: [FocalLengthValue] { focalLengthEntries.filter { $0.isActive }.map { $0.value } }
-    
-    @Published var apertureRingFeedbackStyle: FeedbackStyle = .rigid
-    @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle = .rigid
-    @Published var isoDialFeedbackStyle: FeedbackStyle = .rigid
-    @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .rigid
-    @Published var perforationShape: PerforationShape = .bh
-    @Published var filmCanister: FilmCanister = .fujiXtra400
-    
-    func saveAperture(entries: [ConfigFeature.ApertureEntry]) {
-        apertureEntries = entries
-    }
-    
-    func saveShutterSpeed(entries: [ConfigFeature.ShutterSpeedEntry]) {
-        shutterSpeedEntries = entries
-    }
-    
-    func saveIso(entries: [ConfigFeature.IsoEntry]) {
-        isoEntries = entries
-    }
-    
-    func saveFocalLength(entries: [ConfigFeature.FocalLengthEntry]) {
-        focalLengthEntries = entries
-    }
-    
-    func saveApertureRing(feedbackStyle: FeedbackStyle) {
-        print(#function)
-    }
-    
-    func saveShutterSpeedDial(feedbackStyle: FeedbackStyle) {
-        print(#function)
-    }
-    
-    func saveIsoDial(feedbackStyle: FeedbackStyle) {
-        print(#function)
-    }
-    
-    func savePerforationShape(_ perforationShape: HaebitCommonModels.PerforationShape) {
-        print(#function)
-    }
-    
-    func saveFilmCanister(_ filmCanister: HaebitCommonModels.FilmCanister) {
-        print(#function)
-    }
 }
