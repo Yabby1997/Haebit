@@ -10,18 +10,21 @@ import SwiftUI
 import HaebitUI
 import StoreKit
 
-public struct HaebitLightMeterView<LogView: View>: View{
+public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
     @Environment(\.openURL) var openURL
     @Environment(\.scenePhase) var scenePhase
     let logView: LogView
+    let configView: ConfigView
     
     public init(
         viewModel: HaebitLightMeterViewModel,
-        logView: LogView
+        logView: LogView,
+        configView: ConfigView
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.logView = logView
+        self.configView = configView
     }
     
     public var body: some View {
@@ -53,6 +56,9 @@ public struct HaebitLightMeterView<LogView: View>: View{
         } message :{ Text(.lightMeterViewGPSAccessAlertMessage) }
         .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
             logView
+        }
+        .fullScreenCover(isPresented: $viewModel.isPresentingConfig, onDismiss: viewModel.didCloseConfig) {
+            configView
         }
     }
     

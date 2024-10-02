@@ -6,6 +6,7 @@
 //  Copyright © 2023 seunghun. All rights reserved.
 //
 
+import ConfigFeature
 import FilmLogFeature
 import HaebitLogger
 import HaebitUI
@@ -14,6 +15,7 @@ import SwiftUI
 
 @main
 struct HaebitApp: App {
+    let configRepository = DefaultHaebitConfigRepository()
     let logger = HaebitLogger(repository: DefaultHaebitLogRepository())
     
     var body: some Scene {
@@ -22,7 +24,7 @@ struct HaebitApp: App {
                 viewModel: HaebitLightMeterViewModel(
                     camera: LightMeterObscuraCamera(),
                     logger: logger,
-                    preferenceProvider: DefaultLightMeterPreferenceProvider(),
+                    preferenceProvider: configRepository,
                     statePersistence: LightMeterStateUserDefaultsPersistence(),
                     fallbackFocalLength: UIDevice.focalLength,
                     reviewRequestValidator: DefaultReviewRequestValidator(),
@@ -31,6 +33,11 @@ struct HaebitApp: App {
                 logView: HaebitFilmLogView(
                     logger: logger,
                     preferenceProvider: DefaultLoggerPreferenceProvider()
+                ),
+                configView: HaebitConfigView(
+                    configRepository: configRepository,
+                    appStoreOpener: HaebitAppStoreOpener(locale: Locale.current.identifier),
+                    appVersionProvider: HaebitAppVersionProvider()
                 )
             )
             .environmentObject(
