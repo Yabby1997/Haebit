@@ -16,20 +16,20 @@ final class HaebitConfigViewModel: ObservableObject {
     private let appStoreOpener: any AppStoreOpener
     private let appVersionProvider: any AppVersionProvidable
     @Published var currentHeaderType: HeaderType = .tipJar
-    @Published var apertureEntries: [ApertureEntry] = []
+    @Published var apertureEntries: [ApertureEntry]
+    @Published var shutterSpeedEntries: [ShutterSpeedEntry]
+    @Published var isoEntries: [IsoEntry]
+    @Published var focalLengthEntries: [FocalLengthEntry]
+    @Published var apertureRingFeedbackStyle: FeedbackStyle
+    @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle
+    @Published var isoDialFeedbackStyle: FeedbackStyle
+    @Published var focalLengthRingFeedbackStyle: FeedbackStyle
+    @Published var perforationShape: PerforationShape
+    @Published var filmCanister: FilmCanister
     @Published var apertures: [ApertureValue] = []
-    @Published var shutterSpeedEntries: [ShutterSpeedEntry] = []
     @Published var shutterSpeeds: [ShutterSpeedValue] = []
-    @Published var isoEntries: [IsoEntry] = []
     @Published var isoValues: [IsoValue] = []
-    @Published var focalLengthEntries: [FocalLengthEntry] = []
     @Published var focalLengths: [FocalLengthValue] = []
-    @Published var apertureRingFeedbackStyle: FeedbackStyle = .medium
-    @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle = .medium
-    @Published var isoDialFeedbackStyle: FeedbackStyle = .medium
-    @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .medium
-    @Published var perforationShape: PerforationShape = .ks
-    @Published var filmCanister: FilmCanister = .kodakUltramax400
     @Published var isLatestVersion: Bool = false
     @Published var appVersion: String = "1.0.0"
     
@@ -43,23 +43,17 @@ final class HaebitConfigViewModel: ObservableObject {
         self.configRepository = configRepository
         self.appStoreOpener = appStoreOpener
         self.appVersionProvider = appVersionProvider
-        load()
+        apertureEntries = configRepository.apertureEntries
+        shutterSpeedEntries = configRepository.shutterSpeedEntries
+        isoEntries = configRepository.isoEntries
+        focalLengthEntries = configRepository.focalLengthEntries
+        apertureRingFeedbackStyle = configRepository.apertureRingFeedbackStyle
+        shutterSpeedDialFeedbackStyle = configRepository.shutterSpeedDialFeedbackStyle
+        isoDialFeedbackStyle = configRepository.isoDialFeedbackStyle
+        focalLengthRingFeedbackStyle = configRepository.focalLengthRingFeedbackStyle
+        perforationShape = configRepository.perforationShape
+        filmCanister = configRepository.filmCanister
         bind()
-    }
-    
-    private func load() {
-        Task {
-            apertureEntries = await configRepository.apertureEntries
-            shutterSpeedEntries = await configRepository.shutterSpeedEntries
-            isoEntries = await configRepository.isoEntries
-            focalLengthEntries = await configRepository.focalLengthEntries
-            apertureRingFeedbackStyle = await configRepository.apertureRingFeedbackStyle
-            shutterSpeedDialFeedbackStyle = await configRepository.shutterSpeedDialFeedbackStyle
-            isoDialFeedbackStyle = await configRepository.isoDialFeedbackStyle
-            focalLengthRingFeedbackStyle = await configRepository.focalLengthRingFeedbackStyle
-            perforationShape = await configRepository.perforationShape
-            filmCanister = await configRepository.filmCanister
-        }
     }
     
     private func bind() {
@@ -86,42 +80,34 @@ final class HaebitConfigViewModel: ObservableObject {
             .assign(to: &$focalLengths)
         
         $apertureEntries
-            .dropFirst(2)
+            .dropFirst()
             .removeDuplicates()
             .sink { [weak self] entries in
-                Task {
-                    await self?.configRepository.saveAperture(entries: entries)
-                }
+                self?.configRepository.apertureEntries = entries
             }
             .store(in: &cancellables)
         
         $shutterSpeedEntries
-            .dropFirst(2)
+            .dropFirst()
             .removeDuplicates()
             .sink { [weak self] entries in
-                Task {
-                    await self?.configRepository.saveShutterSpeed(entries: entries)
-                }
+                self?.configRepository.shutterSpeedEntries = entries
             }
             .store(in: &cancellables)
         
         $isoEntries
-            .dropFirst(2)
+            .dropFirst()
             .removeDuplicates()
             .sink { [weak self] entries in
-                Task {
-                    await self?.configRepository.saveIso(entries: entries)
-                }
+                self?.configRepository.isoEntries = entries
             }
             .store(in: &cancellables)
         
         $focalLengthEntries
-            .dropFirst(2)
+            .dropFirst()
             .removeDuplicates()
             .sink { [weak self] entries in
-                Task {
-                    await self?.configRepository.saveFocalLength(entries: entries)
-                }
+                self?.configRepository.focalLengthEntries = entries
             }
             .store(in: &cancellables)
     }
