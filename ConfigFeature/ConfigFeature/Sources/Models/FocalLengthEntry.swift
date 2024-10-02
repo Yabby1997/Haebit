@@ -9,7 +9,7 @@
 import Foundation
 import HaebitCommonModels
 
-public struct FocalLengthEntry: Hashable, Sendable {
+public struct FocalLengthEntry: Codable, Hashable, Sendable {
     public let value: FocalLengthValue
     public var isActive: Bool
     

@@ -9,7 +9,7 @@
 import Foundation
 import HaebitCommonModels
 
-public struct IsoEntry: Hashable, Sendable {
+public struct IsoEntry: Codable, Hashable, Sendable {
     public let value: IsoValue
     public var isActive: Bool
     
