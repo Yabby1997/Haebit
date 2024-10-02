@@ -18,7 +18,7 @@ struct ShutterSpeedRing: View {
             HaebitApertureRing(
                 selection: $viewModel.shutterSpeed,
                 entries: $viewModel.shutterSpeeds,
-                feedbackStyle: .constant(viewModel.shutterSpeedRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                feedbackStyle: .constant(viewModel.shutterSpeedDialFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { shutterSpeed in
                 Text(shutterSpeed.title)

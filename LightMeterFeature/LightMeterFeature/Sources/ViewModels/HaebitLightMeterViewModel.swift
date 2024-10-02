@@ -58,23 +58,24 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isFocalLengthFixed = false
     @Published public var shouldRequestReview = false
     @Published public var isPresentingLogger = false
+    @Published public var isPresentingConfig = false
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
     @Published public var lightMeterMode: LightMeterMode
-    @Published public var apertures: [ApertureValue] = []
-    @Published public var shutterSpeeds: [ShutterSpeedValue] = []
-    @Published public var isoValues: [IsoValue] = []
-    @Published public var focalLengths: [FocalLengthValue] = []
+    @Published public var apertures: [ApertureValue]
+    @Published public var shutterSpeeds: [ShutterSpeedValue]
+    @Published public var isoValues: [IsoValue]
+    @Published public var focalLengths: [FocalLengthValue]
     @Published public var aperture: ApertureValue
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
-    @Published public var apertureRingFeedbackStyle: FeedbackStyle = .light
-    @Published public var shutterSpeedRingFeedbackStyle: FeedbackStyle = .light
-    @Published public var isoRingFeedbackStyle: FeedbackStyle = .light
-    @Published public var focalRingFeedbackStyle: FeedbackStyle = .light
-    @Published public var filmCanister: FilmCanister = .kodakUltramax400
+    @Published public var apertureRingFeedbackStyle: FeedbackStyle
+    @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
+    @Published public var isoDialFeedbackStyle: FeedbackStyle
+    @Published public var focalRingFeedbackStyle: FeedbackStyle
+    @Published public var filmCanister: FilmCanister
     @Published public var lockPoint: CGPoint? = nil
     @Published public var isLocked: Bool = false
     @Published public private(set) var isCapturing = false
@@ -105,6 +106,15 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         self.gpsAccessValidator = gpsAccessValidator
         self.feedbackProvider = feedbackProvider
         previewLayer = camera.previewLayer
+        apertures = preferenceProvider.apertures
+        shutterSpeeds = preferenceProvider.shutterSpeeds
+        isoValues = preferenceProvider.isoValues
+        focalLengths = preferenceProvider.focalLengths
+        apertureRingFeedbackStyle = preferenceProvider.apertureRingFeedbackStyle
+        shutterSpeedDialFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
+        isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
+        focalRingFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        filmCanister = preferenceProvider.filmCanister
         lightMeterMode = statePersistence.mode
         aperture = statePersistence.aperture
         shutterSpeed = statePersistence.shutterSpeed
@@ -117,47 +127,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     
     private func bind() {
         cancellables = []
-        
-        preferenceProvider.aperturesPublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$apertures)
-        
-        preferenceProvider.shutterSpeedsPublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$shutterSpeeds)
-        
-        preferenceProvider.isoValuesPublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$isoValues)
-        
-        preferenceProvider.focalLengthsPublisher.combineLatest(camera.minZoomFactor, camera.maxZoomFactor)
-            .map { [weak self] focalLengths, minZoomFactor, maxZoomFactor -> [FocalLengthValue] in
-                guard let self else { return [] }
-                let filtered = focalLengths
-                    .filter { $0.zoomFactor >= minZoomFactor }
-                    .filter { $0.zoomFactor <= maxZoomFactor }
-                return filtered.isEmpty
-                    ? [FocalLengthValue(fallbackFocalLength)].compactMap { $0 }
-                    : filtered
-            }
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$focalLengths)
-        
-        preferenceProvider.apertureRingFeedbackStylePublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$apertureRingFeedbackStyle)
-        
-        preferenceProvider.shutterSpeedRingFeedbackStylePublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$shutterSpeedRingFeedbackStyle)
-        
-        preferenceProvider.isoRingFeedbackStylePublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$isoRingFeedbackStyle)
-        
-        preferenceProvider.filmCanisterPublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$filmCanister)
         
         $apertures
             .compactMap { [weak self] apertures in
@@ -180,6 +149,21 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                 return isoValues.first { Float($0.value) == value.nearest(among: isoValues.compactMap { Float($0.value) }) }
             }
             .assign(to: &$iso)
+        
+        $isCameraRunning.combineLatest($focalLengths, camera.minZoomFactor, camera.maxZoomFactor)
+            .filter { $0.0 }
+            .map { [weak self] _, focalLengths, minZoomFactor, maxZoomFactor -> [FocalLengthValue] in
+                guard let self else { return [] }
+                let filtered = focalLengths
+                    .filter { $0.zoomFactor >= minZoomFactor }
+                    .filter { $0.zoomFactor <= maxZoomFactor }
+                return filtered.isEmpty
+                    ? [FocalLengthValue(fallbackFocalLength)].compactMap { $0 }
+                    : filtered
+            }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$focalLengths)
         
         $focalLengths
             .compactMap { [weak self] focalLengths in
@@ -276,10 +260,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$iso)
         
-        $focalLength.combineLatest(camera.isRunning)
-            .filter { $0.1 }
-            .map { $0.0 }
-            .removeDuplicates()
+        $focalLength
             .sink { [weak self] focalLength in
                 try? self?.zoomCamera(factor: focalLength.zoomFactor)
             }
@@ -347,28 +328,13 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { $0.count == 1 }
             .assign(to: &$isShutterSpeedFixed)
         
-        $shutterSpeeds
-            .filter { $0.count == 1 }
-            .compactMap { $0.first }
-            .assign(to: &$shutterSpeed)
-        
         $isoValues
             .map { $0.count == 1 }
             .assign(to: &$isIsoFixed)
         
-        $isoValues
-            .filter { $0.count == 1 }
-            .compactMap { $0.first }
-            .assign(to: &$iso)
-        
         $focalLengths
             .map { $0.count == 1 }
             .assign(to: &$isFocalLengthFixed)
-        
-        $focalLengths
-            .filter { $0.count == 1 }
-            .compactMap { $0.first }
-            .assign(to: &$focalLength)
         
         $isApertureFixed.combineLatest($isShutterSpeedFixed, $isIsoFixed)
             .filter { [weak self] in
@@ -497,6 +463,36 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             await camera.start()
             try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
         }
+    }
+    
+    public func didTapConfig() {
+        isPresentingConfig = true
+        feedbackProvider.generateInteractionFeedback()
+        Task {
+            await camera.stop()
+        }
+    }
+    
+    public func didCloseConfig() {
+        reloadPreferences()
+        isPresentingConfig = false
+        feedbackProvider.generateInteractionFeedback()
+        Task {
+            await camera.start()
+            try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
+        }
+    }
+    
+    private func reloadPreferences() {
+        apertures = preferenceProvider.apertures
+        shutterSpeeds = preferenceProvider.shutterSpeeds
+        isoValues = preferenceProvider.isoValues
+        focalLengths = preferenceProvider.focalLengths
+        apertureRingFeedbackStyle = preferenceProvider.apertureRingFeedbackStyle
+        shutterSpeedDialFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
+        isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
+        focalRingFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        filmCanister = preferenceProvider.filmCanister
     }
 }
 

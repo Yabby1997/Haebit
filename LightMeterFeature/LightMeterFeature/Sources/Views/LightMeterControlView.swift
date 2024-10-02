@@ -15,6 +15,17 @@ struct LightMeterControlView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                Button {
+                    viewModel.didTapConfig()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .foregroundStyle(.white)
+                }
+                .disabled(viewModel.isCapturing)
+            }
+            .padding(20)
             Spacer()
             VStack(spacing: 6) {
                 UnlockButton(viewModel: viewModel)

@@ -18,7 +18,7 @@ struct IsoRing: View {
             HaebitApertureRing(
                 selection: $viewModel.iso,
                 entries: $viewModel.isoValues,
-                feedbackStyle: .constant(viewModel.isoRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                feedbackStyle: .constant(viewModel.isoDialFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { iso in
                 Text(iso.title)
