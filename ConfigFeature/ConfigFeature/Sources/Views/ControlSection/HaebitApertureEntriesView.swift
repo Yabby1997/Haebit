@@ -10,8 +10,11 @@ import SwiftUI
 import HaebitCommonModels
 
 struct HaebitApertureEntriesConfigView: View {
-    @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
+    
     @State private var isPresenting = false
     @State private var numberString = ""
     @State private var isEditing = false
@@ -35,9 +38,26 @@ struct HaebitApertureEntriesConfigView: View {
                     viewModel.deleteApertures(at: offset)
                 }
             } footer: {
-                VStack(alignment: .leading) {
-                    BulletedText("At least one entry should be exist and active.")
-                    BulletedText("If shutter speed and ISO has only one entry, at least two entries should be exist and active.")
+                VStack(spacing: 8) {
+                    VStack(alignment: .leading) {
+                        BulletedText("At least one entry should be exist and active.")
+                        BulletedText("If shutter speed and ISO has only one entry, at least two entries should be exist and active.")
+                    }
+                    Button {
+                        isPresenting = true
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerSize: .init(width: 8.0, height: 8.0))
+                                .foregroundStyle(Color(uiColor: .secondarySystemGroupedBackground))
+                            HStack {
+                                Image(systemName: "plus")
+                                Text("Add New Entry")
+                            }
+                            .foregroundStyle(.white)
+                            .font(.system(size: 14, weight: .semibold))
+                        }
+                        .frame(height: 50)
+                    }
                 }
             }
         }
@@ -50,9 +70,9 @@ struct HaebitApertureEntriesConfigView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    isPresenting = true
+                    isPresented = false
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "xmark")
                         .foregroundStyle(.white)
                 }
             }

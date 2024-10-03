@@ -17,6 +17,8 @@ import SwiftUI
 struct HaebitApp: App {
     let configRepository = DefaultHaebitConfigRepository()
     let logger = HaebitLogger(repository: DefaultHaebitLogRepository())
+    @State var isPresentingLogger = false
+    @State var isPresentingConfig = false
     
     var body: some Scene {
         WindowGroup {
@@ -30,15 +32,8 @@ struct HaebitApp: App {
                     reviewRequestValidator: DefaultReviewRequestValidator(),
                     gpsAccessValidator: DefaultGPSAccessValidator()
                 ),
-                logView: HaebitFilmLogView(
-                    logger: logger,
-                    preferenceProvider: DefaultLoggerPreferenceProvider()
-                ),
-                configView: HaebitConfigView(
-                    configRepository: configRepository,
-                    appStoreOpener: HaebitAppStoreOpener(locale: Locale.current.identifier),
-                    appVersionProvider: HaebitAppVersionProvider()
-                )
+                isPresentingLogger: $isPresentingLogger,
+                isPresentingConfig: $isPresentingConfig
             )
             .environmentObject(
                 LightMeterControlViewDependencies(
@@ -47,6 +42,17 @@ struct HaebitApp: App {
                     )
                 )
             )
+            .fullScreenCover(isPresented: $isPresentingLogger) {
+                HaebitFilmLogView(logger: logger, preferenceProvider: DefaultLoggerPreferenceProvider())
+            }
+            .fullScreenCover(isPresented: $isPresentingConfig) {
+                HaebitConfigView(
+                    configRepository: configRepository,
+                    appStoreOpener: HaebitAppStoreOpener(locale: Locale.current.identifier),
+                    appVersionProvider: HaebitAppVersionProvider(),
+                    isPresented: $isPresentingConfig
+                )
+            }
         }
     }
 }

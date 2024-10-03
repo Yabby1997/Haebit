@@ -12,12 +12,13 @@ import HaebitUI
 
 struct LoggerButton: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
+    let action: (() -> Void)?
     
     var body: some View {
         HStack {
             Spacer()
             Button {
-                viewModel.didTapLogger()
+                action?()
             } label: {
                 Image(asset: viewModel.filmCanister.image)
                     .antialiased(true)
@@ -25,7 +26,6 @@ struct LoggerButton: View {
                     .scaledToFit()
                     .frame(width: 72, height: 72)
             }
-            .disabled(viewModel.isCapturing)
         }
         .padding(.horizontal, 20)
     }

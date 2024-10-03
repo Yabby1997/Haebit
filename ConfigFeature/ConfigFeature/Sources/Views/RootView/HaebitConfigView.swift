@@ -10,20 +10,24 @@ import SwiftUI
 
 public struct HaebitConfigView: View {
     @State private var navigationPath = NavigationPath()
+    
     @StateObject private var viewModel: HaebitConfigViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Binding private var isPresented: Bool
     
     public init(
         configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
-        appVersionProvider: any AppVersionProvidable
+        appVersionProvider: any AppVersionProvidable,
+        isPresented: Binding<Bool>
     ) {
-        let viewModel = HaebitConfigViewModel(
-            configRepository: configRepository,
-            appStoreOpener: appStoreOpener,
-            appVersionProvider: appVersionProvider
+        self._viewModel = StateObject(
+            wrappedValue: HaebitConfigViewModel(
+                configRepository: configRepository,
+                appStoreOpener: appStoreOpener,
+                appVersionProvider: appVersionProvider
+            )
         )
-        self._viewModel = StateObject(wrappedValue: viewModel)
+        self._isPresented = isPresented
     }
     
     public var body: some View {
@@ -31,7 +35,7 @@ public struct HaebitConfigView: View {
             ScrollViewReader { proxy in
                 List {
                     HaebitConfigHeaderSection(navigationPath: $navigationPath, viewModel: viewModel)
-                    HaebitControlConfigSection(viewModel: viewModel)
+                    HaebitControlConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitFeedbackConfigSection(viewModel: viewModel)
                     HaebitAppearanceConfigSection(viewModel: viewModel)
                     HaebitOtherConfigSection(viewModel: viewModel)
@@ -47,7 +51,7 @@ public struct HaebitConfigView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        dismiss()
+                        isPresented = false
                     } label: {
                         Image(systemName: "xmark")
                             .foregroundStyle(.white)

@@ -10,22 +10,14 @@ import SwiftUI
 import HaebitUI
 
 struct LightMeterControlView: View {
-    @StateObject var viewModel: HaebitLightMeterViewModel
     @EnvironmentObject private var dependencies: LightMeterControlViewDependencies
+    
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    @Binding var isPresentingLogger: Bool
+    @Binding var isPresentingConfig: Bool
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button {
-                    viewModel.didTapConfig()
-                } label: {
-                    Image(systemName: "gearshape")
-                        .foregroundStyle(.white)
-                }
-                .disabled(viewModel.isCapturing)
-            }
-            .padding(20)
             Spacer()
             VStack(spacing: 6) {
                 UnlockButton(viewModel: viewModel)
@@ -41,9 +33,11 @@ struct LightMeterControlView: View {
                 }
                 FocalRing(viewModel: viewModel)
                 ZStack {
-                    LoggerButton(viewModel: viewModel)
+                    ConfigButton { isPresentingConfig = true }
                     ShutterButton(viewModel: viewModel)
+                    LoggerButton(viewModel: viewModel) { isPresentingLogger = true }
                 }
+                .disabled(viewModel.isCapturing)
                 .padding(.vertical, 8)
             }
             .background {

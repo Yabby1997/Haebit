@@ -10,21 +10,22 @@ import SwiftUI
 import HaebitUI
 import StoreKit
 
-public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
-    @StateObject var viewModel: HaebitLightMeterViewModel
+public struct HaebitLightMeterView: View {
     @Environment(\.openURL) var openURL
     @Environment(\.scenePhase) var scenePhase
-    let logView: LogView
-    let configView: ConfigView
+    
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    @Binding var isPresentingLogger: Bool
+    @Binding var isPresentingConfig: Bool
     
     public init(
         viewModel: HaebitLightMeterViewModel,
-        logView: LogView,
-        configView: ConfigView
+        isPresentingLogger: Binding<Bool>,
+        isPresentingConfig: Binding<Bool>
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel)
-        self.logView = logView
-        self.configView = configView
+        self._isPresentingLogger = isPresentingLogger
+        self._isPresentingConfig = isPresentingConfig
     }
     
     public var body: some View {
@@ -38,7 +39,11 @@ public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
                 exposureValue: viewModel.exposureValue,
                 isLocked: viewModel.isLocked
             )
-            LightMeterControlView(viewModel: viewModel)
+            LightMeterControlView(
+                viewModel: viewModel,
+                isPresentingLogger: $isPresentingLogger,
+                isPresentingConfig: $isPresentingConfig
+            )
             if let point = viewModel.lockPoint {
                 LockIindicatorView(point: point, isHighlighted: viewModel.isLocked)
             }
@@ -46,6 +51,8 @@ public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase, perform: didChangeScene)
         .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
+        .onChange(of: isPresentingLogger, perform: didChange(isPresentingLogger:))
+        .onChange(of: isPresentingConfig, perform: didChange(isPresentingConfig:))
         .disabled(viewModel.isCapturing)
         .alert(.lightMeterViewCameraAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
             Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
@@ -54,12 +61,6 @@ public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
             Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
             Button(action: viewModel.didTapDoNotAskGPSAccess) { Text(.lightMeterViewAccessAlertDoNotAskButton) }
         } message :{ Text(.lightMeterViewGPSAccessAlertMessage) }
-        .fullScreenCover(isPresented: $viewModel.isPresentingLogger, onDismiss: viewModel.didCloseLogger) {
-            logView
-        }
-        .fullScreenCover(isPresented: $viewModel.isPresentingConfig, onDismiss: viewModel.didCloseConfig) {
-            configView
-        }
     }
     
     private func didChangeScene(phase: ScenePhase) {
@@ -78,6 +79,22 @@ public struct HaebitLightMeterView<LogView: View, ConfigView: View>: View {
               let scene = (UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive }),
               let windowScene = scene as? UIWindowScene else { return }
         SKStoreReviewController.requestReview(in: windowScene)
+    }
+    
+    private func didChange(isPresentingLogger: Bool) {
+        if isPresentingLogger {
+            viewModel.willPresentLogger()
+        } else {
+            viewModel.willDismissLogger()
+        }
+    }
+    
+    private func didChange(isPresentingConfig: Bool) {
+        if isPresentingConfig {
+            viewModel.willPresentConfig()
+        } else {
+            viewModel.willDismissConfig()
+        }
     }
     
     private func openSettings() {

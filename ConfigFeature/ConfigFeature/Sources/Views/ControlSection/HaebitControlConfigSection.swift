@@ -10,11 +10,12 @@ import SwiftUI
 
 struct HaebitControlConfigSection: View {
     @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
 
     var body: some View {
         Section {
             NavigationLink {
-                HaebitApertureEntriesConfigView(viewModel: viewModel)
+                HaebitApertureEntriesConfigView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
                     Text("Aperture")

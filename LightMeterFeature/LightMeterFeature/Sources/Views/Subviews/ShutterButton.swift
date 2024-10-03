@@ -23,7 +23,6 @@ struct ShutterButton: View {
         ) {
             viewModel.didTapShutter()
         }
-        .disabled(viewModel.isCapturing)
         .environmentObject(dependencies.shutterButtonDependency)
     }
 }

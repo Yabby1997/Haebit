@@ -57,8 +57,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isIsoFixed = false
     @Published public var isFocalLengthFixed = false
     @Published public var shouldRequestReview = false
-    @Published public var isPresentingLogger = false
-    @Published public var isPresentingConfig = false
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
     @Published public private(set) var exposureValue: Float = .zero
@@ -194,9 +192,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { ($0.1, $0.2, $0.3) }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .aperture
-                && self?.isCapturing == false
-                && self?.isPresentingLogger == false
+                self?.lightMeterMode == .aperture && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
                 guard let self else { return nil }
@@ -218,9 +214,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { ($0.1, $0.2, $0.3) }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .shutterSpeed
-                && self?.isCapturing == false
-                && self?.isPresentingLogger == false
+                self?.lightMeterMode == .shutterSpeed && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, aperture in
                 guard let self else { return nil }
@@ -242,9 +236,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .map { ($0.1, $0.2, $0.3) }
             .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
-                self?.lightMeterMode == .iso
-                && self?.isCapturing == false
-                && self?.isPresentingLogger == false
+                self?.lightMeterMode == .iso && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
                 guard let self else { return nil }
@@ -448,16 +440,14 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         gpsAccessValidator.requestDoNotAsk()
     }
     
-    public func didTapLogger() {
-        isPresentingLogger = true
+    public func willPresentLogger() {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.stop()
         }
     }
     
-    public func didCloseLogger() {
-        isPresentingLogger = false
+    public func willDismissLogger() {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.start()
@@ -465,17 +455,15 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         }
     }
     
-    public func didTapConfig() {
-        isPresentingConfig = true
+    public func willPresentConfig() {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.stop()
         }
     }
     
-    public func didCloseConfig() {
+    public func willDismissConfig() {
         reloadPreferences()
-        isPresentingConfig = false
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.start()
