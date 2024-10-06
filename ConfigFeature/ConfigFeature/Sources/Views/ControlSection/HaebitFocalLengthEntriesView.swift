@@ -10,8 +10,11 @@ import SwiftUI
 import HaebitCommonModels
 
 struct HaebitFocalLengthEntriesView: View {
-    @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
+    
     @State private var isPresenting = false
     @State private var numberString = ""
     @State private var isEditing = false
@@ -20,26 +23,30 @@ struct HaebitFocalLengthEntriesView: View {
         List {
             Section {
                 ForEach($viewModel.focalLengthEntries, id: \.self) { $focalLengthEntry in
-                    HStack {
-                        Text(focalLengthEntry.value.title)
-                            .font(.system(size: 24, weight: .bold, design: .monospaced))
-                            .foregroundStyle(focalLengthEntry.isActive ? .white : .gray)
-                        Spacer()
-                        Toggle(isOn: $focalLengthEntry.isActive, label: {})
-                            .labelsHidden()
-                            .disabled(!viewModel.isToggleable(focalLength: focalLengthEntry))
-                    }
-                    .deleteDisabled(!viewModel.isDeletable(focalLength: focalLengthEntry))
-                }
-                .onDelete { offset in
-                    viewModel.deleteFocalLength(at: offset)
+                    ToggleableEntry(title: focalLengthEntry.value.title, isActive: $focalLengthEntry.isActive)
+                        .font(.system(size: 24, weight: .bold, design: .monospaced))
+                        .disabled(!viewModel.isToggleable(focalLength: focalLengthEntry))
+                        .swipeActions(edge: .trailing) {
+                            if viewModel.isDeletable(focalLength: focalLengthEntry) {
+                                Button(role: .destructive) {
+                                    viewModel.delete(focalLength: focalLengthEntry)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }
+                        }
                 }
             } footer: {
-                VStack(alignment: .leading) {
-                    BulletedText("At least one entry should be exist and active.")
-                    BulletedText("Some entries may not be displayed if iPhone is  won't support it.")
-                    BulletedText("If no entries available for iPhone camera, it will be automatically fallback to default focal length.")
+                VStack(spacing: 12) {
+                    VStack(alignment: .leading) {
+                        BulletedText("At least one entry should be exist and active.")
+                        BulletedText("Some entries may not be displayed if iPhone is  won't support it.")
+                        BulletedText("If no entries available for iPhone camera, it will be automatically fallback to default focal length.")
+                    }
+                    .padding(.horizontal, 4)
+                    AddEntryButton { isPresenting = true }
                 }
+                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
@@ -51,9 +58,9 @@ struct HaebitFocalLengthEntriesView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    isPresenting = true
+                    isPresented = false
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "xmark")
                         .foregroundStyle(.white)
                 }
             }

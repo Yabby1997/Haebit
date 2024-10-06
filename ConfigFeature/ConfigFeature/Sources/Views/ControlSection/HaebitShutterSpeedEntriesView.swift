@@ -36,8 +36,11 @@ fileprivate enum Unit {
 }
 
 struct HaebitShutterSpeedEntriesView: View {
-    @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
+    
     @State private var isPresenting = false
     @State private var selectedUnit: Unit = .denominator
     @State private var numberString = ""
@@ -47,25 +50,32 @@ struct HaebitShutterSpeedEntriesView: View {
         List {
             Section {
                 ForEach($viewModel.shutterSpeedEntries, id: \.self) { $shutterSpeedEntry in
-                    HStack {
-                        Text(shutterSpeedEntry.value.description.replacingOccurrences(of: "⁄", with: "⁄ "))
-                            .font(.system(size: 24, weight: .bold, design: .serif))
-                            .foregroundStyle(shutterSpeedEntry.isActive ? .white : .gray)
-                        Spacer()
-                        Toggle(isOn: $shutterSpeedEntry.isActive, label: {})
-                            .labelsHidden()
-                            .disabled(!viewModel.isToggleable(shutterSpeed: shutterSpeedEntry))
+                    ToggleableEntry(
+                        title: shutterSpeedEntry.value.description.replacingOccurrences(of: "⁄", with: "⁄ "),
+                        isActive: $shutterSpeedEntry.isActive
+                    )
+                    .font(.system(size: 24, weight: .bold, design: .serif))
+                    .disabled(!viewModel.isToggleable(shutterSpeed: shutterSpeedEntry))
+                    .swipeActions(edge: .trailing) {
+                        if viewModel.isDeletable(shutterSpeed: shutterSpeedEntry) {
+                            Button(role: .destructive) {
+                                viewModel.delete(shutterSpeed: shutterSpeedEntry)
+                            } label: {
+                                Image(systemName: "trash")
+                            }
+                        }
                     }
-                    .deleteDisabled(!viewModel.isDeletable(shutterSpeed: shutterSpeedEntry))
-                }
-                .onDelete { offset in
-                    viewModel.deleteShutterSpeeds(at: offset)
                 }
             } footer: {
-                VStack(alignment: .leading) {
-                    BulletedText("At least one entry should be exist and active.")
-                    BulletedText("If aperture and ISO has only one entry, at least two entries should be exist and active.")
+                VStack(spacing: 12) {
+                    VStack(alignment: .leading) {
+                        BulletedText("At least one entry should be exist and active.")
+                        BulletedText("If aperture and ISO has only one entry, at least two entries should be exist and active.")
+                    }
+                    .padding(.horizontal, 4)
+                    AddEntryButton { isPresenting = true }
                 }
+                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
@@ -77,9 +87,9 @@ struct HaebitShutterSpeedEntriesView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    isPresenting = true
+                    isPresented = false
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "xmark")
                         .foregroundStyle(.white)
                 }
             }

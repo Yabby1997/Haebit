@@ -162,20 +162,20 @@ final class HaebitConfigViewModel: ObservableObject {
         focalLengthEntries.filter { $0 != entry }.count { $0.isActive } > .zero
     }
     
-    func deleteApertures(at offsets: IndexSet) {
-        apertureEntries.remove(atOffsets: offsets)
+    func delete(aperture: ApertureEntry) {
+        apertureEntries.removeAll { $0 == aperture }
     }
     
-    func deleteShutterSpeeds(at offsets: IndexSet) {
-        shutterSpeedEntries.remove(atOffsets: offsets)
+    func delete(shutterSpeed: ShutterSpeedEntry) {
+        shutterSpeedEntries.removeAll { $0 == shutterSpeed }
     }
     
-    func deleteIso(at offsets: IndexSet) {
-        isoEntries.remove(atOffsets: offsets)
+    func delete(iso: IsoEntry) {
+        isoEntries.removeAll { $0 == iso }
     }
     
-    func deleteFocalLength(at offsets: IndexSet) {
-        focalLengthEntries.remove(atOffsets: offsets)
+    func delete(focalLength: FocalLengthEntry) {
+        focalLengthEntries.removeAll { $0 == focalLength }
     }
     
     func add(aperture value: ApertureValue) {

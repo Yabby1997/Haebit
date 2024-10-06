@@ -23,42 +23,29 @@ struct HaebitApertureEntriesConfigView: View {
         List {
             Section {
                 ForEach($viewModel.apertureEntries, id: \.self) { $apertureEntry in
-                    HStack {
-                        Text(apertureEntry.value.title)
-                            .font(.system(size: 24, weight: .bold, design: .monospaced))
-                            .foregroundStyle(apertureEntry.isActive ? .white : .gray)
-                        Spacer()
-                        Toggle(isOn: $apertureEntry.isActive, label: {})
-                            .labelsHidden()
-                            .disabled(!viewModel.isToggleable(aperture: apertureEntry))
-                    }
-                    .deleteDisabled(!viewModel.isDeletable(aperture: apertureEntry))
-                }
-                .onDelete { offset in
-                    viewModel.deleteApertures(at: offset)
+                    ToggleableEntry(title: apertureEntry.value.title, isActive: $apertureEntry.isActive)
+                        .font(.system(size: 24, weight: .bold, design: .monospaced))
+                        .disabled(!viewModel.isToggleable(aperture: apertureEntry))
+                        .swipeActions(edge: .trailing) {
+                            if viewModel.isDeletable(aperture: apertureEntry) {
+                                Button(role: .destructive) {
+                                    viewModel.delete(aperture: apertureEntry)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }
+                        }
                 }
             } footer: {
-                VStack(spacing: 8) {
+                VStack(spacing: 12) {
                     VStack(alignment: .leading) {
                         BulletedText("At least one entry should be exist and active.")
                         BulletedText("If shutter speed and ISO has only one entry, at least two entries should be exist and active.")
                     }
-                    Button {
-                        isPresenting = true
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerSize: .init(width: 8.0, height: 8.0))
-                                .foregroundStyle(Color(uiColor: .secondarySystemGroupedBackground))
-                            HStack {
-                                Image(systemName: "plus")
-                                Text("Add New Entry")
-                            }
-                            .foregroundStyle(.white)
-                            .font(.system(size: 14, weight: .semibold))
-                        }
-                        .frame(height: 50)
-                    }
+                    .padding(.horizontal, 4)
+                    AddEntryButton { isPresenting = true }
                 }
+                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()

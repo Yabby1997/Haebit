@@ -10,8 +10,11 @@ import SwiftUI
 import HaebitCommonModels
 
 struct HaebitIsoEntriesView: View {
-    @StateObject var viewModel: HaebitConfigViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
+    
     @State private var isPresenting = false
     @State private var numberString = ""
     @State private var isEditing = false
@@ -20,25 +23,29 @@ struct HaebitIsoEntriesView: View {
         List {
             Section {
                 ForEach($viewModel.isoEntries, id: \.self) { $isoEntry in
-                    HStack {
-                        Text(isoEntry.value.title)
-                            .font(.system(size: 24, weight: .bold, design: .serif))
-                            .foregroundStyle(isoEntry.isActive ? .white : .gray)
-                        Spacer()
-                        Toggle(isOn: $isoEntry.isActive, label: {})
-                            .labelsHidden()
-                            .disabled(!viewModel.isToggleable(iso: isoEntry))
-                    }
-                    .deleteDisabled(!viewModel.isDeletable(iso: isoEntry))
-                }
-                .onDelete { offset in
-                    viewModel.deleteIso(at: offset)
+                    ToggleableEntry(title: isoEntry.value.title, isActive: $isoEntry.isActive)
+                        .font(.system(size: 24, weight: .bold, design: .serif))
+                        .disabled(!viewModel.isToggleable(iso: isoEntry))
+                        .swipeActions(edge: .trailing) {
+                            if viewModel.isDeletable(iso: isoEntry) {
+                                Button(role: .destructive) {
+                                    viewModel.delete(iso: isoEntry)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }
+                        }
                 }
             } footer: {
-                VStack(alignment: .leading) {
-                    BulletedText("At least one entry should be exist and active.")
-                    BulletedText("If aperture and shutter speed has only one entry, at least two entries should be exist and active.")
+                VStack(spacing: 12) {
+                    VStack(alignment: .leading) {
+                        BulletedText("At least one entry should be exist and active.")
+                        BulletedText("If aperture and shutter speed has only one entry, at least two entries should be exist and active.")
+                    }
+                    .padding(.horizontal, 4)
+                    AddEntryButton { isPresenting = true }
                 }
+                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
@@ -50,9 +57,9 @@ struct HaebitIsoEntriesView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    isPresenting = true
+                    isPresented = false
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "xmark")
                         .foregroundStyle(.white)
                 }
             }

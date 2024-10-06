@@ -34,7 +34,7 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                HaebitShutterSpeedEntriesView(viewModel: viewModel)
+                HaebitShutterSpeedEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
                     Text("Shutter Speed")
@@ -53,7 +53,7 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                HaebitIsoEntriesView(viewModel: viewModel)
+                HaebitIsoEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
                     Text("ISO")
@@ -72,7 +72,7 @@ struct HaebitControlConfigSection: View {
                 }
             }
             NavigationLink {
-                HaebitFocalLengthEntriesView(viewModel: viewModel)
+                HaebitFocalLengthEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
                     Text("Focal Length")
