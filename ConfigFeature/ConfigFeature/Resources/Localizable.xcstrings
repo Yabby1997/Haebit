@@ -67,6 +67,9 @@
     "Shutter Speed Dial" : {
 
     },
+    "Types with only one entry will be locked and won't be displayed as a control." : {
+
+    },
     "Version %@" : {
 
     }

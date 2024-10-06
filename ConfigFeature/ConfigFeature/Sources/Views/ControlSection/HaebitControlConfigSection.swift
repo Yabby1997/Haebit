@@ -97,9 +97,13 @@ struct HaebitControlConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            VStack(alignment: .leading) {
-                BulletedText("Types with only one entry will be locked and won't be displayed as a control.")
+            VStack(spacing: 12) {
+                VStack(alignment: .leading) {
+                    Text("Types with only one entry will be locked and won't be displayed as a control.")
+                }
+                .padding(.horizontal, 4)
             }
+            .listRowInsets(.init(top: 8, leading: 4, bottom: 8, trailing: 4))
         }
     }
 }
