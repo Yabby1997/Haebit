@@ -29,8 +29,9 @@ struct HaebitConfigHeaderSection: View {
                     }
                 }
             }
-            .frame(height: 300)
             .animation(.easeInOut(duration: 1), value: viewModel.currentHeaderType)
+            .listRowInsets(.init(top: .zero, leading: 8, bottom: .zero, trailing: 8))
+            .frame(height: 300)
             .onTapGesture(perform: handleTapGesture)
         }
     }
