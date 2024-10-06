@@ -68,11 +68,12 @@ struct HaebitShutterSpeedEntriesView: View {
                 }
             } footer: {
                 VStack(spacing: 12) {
-                    VStack(alignment: .leading) {
-                        BulletedText("At least one entry should be exist and active.")
-                        BulletedText("If aperture and ISO has only one entry, at least two entries should be exist and active.")
-                    }
-                    .padding(.horizontal, 4)
+                    BulletedList(
+                        listItems: [
+                            "At least one entry should be exist and active.",
+                            "If aperture and ISO has only one entry, at least two entries should be exist and active.",
+                        ]
+                    )
                     AddEntryButton { isPresenting = true }
                 }
                 .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
@@ -83,7 +84,6 @@ struct HaebitShutterSpeedEntriesView: View {
         .navigationTitle("Shutter Speed Entries")
         .animation(.easeInOut, value: viewModel.shutterSpeedEntries.count)
         .scrollIndicators(.hidden)
-        .headerProminence(.increased)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

@@ -38,12 +38,13 @@ struct HaebitFocalLengthEntriesView: View {
                 }
             } footer: {
                 VStack(spacing: 12) {
-                    VStack(alignment: .leading) {
-                        BulletedText("At least one entry should be exist and active.")
-                        BulletedText("Some entries may not be displayed if iPhone is  won't support it.")
-                        BulletedText("If no entries available for iPhone camera, it will be automatically fallback to default focal length.")
-                    }
-                    .padding(.horizontal, 4)
+                    BulletedList(
+                        listItems: [
+                            "At least one entry should be exist and active.",
+                            "Some entries may not be displayed if iPhone is  won't support it.",
+                            "If no entries available for iPhone camera, it will be automatically fallback to default focal length.",
+                        ]
+                    )
                     AddEntryButton { isPresenting = true }
                 }
                 .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
@@ -54,7 +55,6 @@ struct HaebitFocalLengthEntriesView: View {
         .navigationTitle("Focal Length Entries")
         .animation(.easeInOut, value: viewModel.focalLengthEntries.count)
         .scrollIndicators(.hidden)
-        .headerProminence(.increased)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

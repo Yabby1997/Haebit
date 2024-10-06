@@ -19,6 +19,8 @@ struct BulletedText: View {
         HStack(alignment: .top, spacing: 2) {
             Text("•").fontWeight(.bold)
             Text(key)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
         }
     }
 }
