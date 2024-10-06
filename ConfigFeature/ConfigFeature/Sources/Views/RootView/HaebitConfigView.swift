@@ -36,7 +36,7 @@ public struct HaebitConfigView: View {
                 List {
                     HaebitConfigHeaderSection(navigationPath: $navigationPath, viewModel: viewModel)
                     HaebitControlConfigSection(viewModel: viewModel, isPresented: $isPresented)
-                    HaebitFeedbackConfigSection(viewModel: viewModel)
+                    HaebitFeedbackConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitAppearanceConfigSection(viewModel: viewModel)
                     HaebitOtherConfigSection(viewModel: viewModel)
                 }

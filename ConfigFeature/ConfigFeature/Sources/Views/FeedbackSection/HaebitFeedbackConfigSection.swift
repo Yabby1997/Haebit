@@ -10,11 +10,13 @@ import SwiftUI
 
 struct HaebitFeedbackConfigSection: View {
     @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
     
     var body: some View {
         Section {
             NavigationLink {
-                Text("Aperture Ring")
+                HaebitFeedbackSelectionView(selection: $viewModel.apertureRingFeedbackStyle, isPresented: $isPresented)
+                    .navigationTitle("Aperture Ring Feedback")
             } label: {
                 HStack {
                     Text("Aperture Ring")
@@ -25,7 +27,8 @@ struct HaebitFeedbackConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("Shutter Speed Dial")
+                HaebitFeedbackSelectionView(selection: $viewModel.shutterSpeedDialFeedbackStyle, isPresented: $isPresented)
+                    .navigationTitle("Shutter Speed Dial Feedback")
             } label: {
                 HStack {
                     Text("Shutter Speed Dial")
@@ -36,7 +39,8 @@ struct HaebitFeedbackConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("ISO Dial")
+                HaebitFeedbackSelectionView(selection: $viewModel.isoDialFeedbackStyle, isPresented: $isPresented)
+                    .navigationTitle("ISO Dial Feedback")
             } label: {
                 HStack {
                     Text("ISO Dial")
@@ -47,7 +51,8 @@ struct HaebitFeedbackConfigSection: View {
                 }
             }
             NavigationLink {
-                Text("Focal Length Ring")
+                HaebitFeedbackSelectionView(selection: $viewModel.focalLengthRingFeedbackStyle, isPresented: $isPresented)
+                    .navigationTitle("Focal Length Ring Feedback")
             } label: {
                 HStack {
                     Text("Focal Length Ring")
