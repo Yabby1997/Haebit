@@ -10,15 +10,25 @@ import SwiftUI
 import ConfigFeature
 
 struct ContentView: View {
+    @State var isPresenting = false
+    
     var body: some View {
-        HaebitConfigView(
-            configRepository: MockConfigRepository(),
-            appStoreOpener: RealAppStoreOpener(
-                locale: Locale.current.region?.identifier ?? "kr",
-                appID: "6474086258"
-            ),
-            appVersionProvider: MockAppVersionProvider()
-        )
+        VStack {
+            Button("Open") {
+                isPresenting = true
+            }
+        }
+        .fullScreenCover(isPresented: $isPresenting) {
+            HaebitConfigView(
+                configRepository: MockConfigRepository(),
+                appStoreOpener: RealAppStoreOpener(
+                    locale: Locale.current.region?.identifier ?? "kr",
+                    appID: "6474086258"
+                ),
+                appVersionProvider: MockAppVersionProvider(),
+                isPresented: $isPresenting
+            )
+        }
     }
 }
 

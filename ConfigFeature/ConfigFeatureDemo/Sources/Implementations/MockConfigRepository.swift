@@ -9,7 +9,7 @@
 import ConfigFeature
 import HaebitCommonModels
 
-actor MockConfigRepository: HaebitConfigRepository {
+final class MockConfigRepository: HaebitConfigRepository {
     var apertureEntries: [ApertureEntry] = [
         .init(value: .init(1.4)!, isActive: true),
         .init(value: .init(2)!, isActive: false),
@@ -73,40 +73,4 @@ actor MockConfigRepository: HaebitConfigRepository {
     var focalLengthRingFeedbackStyle: FeedbackStyle = .rigid
     var perforationShape: PerforationShape = .bh
     var filmCanister: FilmCanister = .fujiXtra400
-    
-    func saveAperture(entries: [ConfigFeature.ApertureEntry]) {
-        print(#function)
-    }
-    
-    func saveShutterSpeed(entries: [ConfigFeature.ShutterSpeedEntry]) {
-        print(#function)
-    }
-    
-    func saveIso(entries: [ConfigFeature.IsoEntry]) {
-        print(#function)
-    }
-    
-    func saveFocalLength(entries: [ConfigFeature.FocalLengthEntry]) {
-        print(#function)
-    }
-    
-    func saveApertureRing(feedbackStyle: ConfigFeature.FeedbackStyle) {
-        print(#function)
-    }
-    
-    func saveShutterSpeedDial(feedbackStyle: ConfigFeature.FeedbackStyle) {
-        print(#function)
-    }
-    
-    func saveIsoDial(feedbackStyle: ConfigFeature.FeedbackStyle) {
-        print(#function)
-    }
-    
-    func savePerforationShape(_ perforationShape: HaebitCommonModels.PerforationShape) {
-        print(#function)
-    }
-    
-    func saveFilmCanister(_ filmCanister: HaebitCommonModels.FilmCanister) {
-        print(#function)
-    }
 }
