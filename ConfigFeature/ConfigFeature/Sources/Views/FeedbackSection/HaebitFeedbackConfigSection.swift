@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import HaebitCommonModels
 
 struct HaebitFeedbackConfigSection: View {
     @StateObject var viewModel: HaebitConfigViewModel
@@ -16,7 +17,7 @@ struct HaebitFeedbackConfigSection: View {
         Section {
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.apertureRingFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle("Aperture Ring Feedback")
+                    .navigationTitle("Aperture Ring")
             } label: {
                 HStack {
                     Text("Aperture Ring")
@@ -28,7 +29,7 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.shutterSpeedDialFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle("Shutter Speed Dial Feedback")
+                    .navigationTitle("Shutter Speed Dial")
             } label: {
                 HStack {
                     Text("Shutter Speed Dial")
@@ -40,7 +41,7 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.isoDialFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle("ISO Dial Feedback")
+                    .navigationTitle("ISO Dial")
             } label: {
                 HStack {
                     Text("ISO Dial")
@@ -52,7 +53,7 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.focalLengthRingFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle("Focal Length Ring Feedback")
+                    .navigationTitle("Focal Length Ring")
             } label: {
                 HStack {
                     Text("Focal Length Ring")

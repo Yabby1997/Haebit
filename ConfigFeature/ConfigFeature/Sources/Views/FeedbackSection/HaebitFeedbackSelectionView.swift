@@ -34,8 +34,10 @@ struct HaebitFeedbackSelectionView: View {
                 if selection == feedbackStyle {
                     Spacer()
                     Image(systemName: "checkmark")
+                        .foregroundStyle(.yellow)
                 }
             }
+            .font(.system(size: 16, weight: .semibold))
             .listRowBackground(Color(UIColor.secondarySystemGroupedBackground))
         }
         .navigationBarBackButtonHidden()

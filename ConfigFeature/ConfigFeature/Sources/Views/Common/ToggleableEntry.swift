@@ -18,6 +18,7 @@ struct ToggleableEntry: View {
                 .foregroundStyle(isActive ? .white : .gray)
             Spacer()
             Toggle(isOn: $isActive, label: {})
+                .tint(.yellow)
                 .labelsHidden()
         }
     }
