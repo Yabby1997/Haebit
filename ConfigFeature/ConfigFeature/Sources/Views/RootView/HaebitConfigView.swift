@@ -18,13 +18,15 @@ public struct HaebitConfigView: View {
         configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
         appVersionProvider: any AppVersionProvidable,
+        feedbackGenerator: any HaebitConfigFeedbackGeneratable = DefaultHaebitConfigFeedbackGenerator(),
         isPresented: Binding<Bool>
     ) {
         self._viewModel = StateObject(
             wrappedValue: HaebitConfigViewModel(
                 configRepository: configRepository,
                 appStoreOpener: appStoreOpener,
-                appVersionProvider: appVersionProvider
+                appVersionProvider: appVersionProvider,
+                feedbackGenerator: feedbackGenerator
             )
         )
         self._isPresented = isPresented

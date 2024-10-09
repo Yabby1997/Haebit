@@ -15,6 +15,7 @@ final class HaebitConfigViewModel: ObservableObject {
     private let configRepository: any HaebitConfigRepository
     private let appStoreOpener: any AppStoreOpener
     private let appVersionProvider: any AppVersionProvidable
+    private let feedbackGenerator: any HaebitConfigFeedbackGeneratable
     @Published var currentHeaderType: HeaderType = .tipJar
     @Published var apertureEntries: [ApertureEntry]
     @Published var shutterSpeedEntries: [ShutterSpeedEntry]
@@ -38,11 +39,13 @@ final class HaebitConfigViewModel: ObservableObject {
     init(
         configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
-        appVersionProvider: any AppVersionProvidable
+        appVersionProvider: any AppVersionProvidable,
+        feedbackGenerator: any HaebitConfigFeedbackGeneratable
     ) {
         self.configRepository = configRepository
         self.appStoreOpener = appStoreOpener
         self.appVersionProvider = appVersionProvider
+        self.feedbackGenerator = feedbackGenerator
         apertureEntries = configRepository.apertureEntries
         shutterSpeedEntries = configRepository.shutterSpeedEntries
         isoEntries = configRepository.isoEntries
@@ -108,6 +111,38 @@ final class HaebitConfigViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] entries in
                 self?.configRepository.focalLengthEntries = entries
+            }
+            .store(in: &cancellables)
+        
+        $apertureRingFeedbackStyle
+            .dropFirst()
+            .sink { [weak self] feedbackStyle in
+                self?.configRepository.apertureRingFeedbackStyle = feedbackStyle
+                self?.feedbackGenerator.generate(feedback: feedbackStyle)
+            }
+            .store(in: &cancellables)
+        
+        $shutterSpeedDialFeedbackStyle
+            .dropFirst()
+            .sink { [weak self] feedbackStyle in
+                self?.configRepository.shutterSpeedDialFeedbackStyle = feedbackStyle
+                self?.feedbackGenerator.generate(feedback: feedbackStyle)
+            }
+            .store(in: &cancellables)
+        
+        $isoDialFeedbackStyle
+            .dropFirst()
+            .sink { [weak self] feedbackStyle in
+                self?.configRepository.isoDialFeedbackStyle = feedbackStyle
+                self?.feedbackGenerator.generate(feedback: feedbackStyle)
+            }
+            .store(in: &cancellables)
+        
+        $focalLengthRingFeedbackStyle
+            .dropFirst()
+            .sink { [weak self] feedbackStyle in
+                self?.configRepository.focalLengthRingFeedbackStyle = feedbackStyle
+                self?.feedbackGenerator.generate(feedback: feedbackStyle)
             }
             .store(in: &cancellables)
     }
