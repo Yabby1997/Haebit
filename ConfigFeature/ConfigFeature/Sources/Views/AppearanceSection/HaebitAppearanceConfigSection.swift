@@ -7,14 +7,16 @@
 //
 
 import SwiftUI
+import HaebitCommonModels
 
 struct HaebitAppearanceConfigSection: View {
     @StateObject var viewModel: HaebitConfigViewModel
+    @Binding var isPresented: Bool
 
     var body: some View {
         Section {
             NavigationLink {
-                Text("Perforation")
+                HaebitPerforationShapeSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
                     Text("Perforation")

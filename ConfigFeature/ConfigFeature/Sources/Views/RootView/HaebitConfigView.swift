@@ -39,13 +39,18 @@ public struct HaebitConfigView: View {
                     HaebitConfigHeaderSection(navigationPath: $navigationPath, viewModel: viewModel)
                     HaebitControlConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitFeedbackConfigSection(viewModel: viewModel, isPresented: $isPresented)
-                    HaebitAppearanceConfigSection(viewModel: viewModel)
+                    HaebitAppearanceConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitOtherConfigSection(viewModel: viewModel)
                 }
             }
             .onAppear(perform: viewModel.onAppear)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: NavigatablePages.self, destination: navigate(to:))
+            .navigationDestination(for: NavigatablePages.self) { page in
+                switch page {
+                case .tipJar: Text("Buy me a film")
+                case .filmCanister: HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
+                }
+            }
             .toolbarBackground(.hidden, for: .navigationBar)
             .ignoresSafeArea(.container, edges: .top)
             .scrollIndicators(.hidden)
@@ -60,13 +65,6 @@ public struct HaebitConfigView: View {
                     }
                 }
             }
-        }
-    }
-    
-    private func navigate(to page: NavigatablePages) -> some View {
-        switch page {
-        case .tipJar: return Text("Buy me a film")
-        case .filmCanister: return Text("Film Canister")
         }
     }
 }
