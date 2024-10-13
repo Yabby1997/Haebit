@@ -8,21 +8,21 @@
 
 import SwiftUI
 
-struct LightMeterConstantView: View {
-    @StateObject var viewModel: HaebitLightMeterViewModel
+struct LightMeterFixedDescriptionView: View {
+    let description: String
     
     var body: some View {
         VStack {
             HStack {
                 Spacer()
-                Text(viewModel.constantsDescription)
-                    .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                Label(description, systemImage: "lock.fill")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
                     .foregroundStyle(.white)
                 Spacer()
             }
             Spacer()
         }
         .shadow(radius: 10)
-        .padding(8)
+        .allowsHitTesting(false)
     }
 }

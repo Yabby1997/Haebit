@@ -1,5 +1,5 @@
 //
-//  LightMeterResultView.swift
+//  LightMeterResultDescriptionView.swift
 //  Haebit
 //
 //  Created by Seunghun on 12/9/23.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct LightMeterResultView: View {
+struct LightMeterResultDescriptionView: View {
     let resultDescription: String
     let exposureValue: Float
     let isLocked: Bool
@@ -32,10 +32,10 @@ struct LightMeterResultView: View {
 }
 
 #Preview {
-    LightMeterResultView(resultDescription: "32000", exposureValue: 11.2314, isLocked: false)
+    LightMeterResultDescriptionView(resultDescription: "32000", exposureValue: 11.2314, isLocked: false)
 }
 
 #Preview {
-    LightMeterResultView(resultDescription: "800", exposureValue: 7.623, isLocked: true)
+    LightMeterResultDescriptionView(resultDescription: "800", exposureValue: 7.623, isLocked: true)
 }
 

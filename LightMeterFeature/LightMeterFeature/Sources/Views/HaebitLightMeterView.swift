@@ -33,8 +33,10 @@ public struct HaebitLightMeterView: View {
             HaebitCameraView(previewLayer: viewModel.previewLayer)
                 .ignoresSafeArea()
                 .onTapGesture(coordinateSpace: .local, perform: viewModel.didTap(point:))
-            LightMeterConstantView(viewModel: viewModel)
-            LightMeterResultView(
+            if viewModel.isFixedDescriptionVisible {
+                LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
+            }
+            LightMeterResultDescriptionView(
                 resultDescription: viewModel.resultDescription,
                 exposureValue: viewModel.exposureValue,
                 isLocked: viewModel.isLocked

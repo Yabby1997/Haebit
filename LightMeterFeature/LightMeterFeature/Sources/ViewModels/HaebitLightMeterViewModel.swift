@@ -26,7 +26,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
     private let debounceQueue = DispatchQueue.global()
-    nonisolated public let previewLayer: CALayer
+    public let previewLayer: CALayer
     
     // MARK: - Properties
     
@@ -38,7 +38,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         }
     }
     
-    public var constantsDescription: String {
+    public var fixedDescription: String {
         [
             isApertureFixed ? aperture.description : nil,
             isShutterSpeedFixed ? shutterSpeed.description : nil,
@@ -52,6 +52,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     public var apertureMode: Bool { lightMeterMode == .aperture }
     public var shutterSpeedMode: Bool { lightMeterMode == .shutterSpeed }
     public var isoMode: Bool { lightMeterMode == .iso }
+    public var isFixedDescriptionVisible: Bool {
+        isApertureFixed || isShutterSpeedFixed || isIsoFixed || isFocalLengthFixed
+    }
+    
     @Published public var isApertureFixed = false
     @Published public var isShutterSpeedFixed = false
     @Published public var isIsoFixed = false
