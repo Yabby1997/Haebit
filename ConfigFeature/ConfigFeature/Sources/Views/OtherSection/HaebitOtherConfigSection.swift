@@ -14,20 +14,16 @@ struct HaebitOtherConfigSection: View {
     
     var body: some View {
         Section {
-            NavigationLink {
-                Text("OpenSource")
-            } label: {
-                Text("OpenSource")
-                    .font(.system(size: 16, weight: .semibold))
-            }
             NavigationLink(value: NavigatablePages.tipJar) {
-                Text("Buy me a film")
+                Text("Buy Me a Film")
                     .font(.system(size: 16, weight: .semibold))
             }
             HStack {
-                Text("Contact")
+                Text("Feedback & Inquiry")
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
+                Image(systemName: "arrow.up.forward")
+                    .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapContact)
@@ -35,15 +31,20 @@ struct HaebitOtherConfigSection: View {
                 Text("Review on AppStore")
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
+                Image(systemName: "arrow.up.forward")
+                    .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapReview)
             HStack {
-                Text("Version \(viewModel.appVersion)")
+                Text("Version")
                     .font(.system(size: 16, weight: .semibold))
+                Text(viewModel.appVersion)
+                    .font(.system(size: 14, design: .monospaced))
                 Spacer()
                 Text(viewModel.isLatestVersion ? "Latest" : "Update Available")
                     .font(.system(size: 14, design: .monospaced))
+                    .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapAppVersion)

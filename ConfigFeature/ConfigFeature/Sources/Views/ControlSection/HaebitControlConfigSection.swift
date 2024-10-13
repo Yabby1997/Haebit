@@ -22,11 +22,12 @@ struct HaebitControlConfigSection: View {
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.apertures.count == 1, let singleValue = viewModel.apertures.first {
-                        HStack {
+                        HStack(spacing: 4) {
                             Text("\(singleValue.description)")
+                                .font(.system(size: 14, design: .monospaced))
                             Image(systemName: "lock.fill")
+                                .font(.system(size: 12))
                         }
-                        .font(.system(size: 14, design: .monospaced))
                     } else {
                         Text("\(viewModel.apertures.count) items")
                             .font(.system(size: 14, design: .monospaced))
@@ -41,11 +42,12 @@ struct HaebitControlConfigSection: View {
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
-                        HStack {
+                        HStack(spacing: 4) {
                             Text("\(singleValue.description)")
+                                .font(.system(size: 14, design: .monospaced))
                             Image(systemName: "lock.fill")
+                                .font(.system(size: 12))
                         }
-                        .font(.system(size: 14, design: .monospaced))
                     } else {
                         Text("\(viewModel.shutterSpeeds.count) items")
                             .font(.system(size: 14, design: .monospaced))
@@ -60,11 +62,12 @@ struct HaebitControlConfigSection: View {
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.isoValues.count == 1, let singleValue = viewModel.isoValues.first {
-                        HStack {
+                        HStack(spacing: 4) {
                             Text("\(singleValue.description)")
+                                .font(.system(size: 14, design: .monospaced))
                             Image(systemName: "lock.fill")
+                                .font(.system(size: 12))
                         }
-                        .font(.system(size: 14, design: .monospaced))
                     } else {
                         Text("\(viewModel.isoValues.count) items")
                             .font(.system(size: 14, design: .monospaced))
@@ -79,11 +82,12 @@ struct HaebitControlConfigSection: View {
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.focalLengths.count == 1, let singleValue = viewModel.focalLengths.first {
-                        HStack {
+                        HStack(spacing: 4) {
                             Text("\(singleValue.title)")
+                                .font(.system(size: 14, design: .monospaced))
                             Image(systemName: "lock.fill")
+                                .font(.system(size: 12))
                         }
-                        .font(.system(size: 14, design: .monospaced))
                     } else {
                         Text("\(viewModel.focalLengths.count) items")
                             .font(.system(size: 14, design: .monospaced))
@@ -100,7 +104,7 @@ struct HaebitControlConfigSection: View {
             Text("Types with only one entry will be locked and won't be displayed as a control.")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
-                .listRowInsets(.init(top: 8, leading: 8, bottom: 8, trailing: 8))
+                .listRowInsets(.init(top: 8, leading: 8, bottom: 12, trailing: 8))
         }
     }
 }

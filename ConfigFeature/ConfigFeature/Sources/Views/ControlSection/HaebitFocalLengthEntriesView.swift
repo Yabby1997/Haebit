@@ -37,7 +37,7 @@ struct HaebitFocalLengthEntriesView: View {
                         }
                 }
             } footer: {
-                VStack(spacing: 12) {
+                VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
                             "At least one entry should be exist and active.",
@@ -83,7 +83,7 @@ struct HaebitFocalLengthEntriesView: View {
                     numberString: $numberString,
                     isEditing: $isEditing,
                     format: .integer,
-                    maxDigitCount: 5,
+                    maxDigitCount: 3,
                     suffix: "mm",
                     placeholder: "50mm",
                     font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)

@@ -22,13 +22,16 @@
     "Buy me a film" : {
 
     },
-    "Contact" : {
+    "Buy Me a Film" : {
 
     },
     "Control" : {
 
     },
     "Feedback" : {
+
+    },
+    "Feedback & Inquiry" : {
 
     },
     "Film Canister" : {
@@ -49,9 +52,6 @@
     "New Entry" : {
 
     },
-    "OpenSource" : {
-
-    },
     "Other" : {
 
     },
@@ -70,7 +70,7 @@
     "Types with only one entry will be locked and won't be displayed as a control." : {
 
     },
-    "Version %@" : {
+    "Version" : {
 
     }
   },

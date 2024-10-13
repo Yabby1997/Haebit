@@ -33,6 +33,13 @@ fileprivate enum Unit {
         case .denominator: "¹⁄ "
         }
     }
+    
+    var maxDigits: Int {
+        switch self {
+        case .seconds: 2
+        case .denominator: 5
+        }
+    }
 }
 
 struct HaebitShutterSpeedEntriesView: View {
@@ -67,7 +74,7 @@ struct HaebitShutterSpeedEntriesView: View {
                     }
                 }
             } footer: {
-                VStack(spacing: 12) {
+                VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
                             "At least one entry should be exist and active.",
@@ -112,7 +119,7 @@ struct HaebitShutterSpeedEntriesView: View {
                     numberString: $numberString,
                     isEditing: $isEditing,
                     format: .integer,
-                    maxDigitCount: 5,
+                    maxDigitCount: selectedUnit.maxDigits,
                     prefix: selectedUnit.prefix,
                     suffix: "s",
                     placeholder: selectedUnit.description,
@@ -128,7 +135,11 @@ struct HaebitShutterSpeedEntriesView: View {
                 .contentTransition(.numericText())
                 .foregroundStyle(.yellow)
                 .onTapGesture {
-                    selectedUnit = selectedUnit.toggled
+                    let toggled = selectedUnit.toggled
+                    if toggled.maxDigits < numberString.count {
+                        numberString = String(numberString.prefix(toggled.maxDigits))
+                    }
+                    selectedUnit = toggled
                 }
             }
             .padding(.horizontal, 20)

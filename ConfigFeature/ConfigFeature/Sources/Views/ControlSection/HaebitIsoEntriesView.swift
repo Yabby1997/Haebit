@@ -37,7 +37,7 @@ struct HaebitIsoEntriesView: View {
                         }
                 }
             } footer: {
-                VStack(spacing: 12) {
+                VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
                             "At least one entry should be exist and active.",
