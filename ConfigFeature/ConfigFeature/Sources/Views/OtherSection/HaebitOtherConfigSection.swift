@@ -24,24 +24,28 @@ struct HaebitOtherConfigSection: View {
                 Text("Buy me a film")
                     .font(.system(size: 16, weight: .semibold))
             }
-            Text("Contact")
-                .font(.system(size: 16, weight: .semibold))
-                .onTapGesture {
-                    viewModel.didTapContact()
-                }
+            HStack {
+                Text("Contact")
+                    .font(.system(size: 16, weight: .semibold))
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(perform: viewModel.didTapContact)
             HStack {
                 Text("Review on AppStore")
                     .font(.system(size: 16, weight: .semibold))
+                Spacer()
             }
+            .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapReview)
             HStack {
-                Text("Version \(viewModel.appVersion)"
-                )
+                Text("Version \(viewModel.appVersion)")
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Text(viewModel.isLatestVersion ? "Latest" : "Update Available")
                     .font(.system(size: 14, design: .monospaced))
             }
+            .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapAppVersion)
         } header: {
             HStack {
