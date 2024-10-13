@@ -43,7 +43,7 @@ struct HaebitApp: App {
                 )
             )
             .fullScreenCover(isPresented: $isPresentingLogger) {
-                HaebitFilmLogView(logger: logger, preferenceProvider: DefaultLoggerPreferenceProvider())
+                HaebitFilmLogView(logger: logger, preferenceProvider: configRepository)
             }
             .fullScreenCover(isPresented: $isPresentingConfig) {
                 HaebitConfigView(

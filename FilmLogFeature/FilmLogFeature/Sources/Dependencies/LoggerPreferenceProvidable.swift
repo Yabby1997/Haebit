@@ -6,10 +6,9 @@
 //  Copyright © 2024 seunghun. All rights reserved.
 //
 
-import Combine
 import Foundation
 import HaebitCommonModels
 
 public protocol LoggerPreferenceProvidable: AnyObject {
-    var perforationShapePublisher: AnyPublisher<PerforationShape, Never> { get }
+    var perforationShape: PerforationShape { get }
 }

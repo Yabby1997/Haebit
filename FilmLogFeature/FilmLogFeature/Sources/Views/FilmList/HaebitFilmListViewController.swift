@@ -188,14 +188,6 @@ final class HaebitFilmListViewController: UIViewController {
                 subtitleLabel.text = title
             }
             .store(in: &cancellables)
-        
-        viewModel.perforationShapePublisher
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                photoListCollectionView.reloadData()
-            }
-            .store(in: &cancellables)
     }
     
     private func configureDataSource() {

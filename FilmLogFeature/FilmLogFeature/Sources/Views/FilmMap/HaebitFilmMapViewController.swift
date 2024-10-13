@@ -149,16 +149,6 @@ final class HaebitFilmMapViewController: UIViewController {
                 self?.titleLabel.isLoading = isUpdating
             }
             .store(in: &cancellables)
-        
-        viewModel.perforationShapePublisher
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                let annotations = mapView.annotations
-                mapView.removeAnnotations(annotations)
-                mapView.addAnnotations(annotations)
-            }
-            .store(in: &cancellables)
     }
     
     func setRegionIfNeeded() {

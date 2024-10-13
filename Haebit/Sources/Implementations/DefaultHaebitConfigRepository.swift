@@ -8,6 +8,7 @@
 
 
 import ConfigFeature
+import FilmLogFeature
 import Foundation
 import HaebitCommonModels
 import LightMeterFeature
@@ -85,3 +86,5 @@ extension DefaultHaebitConfigRepository: LightMeterPreferenceProvidable {
     var isoValues: [IsoValue] { isoEntries.filter { $0.isActive }.map { $0.value } }
     var focalLengths: [FocalLengthValue] { focalLengthEntries.filter { $0.isActive }.map { $0.value } }
 }
+
+extension DefaultHaebitConfigRepository: LoggerPreferenceProvidable {}
