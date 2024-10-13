@@ -145,6 +145,20 @@ final class HaebitConfigViewModel: ObservableObject {
                 self?.feedbackGenerator.generate(feedback: feedbackStyle)
             }
             .store(in: &cancellables)
+        
+        $perforationShape
+            .dropFirst()
+            .sink { [weak self] perforationShape in
+                self?.configRepository.perforationShape = perforationShape
+            }
+            .store(in: &cancellables)
+        
+        $filmCanister
+            .dropFirst()
+            .sink { [weak self] filmCanister in
+                self?.configRepository.filmCanister = filmCanister
+            }
+            .store(in: &cancellables)
     }
     
     func onAppear() {
