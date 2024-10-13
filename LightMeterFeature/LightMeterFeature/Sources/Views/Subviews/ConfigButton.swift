@@ -16,15 +16,14 @@ struct ConfigButton: View {
             Button {
                 action?()
             } label: {
-                Image(systemName: "gearshape")
+                Image(systemName: "gearshape.2.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.gray)
             }
-            .frame(width: 72, height: 72)
+            .frame(width: 50, height: 50)
             Spacer()
         }
-        .padding(.horizontal, 20)
     }
 }

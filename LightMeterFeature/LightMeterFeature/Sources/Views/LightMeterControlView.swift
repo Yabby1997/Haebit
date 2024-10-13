@@ -39,6 +39,7 @@ struct LightMeterControlView: View {
                 }
                 .disabled(viewModel.isCapturing)
                 .padding(.vertical, 8)
+                .padding(.horizontal, 20)
             }
             .background {
                 BackgroundGradient()

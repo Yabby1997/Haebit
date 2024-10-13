@@ -21,13 +21,11 @@ struct LoggerButton: View {
                 action?()
             } label: {
                 Image(asset: viewModel.filmCanister.image)
-                    .antialiased(true)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 72, height: 72)
             }
+            .frame(height: 60)
         }
-        .padding(.horizontal, 20)
     }
 }
 
