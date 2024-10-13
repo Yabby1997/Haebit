@@ -15,7 +15,10 @@ final class HaebitConfigViewModel: ObservableObject {
     private let configRepository: any HaebitConfigRepository
     private let appStoreOpener: any AppStoreOpener
     private let appVersionProvider: any AppVersionProvidable
+    private let mailService: any MailService
+    private let systemInfoProvider: any SystemInfoProvidable
     private let feedbackGenerator: any HaebitConfigFeedbackGeneratable
+    
     @Published var currentHeaderType: HeaderType = .tipJar
     @Published var apertureEntries: [ApertureEntry]
     @Published var shutterSpeedEntries: [ShutterSpeedEntry]
@@ -40,12 +43,16 @@ final class HaebitConfigViewModel: ObservableObject {
         configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
         appVersionProvider: any AppVersionProvidable,
-        feedbackGenerator: any HaebitConfigFeedbackGeneratable
+        mailService: any MailService,
+        feedbackGenerator: any HaebitConfigFeedbackGeneratable,
+        systemInfoProvider: any SystemInfoProvidable
     ) {
         self.configRepository = configRepository
         self.appStoreOpener = appStoreOpener
         self.appVersionProvider = appVersionProvider
+        self.mailService = mailService
         self.feedbackGenerator = feedbackGenerator
+        self.systemInfoProvider = systemInfoProvider
         apertureEntries = configRepository.apertureEntries
         shutterSpeedEntries = configRepository.shutterSpeedEntries
         isoEntries = configRepository.isoEntries
@@ -261,5 +268,22 @@ final class HaebitConfigViewModel: ObservableObject {
             focalLengthEntries.append(.init(value: value, isActive: true))
             focalLengthEntries.sort(by: { $0.value.value < $1.value.value })
         }
+    }
+    
+    func didTapContact() {
+        let body = """
+        
+        
+        ==================
+        App: \(appVersion)
+        OS: \(systemInfoProvider.systemVersion)
+        Device: \(systemInfoProvider.modelName)
+        ==================
+        """
+        mailService.sendMail(
+            to: "yabby1997@gmail.com",
+            subject: "Haebit Feedback & Inquiry",
+            body: body
+        )
     }
 }

@@ -18,6 +18,7 @@ public struct HaebitConfigView: View {
         configRepository: any HaebitConfigRepository,
         appStoreOpener: any AppStoreOpener,
         appVersionProvider: any AppVersionProvidable,
+        mailService: any MailService = DefaultMailService(),
         feedbackGenerator: any HaebitConfigFeedbackGeneratable = DefaultHaebitConfigFeedbackGenerator(),
         isPresented: Binding<Bool>
     ) {
@@ -26,7 +27,9 @@ public struct HaebitConfigView: View {
                 configRepository: configRepository,
                 appStoreOpener: appStoreOpener,
                 appVersionProvider: appVersionProvider,
-                feedbackGenerator: feedbackGenerator
+                mailService: mailService,
+                feedbackGenerator: feedbackGenerator,
+                systemInfoProvider: SystemInfoProvider()
             )
         )
         self._isPresented = isPresented

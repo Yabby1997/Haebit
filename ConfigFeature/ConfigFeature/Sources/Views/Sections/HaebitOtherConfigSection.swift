@@ -10,6 +10,7 @@ import SwiftUI
 
 struct HaebitOtherConfigSection: View {
     @StateObject var viewModel: HaebitConfigViewModel
+    @State var isPresenting: Bool = false
     
     var body: some View {
         Section {
@@ -23,12 +24,11 @@ struct HaebitOtherConfigSection: View {
                 Text("Buy me a film")
                     .font(.system(size: 16, weight: .semibold))
             }
-            NavigationLink {
-                Text("Contact")
-            } label: {
-                Text("Contact")
-                    .font(.system(size: 16, weight: .semibold))
-            }
+            Text("Contact")
+                .font(.system(size: 16, weight: .semibold))
+                .onTapGesture {
+                    viewModel.didTapContact()
+                }
             HStack {
                 Text("Review on AppStore")
                     .font(.system(size: 16, weight: .semibold))
