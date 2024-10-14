@@ -77,8 +77,8 @@ struct HaebitShutterSpeedEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "At least one entry should be exist and active.",
-                            "If aperture and ISO has only one entry, at least two entries should be exist and active.",
+                            "ControlCommonDescription",
+                            "ShutterSpeedControlDescription",
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -88,7 +88,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Shutter Speed Entries")
+        .navigationTitle("ShutterSpeedEntries")
         .animation(.easeInOut, value: viewModel.shutterSpeedEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -113,7 +113,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Entry")
+                Text("AddNewEntry")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

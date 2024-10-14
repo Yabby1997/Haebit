@@ -28,7 +28,7 @@ struct HaebitAppearanceConfigSection: View {
             }
             NavigationLink(value: NavigatablePages.filmCanister) {
                 HStack {
-                    Text("Film Canister")
+                    Text("FilmCanister")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.filmCanister.description)

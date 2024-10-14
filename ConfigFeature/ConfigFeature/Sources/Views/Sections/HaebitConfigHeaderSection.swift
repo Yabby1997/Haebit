@@ -46,19 +46,19 @@ struct HaebitConfigHeaderSection: View {
 }
 
 extension HeaderType {
-    var title: String {
+    var title: LocalizedStringKey {
         switch self {
-        case .tipJar: return "Having fun with illumeter?"
-        case .reviewRequest: return "149 cuts with illumeter"
-        case .filmCanister: return "Wanna try fresh look? "
+        case .tipJar: return "tipJarTitle"
+        case .reviewRequest: return "reviewRqeuestTitle"
+        case .filmCanister: return "filmCanisterTitle"
         }
     }
     
-    var description: String {
+    var description: LocalizedStringKey {
         switch self {
-        case .tipJar: return "If so, consider to buy me a roll of film. I'm a film photographer as well."
-        case .reviewRequest: return "How about leaving a review on the AppStore? It will help me to improve the app."
-        case .filmCanister: return "You can customize some apperances like film canister on the bottom right corner!"
+        case .tipJar: return "tipJarDescription"
+        case .reviewRequest: return "reviewRequestDescription"
+        case .filmCanister: return "filmCanisterDescription"
         }
     }
 }

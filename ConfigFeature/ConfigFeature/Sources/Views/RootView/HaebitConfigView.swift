@@ -50,7 +50,7 @@ public struct HaebitConfigView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: NavigatablePages.self) { page in
                 switch page {
-                case .tipJar: Text("Buy me a film")
+                case .tipJar: Text("Buy Me a Film")
                 case .filmCanister: HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
                 }
             }

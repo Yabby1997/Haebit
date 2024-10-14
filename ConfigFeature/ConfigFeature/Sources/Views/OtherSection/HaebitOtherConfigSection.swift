@@ -15,7 +15,7 @@ struct HaebitOtherConfigSection: View {
     var body: some View {
         Section {
             NavigationLink(value: NavigatablePages.tipJar) {
-                Text("Buy Me a Film")
+                Text("Buy me a Film")
                     .font(.system(size: 16, weight: .semibold))
             }
             HStack {

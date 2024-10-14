@@ -35,17 +35,13 @@ struct HaebitPerforationShapeSelectionView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(.init(top: 4, leading: 4, bottom: 4, trailing: 4))
             } footer: {
-                BulletedList(
-                    listItems: [
-                        "Perforation displayed as background of each film log on log list and map.",
-                    ]
-                )
-                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
+                Text("PerforationSelectionDescription")
+                    .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Perforation Shape")
+        .navigationTitle("Perforation")
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

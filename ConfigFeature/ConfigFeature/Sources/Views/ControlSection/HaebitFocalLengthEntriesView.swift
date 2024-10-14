@@ -40,9 +40,9 @@ struct HaebitFocalLengthEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "At least one entry should be exist and active.",
-                            "Some entries may not be displayed if iPhone is  won't support it.",
-                            "If no entries available for iPhone camera, it will be automatically fallback to default focal length.",
+                            "ControlCommonDescription",
+                            "FocalLengthDescription",
+                            "FocalLengthDescription2",
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -52,7 +52,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Focal Length Entries")
+        .navigationTitle("FocalLengthEntries")
         .animation(.easeInOut, value: viewModel.focalLengthEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -77,7 +77,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("New Entry")
+                Text("AddNewEntry")
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

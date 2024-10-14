@@ -19,7 +19,7 @@ struct AddEntryButton: View {
                 RoundedRectangle(cornerRadius: 8)
                     .foregroundStyle(Color(uiColor: .secondarySystemGroupedBackground))
                 HStack {
-                    Label("Add New Entry", systemImage: "plus")
+                    Label("AddNewEntry", systemImage: "plus")
                 }
                 .foregroundStyle(.white)
                 .font(.system(size: 16, weight: .semibold))

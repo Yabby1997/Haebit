@@ -23,15 +23,8 @@ struct HaebitFilmCanisterSelectionView: View {
                     .aspectRatio(contentMode: .fit)
                     .animation(.easeInOut, value: viewModel.filmCanister)
             } footer: {
-                VStack {
-                    BulletedList(
-                        listItems: [
-                            "Film canister displayed as entry button for film log on the right bottom corner.",
-                        ]
-                    )
-                    Divider()
-                }
-                .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
+                Text("FilmCanisterSelectionDescription")
+                    .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
             .listRowBackground(Color.clear)
             Section {
@@ -55,7 +48,7 @@ struct HaebitFilmCanisterSelectionView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Film Canister")
+        .navigationTitle("FilmCanister")
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

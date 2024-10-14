@@ -38,7 +38,7 @@ struct HaebitControlConfigSection: View {
                 HaebitShutterSpeedEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("Shutter Speed")
+                    Text("ShutterSpeed")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
@@ -78,7 +78,7 @@ struct HaebitControlConfigSection: View {
                 HaebitFocalLengthEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("Focal Length")
+                    Text("FocalLength")
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.focalLengths.count == 1, let singleValue = viewModel.focalLengths.first {
@@ -101,7 +101,7 @@ struct HaebitControlConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            Text("Types with only one entry will be locked and won't be displayed as a control.")
+            Text("ControlDescription")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 .listRowInsets(.init(top: 8, leading: 8, bottom: 12, trailing: 8))
