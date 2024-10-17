@@ -71,6 +71,7 @@ final class MockConfigRepository: HaebitConfigRepository {
     var shutterSpeedDialFeedbackStyle: FeedbackStyle = .rigid
     var isoDialFeedbackStyle: FeedbackStyle = .rigid
     var focalLengthRingFeedbackStyle: FeedbackStyle = .rigid
+    var shutterSound: Bool = true
     var perforationShape: PerforationShape = .bh
     var filmCanister: FilmCanister = .fujiXtra400
 }

@@ -94,6 +94,10 @@ actor LightMeterObscuraCamera: LightMeterCamera {
         }
     }
     
+    func setMute(_ isMuted: Bool) async {
+        await camera.setMute(isMuted)
+    }
+    
     func lockExposure(on point: CGPoint) async throws {
         do {
             try await camera.lockExposure(on: point)

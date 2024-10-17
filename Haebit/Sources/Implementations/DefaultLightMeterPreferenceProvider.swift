@@ -62,5 +62,6 @@ final class DefaultLightMeterPreferenceProvider: LightMeterPreferenceProvidable 
     var shutterSpeedDialFeedbackStyle: FeedbackStyle { .light }
     var isoDialFeedbackStyle: FeedbackStyle { .light }
     var focalLengthRingFeedbackStyle: FeedbackStyle { .soft }
+    var shutterSound: Bool { true }
     var filmCanister: FilmCanister { .cinestill400D }
 }

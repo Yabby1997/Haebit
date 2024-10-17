@@ -19,6 +19,7 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case shutterSpeedEntries = "DefaultHeabitConfigRepository.shutterSpeedEntries"
         case isoEntries = "DefaultHeabitConfigRepository.isoEntries"
         case focalLengthEntries = "DefaultHeabitConfigRepository.focalLengthEntries"
+        case shutterSound = "DefaultHaebitConfigRepository.shutterSound"
         case apertureRingFeedbackStyle = "DefaultHeabitConfigRepository.apertureRingFeedbackStyle"
         case shutterSpeedDialFeedbackStyle = "DefaultHeabitConfigRepository.shutterSpeedDialFeedbackStyle"
         case isoDialFeedbackStyle = "DefaultHeabitConfigRepository.isoDialFeedbackStyle"
@@ -61,7 +62,6 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
             .map { FocalLengthEntry(value: $0, isActive: true) }
     )
     var focalLengthEntries: [ConfigFeature.FocalLengthEntry]
-    
     @UserDefault(key: UserDefaultKey.apertureRingFeedbackStyle.rawValue, defaultValue: .rigid)
     var apertureRingFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.shutterSpeedDialFeedbackStyle.rawValue, defaultValue: .rigid)
@@ -70,6 +70,8 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     var isoDialFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.focalLengthRingFeedbackStyle.rawValue, defaultValue: .rigid)
     var focalLengthRingFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.shutterSound.rawValue, defaultValue: true)
+    var shutterSound: Bool
     @UserDefault(key: UserDefaultKey.perforationShape.rawValue, defaultValue: .ks)
     var perforationShape: PerforationShape
     @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .fujiXtra400)

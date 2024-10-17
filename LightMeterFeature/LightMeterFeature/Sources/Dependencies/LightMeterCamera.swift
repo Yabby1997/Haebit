@@ -79,6 +79,12 @@ public protocol LightMeterCamera: Actor {
     ///     - isEnabled: Whether or not to enable the HDR mode.
     func setHDRMode(isEnabled: Bool) async throws
     
+    /// Sets the mute status.
+    ///
+    /// - Parameters:
+    ///     - isMuted: The mute state to be set.
+    func setMute(_ isMuted: Bool) async
+
     /// Locks the exposure on certain point.
     ///
     /// - Note: Unlock the exposure using ``unlockExposure()``

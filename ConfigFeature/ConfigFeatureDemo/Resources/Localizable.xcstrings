@@ -460,9 +460,6 @@
         }
       }
     },
-    "Open" : {
-
-    },
     "Other" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -565,6 +562,23 @@
         }
       }
     },
+    "ShutterSoundOption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shutter Sound"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "셔터음"
+          }
+        }
+      }
+    },
     "ShutterSpeed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -629,6 +643,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "셔터속도 값"
+          }
+        }
+      }
+    },
+    "Sound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사운드"
           }
         }
       }

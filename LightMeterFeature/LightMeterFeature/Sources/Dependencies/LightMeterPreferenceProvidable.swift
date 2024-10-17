@@ -18,5 +18,6 @@ public protocol LightMeterPreferenceProvidable: AnyObject {
     var shutterSpeedDialFeedbackStyle: FeedbackStyle { get }
     var isoDialFeedbackStyle: FeedbackStyle { get }
     var focalLengthRingFeedbackStyle: FeedbackStyle { get }
+    var shutterSound: Bool { get }
     var filmCanister: FilmCanister { get }
 }

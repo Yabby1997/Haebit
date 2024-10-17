@@ -371,6 +371,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             do {
                 try await camera.setup()
                 try? await camera.setHDRMode(isEnabled: false)
+                await camera.setMute(!preferenceProvider.shutterSound)
             } catch {
                 if case .notAuthorized = error as? LightMeterCameraErrors {
                     shouldRequestCameraAccess = true
@@ -471,6 +472,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.start()
+            await camera.setMute(!preferenceProvider.shutterSound)
             try? AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
         }
     }
