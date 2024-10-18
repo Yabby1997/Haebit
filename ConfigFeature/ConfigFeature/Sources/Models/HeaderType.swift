@@ -9,11 +9,14 @@
 import Foundation
 
 enum HeaderType: CaseIterable {
-    case tipJar
     case reviewRequest
-    case filmCanister
+    case controlSection
+    case feedbackSection
+    case soundSection
+    case appearanceSection
+    case othersSection
     
     var next: HeaderType {
-        HeaderType.allCases.drop { $0 != self }.dropFirst().first ?? .tipJar
+        HeaderType.allCases.drop { $0 != self }.dropFirst().first ?? .reviewRequest
     }
 }

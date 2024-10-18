@@ -14,10 +14,6 @@ struct HaebitOtherConfigSection: View {
     
     var body: some View {
         Section {
-            NavigationLink(value: NavigatablePages.tipJar) {
-                Text("Buy me a Film")
-                    .font(.system(size: 16, weight: .semibold))
-            }
             HStack {
                 Text("Feedback & Inquiry")
                     .font(.system(size: 16, weight: .semibold))
@@ -55,5 +51,8 @@ struct HaebitOtherConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         }
+        .id(ConfigSection.others)
+        .foregroundStyle(viewModel.highlightedSection == .others ? .yellow : .white)
+        .animation(.easeInOut, value: viewModel.highlightedSection)
     }
 }

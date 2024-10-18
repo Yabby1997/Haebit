@@ -9,8 +9,6 @@
 import SwiftUI
 
 public struct HaebitConfigView: View {
-    @State private var navigationPath = NavigationPath()
-    
     @StateObject private var viewModel: HaebitConfigViewModel
     @Binding private var isPresented: Bool
     
@@ -36,25 +34,25 @@ public struct HaebitConfigView: View {
     }
     
     public var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack {
             ScrollViewReader { proxy in
                 List {
-                    HaebitConfigHeaderSection(navigationPath: $navigationPath, viewModel: viewModel)
+                    HaebitConfigHeaderSection(viewModel: viewModel)
                     HaebitControlConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitFeedbackConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitSoundConfigSection(viewModel: viewModel)
                     HaebitAppearanceConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitOtherConfigSection(viewModel: viewModel)
                 }
+                .onChange(of: viewModel.highlightedSection) { section in
+                    guard let section else { return }
+                    withAnimation {
+                        proxy.scrollTo(section, anchor: .center)
+                    }
+                }
             }
             .onAppear(perform: viewModel.onAppear)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: NavigatablePages.self) { page in
-                switch page {
-                case .tipJar: Text("Buy Me a Film")
-                case .filmCanister: HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
-                }
-            }
             .toolbarBackground(.hidden, for: .navigationBar)
             .ignoresSafeArea(.container, edges: .top)
             .scrollIndicators(.hidden)

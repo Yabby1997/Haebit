@@ -106,5 +106,8 @@ struct HaebitControlConfigSection: View {
                 .multilineTextAlignment(.leading)
                 .listRowInsets(.init(top: 8, leading: 8, bottom: 12, trailing: 8))
         }
+        .id(ConfigSection.control)
+        .foregroundStyle(viewModel.highlightedSection == .control ? .yellow : .white)
+        .animation(.easeInOut, value: viewModel.highlightedSection)
     }
 }

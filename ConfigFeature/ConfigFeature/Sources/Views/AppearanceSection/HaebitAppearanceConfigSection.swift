@@ -26,7 +26,9 @@ struct HaebitAppearanceConfigSection: View {
                         .font(.system(size: 14, design: .monospaced))
                 }
             }
-            NavigationLink(value: NavigatablePages.filmCanister) {
+            NavigationLink {
+                HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
+            } label: {
                 HStack {
                     Text("FilmCanister")
                         .font(.system(size: 16, weight: .semibold))
@@ -42,5 +44,8 @@ struct HaebitAppearanceConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         }
+        .id(ConfigSection.appearance)
+        .foregroundStyle(viewModel.highlightedSection == .appearance ? .yellow : .white)
+        .animation(.easeInOut, value: viewModel.highlightedSection)
     }
 }

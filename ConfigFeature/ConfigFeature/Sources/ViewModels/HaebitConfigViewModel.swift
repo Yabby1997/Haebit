@@ -19,7 +19,8 @@ final class HaebitConfigViewModel: ObservableObject {
     private let systemInfoProvider: any SystemInfoProvidable
     private let feedbackGenerator: any HaebitConfigFeedbackGeneratable
     
-    @Published var currentHeaderType: HeaderType = .tipJar
+    @Published var currentHeaderType: HeaderType = .reviewRequest
+    @Published var highlightedSection: ConfigSection?
     @Published var apertureEntries: [ApertureEntry]
     @Published var shutterSpeedEntries: [ShutterSpeedEntry]
     @Published var isoEntries: [IsoEntry]
@@ -69,11 +70,17 @@ final class HaebitConfigViewModel: ObservableObject {
     }
     
     private func bind() {
-        Timer.publish(every: 10, on: .main, in: .default)
+        Timer.publish(every: 5, on: .main, in: .default)
             .autoconnect()
             .combineLatest($currentHeaderType)
             .map { $1.next }
             .assign(to: &$currentHeaderType)
+        
+        $highlightedSection
+            .filter { $0 != nil }
+            .map { _ in nil }
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .assign(to: &$highlightedSection)
         
         $apertureEntries
             .map { $0.filter { $0.isActive }.map { $0.value } }

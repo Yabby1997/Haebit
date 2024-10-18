@@ -70,5 +70,8 @@ struct HaebitFeedbackConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         }
+        .id(ConfigSection.feedback)
+        .foregroundStyle(viewModel.highlightedSection == .feedback ? .yellow : .white)
+        .animation(.easeInOut, value: viewModel.highlightedSection)
     }
 }

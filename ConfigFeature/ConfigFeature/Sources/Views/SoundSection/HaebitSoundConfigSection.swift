@@ -16,7 +16,6 @@ struct HaebitSoundConfigSection: View {
             Toggle(isOn: $viewModel.shutterSound) {
                 Text("ShutterSoundOption")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
             }
             .tint(.yellow)
         } header: {
@@ -26,5 +25,8 @@ struct HaebitSoundConfigSection: View {
             }
             .font(.system(size: 14, weight: .bold))
         }
+        .id(ConfigSection.sound)
+        .foregroundStyle(viewModel.highlightedSection == .sound ? .yellow : .white)
+        .animation(.easeInOut, value: viewModel.highlightedSection)
     }
 }
