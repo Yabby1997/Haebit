@@ -48,14 +48,14 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
             self.lockPointY = String(Float(lockPoint.y))
         }
         self.isLocked = camera.isLockedSubject.value
-        self.apertures = preferenceProvider.apertures
-        self.shutterSpeeds = preferenceProvider.shutterSpeeds
-        self.isos = preferenceProvider.isos
-        self.focalLengths = preferenceProvider.focalLengths
-        self.apertureFeedbackStyle = preferenceProvider.apertureFeedbackStyle
-        self.shutterSpeedFeedbackStyle = preferenceProvider.shutterSpeedFeedbackStyle
-        self.isoFeedbackStyle = preferenceProvider.isoFeedbackStyle
-        self.focalLengthFeedbackStyle = preferenceProvider.focalLengthFeedbackStyle
+        self.apertures = preferenceProvider.rawApertures
+        self.shutterSpeeds = preferenceProvider.rawShutterSpeeds
+        self.isos = preferenceProvider.rawIsos
+        self.focalLengths = preferenceProvider.rawFocalLengths
+        self.apertureFeedbackStyle = preferenceProvider.apertureRingFeedbackStyle
+        self.shutterSpeedFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
+        self.isoFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
+        self.focalLengthFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
         self.filmCanister = preferenceProvider.filmCanister
         Task {
             await camera.setCamera(isOn: false)
@@ -82,14 +82,14 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
                 camera.lockPointSubject.send(nil)
             }
             camera.isLockedSubject.send(isLocked)
-            preferenceProvider.apertures = apertures
-            preferenceProvider.shutterSpeeds = shutterSpeeds
-            preferenceProvider.isos = isos
-            preferenceProvider.focalLengths = focalLengths
-            preferenceProvider.apertureFeedbackStyle = apertureFeedbackStyle
-            preferenceProvider.shutterSpeedFeedbackStyle = shutterSpeedFeedbackStyle
-            preferenceProvider.isoFeedbackStyle = isoFeedbackStyle
-            preferenceProvider.focalLengthFeedbackStyle = focalLengthFeedbackStyle
+            preferenceProvider.rawApertures = apertures
+            preferenceProvider.rawShutterSpeeds = shutterSpeeds
+            preferenceProvider.rawIsos = isos
+            preferenceProvider.rawFocalLengths = focalLengths
+            preferenceProvider.apertureRingFeedbackStyle = apertureFeedbackStyle
+            preferenceProvider.shutterSpeedDialFeedbackStyle = shutterSpeedFeedbackStyle
+            preferenceProvider.isoDialFeedbackStyle = isoFeedbackStyle
+            preferenceProvider.focalLengthRingFeedbackStyle = focalLengthFeedbackStyle
             preferenceProvider.filmCanister = filmCanister
             await camera.setCamera(isOn: true)
         }

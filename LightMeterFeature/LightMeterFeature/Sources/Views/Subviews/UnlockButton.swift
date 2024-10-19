@@ -12,7 +12,7 @@ struct UnlockButton: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
 
     var body: some View {
-        Button(action: viewModel.didTapUnlock) { Text(.lightMeterControlViewUnlockButton) }
+        Button(action: viewModel.didTapUnlock) { Text(.controlViewUnlockButton) }
             .font(.system(size: 18, weight: .bold, design: .monospaced))
             .foregroundStyle(.yellow)
             .shadow(radius: 5)

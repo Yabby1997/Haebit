@@ -111,8 +111,8 @@ struct DemoLightMeterConfigView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
                             Picker("", selection: $viewModel.apertureFeedbackStyle) {
-                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
-                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                ForEach(FeedbackStyle.allCases, id: \.self) { feedbackStyle in
+                                    Text(feedbackStyle.description).tag(feedbackStyle)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -122,8 +122,8 @@ struct DemoLightMeterConfigView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
                             Picker("", selection: $viewModel.shutterSpeedFeedbackStyle) {
-                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
-                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                ForEach(FeedbackStyle.allCases, id: \.self) { feedbackStyle in
+                                    Text(feedbackStyle.description).tag(feedbackStyle)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -133,8 +133,8 @@ struct DemoLightMeterConfigView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
                             Picker("", selection: $viewModel.isoFeedbackStyle) {
-                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
-                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                ForEach(FeedbackStyle.allCases, id: \.self) { feedbackStyle in
+                                    Text(feedbackStyle.description).tag(feedbackStyle)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -144,8 +144,8 @@ struct DemoLightMeterConfigView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
                             Picker("", selection: $viewModel.focalLengthFeedbackStyle) {
-                                ForEach(FeedbackStyle.allCases) { feedbackStyle in
-                                    Text(feedbackStyle.rawValue).tag(feedbackStyle)
+                                ForEach(FeedbackStyle.allCases, id: \.self) { feedbackStyle in
+                                    Text(feedbackStyle.description).tag(feedbackStyle)
                                 }
                             }
                             .pickerStyle(.segmented)

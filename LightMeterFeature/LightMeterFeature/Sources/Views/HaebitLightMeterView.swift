@@ -56,13 +56,29 @@ public struct HaebitLightMeterView: View {
         .onChange(of: isPresentingLogger, perform: didChange(isPresentingLogger:))
         .onChange(of: isPresentingConfig, perform: didChange(isPresentingConfig:))
         .disabled(viewModel.isCapturing)
-        .alert(.lightMeterViewCameraAccessAlertTitle, isPresented: $viewModel.shouldRequestCameraAccess) {
-            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
-        } message :{ Text(.lightMeterViewCameraAccessAlertMessage) }
-        .alert(.lightMeterViewGPSAccessAlertTitle, isPresented: $viewModel.shouldRequestGPSAccess) {
-            Button(action: openSettings) { Text(.lightMeterViewAccessAlertOpenSettingsButton) }
-            Button(action: viewModel.didTapDoNotAskGPSAccess) { Text(.lightMeterViewAccessAlertDoNotAskButton) }
-        } message :{ Text(.lightMeterViewGPSAccessAlertMessage) }
+        .alert(
+            Text(.cameraAccessAlertTitle),
+            isPresented: $viewModel.shouldRequestCameraAccess
+        ) {
+            Button(action: openSettings) {
+                Text(.alertOpenSettingsButton)
+            }
+        } message: {
+            Text(.cameraAccessAlertMessage)
+        }
+        .alert(
+            Text(.gpsAccessAlertTitle),
+            isPresented: $viewModel.shouldRequestGPSAccess
+        ) {
+            Button(action: openSettings) {
+                Text(.alertOpenSettingsButton)
+            }
+            Button(action: viewModel.didTapDoNotAskGPSAccess) {
+                Text(.gpsAccessDoNotAskAgainButton)
+            }
+        } message: {
+            Text(.gpsAccessAlertMessage)
+        }
     }
     
     private func didChangeScene(phase: ScenePhase) {

@@ -16,7 +16,7 @@ struct ConfigButton: View {
             Button {
                 action?()
             } label: {
-                Image(systemName: "gearshape.2.fill")
+                Image.gearshape2fill
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)

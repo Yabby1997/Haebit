@@ -24,6 +24,7 @@ actor MockLightMeterCamera: LightMeterCamera {
     nonisolated let isLockedSubject = CurrentValueSubject<Bool, Never>(false)
     
     nonisolated let maxZoomFactor: AnyPublisher<CGFloat, Never> = Just(.greatestFiniteMagnitude).eraseToAnyPublisher()
+    nonisolated let minZoomFactor: AnyPublisher<CGFloat, Never> = Just(.zero).eraseToAnyPublisher()
     nonisolated let isHDREnabled: AnyPublisher<Bool, Never> = Just(false).eraseToAnyPublisher()
     nonisolated let zoomFactor: AnyPublisher<CGFloat, Never> = Just(1.0).eraseToAnyPublisher()
     nonisolated let isCapturing: AnyPublisher<Bool, Never> = Just(false).eraseToAnyPublisher()
@@ -82,6 +83,7 @@ actor MockLightMeterCamera: LightMeterCamera {
     func stop() async {}
     func zoom(factor: CGFloat) async throws {}
     func setHDRMode(isEnabled: Bool) async throws {}
+    func setMute(_ isMuted: Bool) async {}
     func lockExposure(on point: CGPoint) async throws {}
     func unlockExposure() async throws {}
     func lockFocus(on point: CGPoint) async throws {}

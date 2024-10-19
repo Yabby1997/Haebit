@@ -15,9 +15,12 @@ struct LightMeterFixedDescriptionView: View {
         VStack {
             HStack {
                 Spacer()
-                Label(description, systemImage: "lock.fill")
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundStyle(.white)
+                HStack {
+                    Image.lockFill
+                    Text(description)
+                }
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white)
                 Spacer()
             }
             Spacer()

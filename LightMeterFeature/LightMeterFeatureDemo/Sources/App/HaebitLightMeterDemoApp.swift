@@ -6,6 +6,7 @@ import SwiftUI
 struct HaebitLightMeterDemoApp: App {
     let camera: MockLightMeterCamera
     let preferenceProvider: MockLightMeterPreferenceProvider
+    @State var isPresentingConfig: Bool = false
     
     init() {
         camera = MockLightMeterCamera(screenScaleFactor: UIScreen.main.scale)
@@ -23,12 +24,8 @@ struct HaebitLightMeterDemoApp: App {
                     reviewRequestValidator: MockReviewRequestValidator(),
                     gpsAccessValidator: MockGPSAccessValidator()
                 ),
-                logView: DemoLightMeterConfigView(
-                    viewModel: DemoLightMeterConfigViewModel(
-                        camera: camera,
-                        preferenceProvider: preferenceProvider
-                    )
-                )
+                isPresentingLogger: .constant(false),
+                isPresentingConfig: $isPresentingConfig
             )
             .environmentObject(
                 LightMeterControlViewDependencies(
@@ -37,6 +34,14 @@ struct HaebitLightMeterDemoApp: App {
                     )
                 )
             )
+            .fullScreenCover(isPresented: $isPresentingConfig) {
+                DemoLightMeterConfigView(
+                    viewModel: DemoLightMeterConfigViewModel(
+                        camera: camera,
+                        preferenceProvider: preferenceProvider
+                    )
+                )
+            }
         }
     }
 }

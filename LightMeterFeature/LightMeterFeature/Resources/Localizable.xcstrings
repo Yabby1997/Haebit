@@ -1,62 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "," : {
-
-    },
-    "APT" : {
-
-    },
-    "COD" : {
-
-    },
-    "Dismiss" : {
-
-    },
-    "FCL" : {
-
-    },
-    "Film Canister" : {
-
-    },
-    "ISO" : {
-
-    },
-    "lightMeterControlViewUnlockButton" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock"
-          }
-        }
-      }
-    },
-    "lightMeterViewAccessAlertDoNotAskButton" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Do not ask again"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다시 묻지 않기"
-          }
-        }
-      }
-    },
-    "lightMeterViewAccessAlertOpenSettingsButton" : {
+    "alertOpenSettingsButton" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -73,7 +18,7 @@
         }
       }
     },
-    "lightMeterViewCameraAccessAlertMessage" : {
+    "cameraAccessAlertMessage" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -90,7 +35,7 @@
         }
       }
     },
-    "lightMeterViewCameraAccessAlertTitle" : {
+    "cameraAccessAlertTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -107,7 +52,24 @@
         }
       }
     },
-    "lightMeterViewGPSAccessAlertMessage" : {
+    "controlViewUnlockButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock"
+          }
+        }
+      }
+    },
+    "gpsAccessAlertMessage" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -124,7 +86,7 @@
         }
       }
     },
-    "lightMeterViewGPSAccessAlertTitle" : {
+    "gpsAccessAlertTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -141,14 +103,22 @@
         }
       }
     },
-    "Reset" : {
-
-    },
-    "Select photo" : {
-
-    },
-    "SPD" : {
-
+    "gpsAccessDoNotAskAgainButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do not ask again"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 묻지 않기"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
