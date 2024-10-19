@@ -38,6 +38,7 @@ struct HaebitConfigHeaderSection: View {
     
     func handleTapGesture() {
         switch viewModel.currentHeaderType {
+            
         case .reviewRequest: viewModel.didTapReview()
         case .appearanceSection: viewModel.highlightedSection = .appearance
         case .controlSection: viewModel.highlightedSection = .control
@@ -49,34 +50,34 @@ struct HaebitConfigHeaderSection: View {
 
 extension HeaderType {
     @MainActor
-    var title: LocalizedStringKey {
+    var title: LocalizedStringResource {
         switch self {
         case .reviewRequest: 
-            return .configViewHeaderReviewRequestTitle
+            return .headerReviewRequestTitle
         case .controlSection:
-            return .configViewHeaderControlSectionTitle
+            return .headerControlSectionTitle
         case .feedbackSection:
-            return .configViewHeaderFeedbackSectionTitle
+            return .headerFeedbackSectionTitle
         case .soundSection:
-            return .configViewHeaderSoundSectionTitle
+            return .headerSoundSectionTitle
         case .appearanceSection:
-            return .configViewHeaderAppearanceSectionTitle
+            return .headerAppearanceSectionTitle
         }
     }
     
     @MainActor
-    var description: LocalizedStringKey {
+    var description: LocalizedStringResource {
         switch self {
         case .reviewRequest:
-            return .configViewHeaderReviewRequestDescription
+            return .headerReviewRequestDescription
         case .controlSection:
-            return .configViewHeaderControlSectionDescription
+            return .headerControlSectionDescription
         case .feedbackSection:
-            return .configViewHeaderFeedbackSectionDescription
+            return .headerFeedbackSectionDescription
         case .soundSection:
-            return .configViewHeaderSoundSectionDescription
+            return .headerSoundSectionDescription
         case .appearanceSection:
-            return .configViewHeaderAppearanceSectionDescription
+            return .headerAppearanceSectionDescription
         }
     }
 }

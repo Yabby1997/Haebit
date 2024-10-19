@@ -40,8 +40,8 @@ struct HaebitIsoEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            .configViewControlSectionCommonEntriesDescription,
-                            .configViewControlSectionIsoEntriesDescription,
+                            .controlSectionCommonEntriesDescription,
+                            .controlSectionIsoEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -51,7 +51,7 @@ struct HaebitIsoEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewControlSectionIsoEntriesTitle)
+        .navigationTitle(Text(.controlSectionIsoTitle))
         .animation(.easeInOut, value: viewModel.isoEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -76,7 +76,7 @@ struct HaebitIsoEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text(.configViewControlSectionCommonNewEntryTitle)
+                Text(.controlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

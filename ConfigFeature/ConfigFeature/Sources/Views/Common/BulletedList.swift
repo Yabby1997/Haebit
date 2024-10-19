@@ -11,14 +11,14 @@ import SwiftUI
 struct BulletedList: View {
     private let listItems: [BulletedListItem]
     
-    init(listItems: [LocalizedStringKey]) {
-        self.listItems = listItems.map { BulletedListItem(key: $0) }
+    init(listItems: [LocalizedStringResource]) {
+        self.listItems = listItems.map { BulletedListItem(resource: $0) }
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             ForEach(listItems) { item in
-                BulletedText(item.key)
+                BulletedText(item.resource)
             }
         }
         .padding(.horizontal, 8)
@@ -27,5 +27,5 @@ struct BulletedList: View {
 
 fileprivate struct BulletedListItem: Identifiable {
     let id = UUID()
-    let key: LocalizedStringKey
+    let resource: LocalizedStringResource
 }

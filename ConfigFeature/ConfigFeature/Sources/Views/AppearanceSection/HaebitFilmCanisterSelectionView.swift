@@ -23,7 +23,7 @@ struct HaebitFilmCanisterSelectionView: View {
                     .aspectRatio(contentMode: .fit)
                     .animation(.easeInOut, value: viewModel.filmCanister)
             } footer: {
-                Text(.configViewAppearanceSectionFilmCanisterDescription)
+                Text(.appearanceSectionFilmCanisterDescription)
                     .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
             .listRowBackground(Color.clear)
@@ -48,7 +48,7 @@ struct HaebitFilmCanisterSelectionView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewAppearanceSectionFilmCanisterTitle)
+        .navigationTitle(Text(.appearanceSectionFilmCanisterTitle))
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

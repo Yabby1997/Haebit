@@ -14,14 +14,14 @@ struct HaebitSoundConfigSection: View {
     var body: some View {
         Section {
             Toggle(isOn: $viewModel.shutterSound) {
-                Text(.configViewSoundSectionShutterSoundOptionTitle)
+                Text(.soundSectionShutterSoundOptionTitle)
                     .font(.system(size: 16, weight: .semibold))
             }
             .tint(.yellow)
         } header: {
             HStack {
                 Image.speakerWave2
-                Text(.configViewSoundSectionTitle)
+                Text(.soundSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         }

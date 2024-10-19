@@ -17,10 +17,10 @@ struct HaebitFeedbackConfigSection: View {
         Section {
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.apertureRingFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle(.configViewFeedbackSectionApertureRingTitle)
+                    .navigationTitle(Text(.feedbackSectionApertureRingTitle))
             } label: {
                 HStack {
-                    Text(.configViewFeedbackSectionApertureRingTitle)
+                    Text(.feedbackSectionApertureRingTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.apertureRingFeedbackStyle.description)
@@ -29,10 +29,10 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.shutterSpeedDialFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle(.configViewFeedbackSectionShutterSpeedDialTitle)
+                    .navigationTitle(Text(.feedbackSectionShutterSpeedDialTitle))
             } label: {
                 HStack {
-                    Text(.configViewFeedbackSectionShutterSpeedDialTitle)
+                    Text(.feedbackSectionShutterSpeedDialTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.shutterSpeedDialFeedbackStyle.description)
@@ -41,10 +41,10 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.isoDialFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle(.configViewFeedbackSectionIsoDialTitle)
+                    .navigationTitle(Text(.feedbackSectionIsoDialTitle))
             } label: {
                 HStack {
-                    Text(.configViewFeedbackSectionIsoDialTitle)
+                    Text(.feedbackSectionIsoDialTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.isoDialFeedbackStyle.description)
@@ -53,10 +53,10 @@ struct HaebitFeedbackConfigSection: View {
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.focalLengthRingFeedbackStyle, isPresented: $isPresented)
-                    .navigationTitle(.configViewFeedbackSectionFocalLengthRingTitle)
+                    .navigationTitle(Text(.feedbackSectionFocalLengthRingTitle))
             } label: {
                 HStack {
-                    Text(.configViewFeedbackSectionFocalLengthRingTitle)
+                    Text(.feedbackSectionFocalLengthRingTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.focalLengthRingFeedbackStyle.description)
@@ -66,7 +66,7 @@ struct HaebitFeedbackConfigSection: View {
         } header: {
             HStack {
                 Image.handDraw
-                Text(.configViewFeedbackSectionTitle)
+                Text(.feedbackSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         }

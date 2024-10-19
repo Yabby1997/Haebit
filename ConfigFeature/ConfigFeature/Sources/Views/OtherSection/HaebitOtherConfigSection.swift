@@ -15,7 +15,7 @@ struct HaebitOtherConfigSection: View {
     var body: some View {
         Section {
             HStack {
-                Text(.configViewOthersSectionFeedbackAndInquiryTitle)
+                Text(.othersSectionFeedbackAndInquiryTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Image.arrowUpForward
@@ -24,7 +24,7 @@ struct HaebitOtherConfigSection: View {
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapContact)
             HStack {
-                Text(.configViewOthersSectionReviewOnAppstoreTitle)
+                Text(.othersSectionReviewOnAppstoreTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Image.arrowUpForward
@@ -33,15 +33,15 @@ struct HaebitOtherConfigSection: View {
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapReview)
             HStack {
-                Text(.configViewOthersSectionVersionTitle)
+                Text(.othersSectionVersionTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Text(viewModel.appVersion)
                     .font(.system(size: 14, design: .monospaced))
                 Spacer()
                 Text(
                     viewModel.isLatestVersion
-                        ? .configViewOthersSectionLatestDescription
-                        : .configViewOthersSectionUpdateAvailableDescription
+                    ? .othersSectionLatestDescription
+                    : .othersSectionUpdateAvailableDescription
                 )
                 .font(.system(size: 14, design: .monospaced))
                 .foregroundStyle(.yellow)
@@ -51,7 +51,7 @@ struct HaebitOtherConfigSection: View {
         } header: {
             HStack {
                 Image.textBubble
-                Text(.configViewOthersSectionTitle)
+                Text(.othersSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         }

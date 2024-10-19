@@ -40,9 +40,9 @@ struct HaebitFocalLengthEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            .configViewControlSectionCommonEntriesDescription,
-                            .configViewControlSectionFocalLengthEntriesDescription,
-                            .configViewControlSectionFocalLengthEntriesDescription2
+                            .controlSectionCommonEntriesDescription,
+                            .controlSectionFocalLengthEntriesDescription,
+                            .controlSectionFocalLengthEntriesDescription2
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -52,7 +52,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewControlSectionFocalLengthEntriesTitle)
+        .navigationTitle(Text(.controlSectionFocalLengthTitle))
         .animation(.easeInOut, value: viewModel.focalLengthEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -77,7 +77,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text(.configViewControlSectionCommonNewEntryTitle)
+                Text(.controlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

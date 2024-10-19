@@ -1,7 +1,13 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "configViewAppearanceSectionFilmCanisterDescription" : {
+    "%@" : {
+
+    },
+    "•" : {
+
+    },
+    "appearanceSectionFilmCanisterDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -18,7 +24,7 @@
         }
       }
     },
-    "configViewAppearanceSectionFilmCanisterTitle" : {
+    "appearanceSectionFilmCanisterTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -35,7 +41,7 @@
         }
       }
     },
-    "configViewAppearanceSectionPerforationDescription" : {
+    "appearanceSectionPerforationDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -52,7 +58,7 @@
         }
       }
     },
-    "configViewAppearanceSectionPerforationTitle" : {
+    "appearanceSectionPerforationTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -69,7 +75,7 @@
         }
       }
     },
-    "configViewAppearanceSectionTitle" : {
+    "appearanceSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -86,7 +92,7 @@
         }
       }
     },
-    "configViewControlSectionApertureEntriesDescription" : {
+    "controlSectionApertureEntriesDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -103,7 +109,7 @@
         }
       }
     },
-    "configViewControlSectionApertureEntriesTitle" : {
+    "controlSectionApertureEntriesTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -120,7 +126,7 @@
         }
       }
     },
-    "configViewControlSectionApertureTitle" : {
+    "controlSectionApertureTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -137,7 +143,7 @@
         }
       }
     },
-    "configViewControlSectionCommonEntriesDescription" : {
+    "controlSectionCommonEntriesDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -154,7 +160,7 @@
         }
       }
     },
-    "configViewControlSectionCommonNewEntryTitle" : {
+    "controlSectionCommonNewEntryTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -171,7 +177,7 @@
         }
       }
     },
-    "configViewControlSectionDescription" : {
+    "controlSectionDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -188,7 +194,7 @@
         }
       }
     },
-    "configViewControlSectionFocalLengthEntriesDescription" : {
+    "controlSectionFocalLengthEntriesDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -205,7 +211,7 @@
         }
       }
     },
-    "configViewControlSectionFocalLengthEntriesDescription2" : {
+    "controlSectionFocalLengthEntriesDescription2" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -222,7 +228,7 @@
         }
       }
     },
-    "configViewControlSectionFocalLengthEntriesTitle" : {
+    "controlSectionFocalLengthEntriesTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -239,7 +245,7 @@
         }
       }
     },
-    "configViewControlSectionFocalLengthTitle" : {
+    "controlSectionFocalLengthTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -256,7 +262,7 @@
         }
       }
     },
-    "configViewControlSectionIsoEntriesDescription" : {
+    "controlSectionIsoEntriesDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -273,7 +279,7 @@
         }
       }
     },
-    "configViewControlSectionIsoEntriesTitle" : {
+    "controlSectionIsoEntriesTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -290,7 +296,7 @@
         }
       }
     },
-    "configViewControlSectionIsoTitle" : {
+    "controlSectionIsoTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -307,7 +313,7 @@
         }
       }
     },
-    "configViewControlSectionItems%lld" : {
+    "controlSectionItems%lld" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -324,7 +330,7 @@
         }
       }
     },
-    "configViewControlSectionShutterSpeedEntriesDescription" : {
+    "controlSectionShutterSpeedEntriesDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -341,7 +347,7 @@
         }
       }
     },
-    "configViewControlSectionShutterSpeedEntriesTitle" : {
+    "controlSectionShutterSpeedEntriesTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -358,7 +364,7 @@
         }
       }
     },
-    "configViewControlSectionShutterSpeedTitle" : {
+    "controlSectionShutterSpeedTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -375,7 +381,7 @@
         }
       }
     },
-    "configViewControlSectionTitle" : {
+    "controlSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -392,7 +398,7 @@
         }
       }
     },
-    "configViewFeedbackSectionApertureRingTitle" : {
+    "feedbackSectionApertureRingTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -409,7 +415,7 @@
         }
       }
     },
-    "configViewFeedbackSectionFocalLengthRingTitle" : {
+    "feedbackSectionFocalLengthRingTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -426,7 +432,7 @@
         }
       }
     },
-    "configViewFeedbackSectionIsoDialTitle" : {
+    "feedbackSectionIsoDialTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -443,7 +449,7 @@
         }
       }
     },
-    "configViewFeedbackSectionShutterSpeedDialTitle" : {
+    "feedbackSectionShutterSpeedDialTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -460,7 +466,7 @@
         }
       }
     },
-    "configViewFeedbackSectionTitle" : {
+    "feedbackSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -477,7 +483,7 @@
         }
       }
     },
-    "configViewHeaderAppearanceSectionDescription" : {
+    "headerAppearanceSectionDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -494,7 +500,7 @@
         }
       }
     },
-    "configViewHeaderAppearanceSectionTitle" : {
+    "headerAppearanceSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -511,7 +517,7 @@
         }
       }
     },
-    "configViewHeaderControlSectionDescription" : {
+    "headerControlSectionDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -528,7 +534,7 @@
         }
       }
     },
-    "configViewHeaderControlSectionTitle" : {
+    "headerControlSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -545,7 +551,7 @@
         }
       }
     },
-    "configViewHeaderFeedbackSectionDescription" : {
+    "headerFeedbackSectionDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -562,7 +568,7 @@
         }
       }
     },
-    "configViewHeaderFeedbackSectionTitle" : {
+    "headerFeedbackSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -579,7 +585,7 @@
         }
       }
     },
-    "configViewHeaderReviewRequestDescription" : {
+    "headerReviewRequestDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -596,7 +602,7 @@
         }
       }
     },
-    "configViewHeaderReviewRequestTitle" : {
+    "headerReviewRequestTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -613,7 +619,7 @@
         }
       }
     },
-    "configViewHeaderSoundSectionDescription" : {
+    "headerSoundSectionDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -630,7 +636,7 @@
         }
       }
     },
-    "configViewHeaderSoundSectionTitle" : {
+    "headerSoundSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -647,7 +653,7 @@
         }
       }
     },
-    "configViewOthersSectionFeedbackAndInquiryTitle" : {
+    "othersSectionFeedbackAndInquiryTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -664,7 +670,7 @@
         }
       }
     },
-    "configViewOthersSectionLatestDescription" : {
+    "othersSectionLatestDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -681,7 +687,7 @@
         }
       }
     },
-    "configViewOthersSectionReviewOnAppstoreTitle" : {
+    "othersSectionReviewOnAppstoreTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -698,7 +704,7 @@
         }
       }
     },
-    "configViewOthersSectionTitle" : {
+    "othersSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -715,7 +721,7 @@
         }
       }
     },
-    "configViewOthersSectionUpdateAvailableDescription" : {
+    "othersSectionUpdateAvailableDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -732,7 +738,7 @@
         }
       }
     },
-    "configViewOthersSectionVersionTitle" : {
+    "othersSectionVersionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -749,7 +755,7 @@
         }
       }
     },
-    "configViewSoundSectionShutterSoundOptionTitle" : {
+    "soundSectionShutterSoundOptionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -766,7 +772,7 @@
         }
       }
     },
-    "configViewSoundSectionTitle" : {
+    "soundSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

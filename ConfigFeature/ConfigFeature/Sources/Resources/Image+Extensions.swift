@@ -20,4 +20,5 @@ extension Image {
     static let textBubble: Self = .init(systemName: "text.bubble")
     static let speakerWave2: Self = .init(systemName:  "speaker.wave.2")
     static let sparkles: Self = .init(systemName: "sparkles")
+    static let plus: Self = .init(systemName: "plus")
 }

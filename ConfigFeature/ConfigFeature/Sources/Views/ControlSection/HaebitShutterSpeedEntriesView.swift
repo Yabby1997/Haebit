@@ -77,8 +77,8 @@ struct HaebitShutterSpeedEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            .configViewControlSectionCommonEntriesDescription,
-                            .configViewControlSectionShutterSpeedEntriesDescription,
+                            .controlSectionCommonEntriesDescription,
+                            .controlSectionShutterSpeedEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -88,7 +88,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewControlSectionShutterSpeedEntriesTitle)
+        .navigationTitle(Text(.controlSectionShutterSpeedTitle))
         .animation(.easeInOut, value: viewModel.shutterSpeedEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -113,7 +113,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text(.configViewControlSectionCommonNewEntryTitle)
+                Text(.controlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

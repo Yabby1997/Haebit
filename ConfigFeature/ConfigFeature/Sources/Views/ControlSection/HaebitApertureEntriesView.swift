@@ -40,8 +40,8 @@ struct HaebitApertureEntriesConfigView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            .configViewControlSectionCommonEntriesDescription,
-                            .configViewControlSectionApertureEntriesDescription,
+                            .controlSectionCommonEntriesDescription,
+                            .controlSectionApertureEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -51,7 +51,7 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewControlSectionApertureEntriesTitle)
+        .navigationTitle(Text(.controlSectionApertureTitle))
         .animation(.easeInOut, value: viewModel.apertureEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -76,7 +76,7 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text(.configViewControlSectionCommonNewEntryTitle)
+                Text(.controlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

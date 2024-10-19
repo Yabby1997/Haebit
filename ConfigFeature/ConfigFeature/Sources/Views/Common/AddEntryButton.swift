@@ -19,7 +19,8 @@ struct AddEntryButton: View {
                 RoundedRectangle(cornerRadius: 8)
                     .foregroundStyle(Color(uiColor: .secondarySystemGroupedBackground))
                 HStack {
-                    Label("AddNewEntry", systemImage: "plus")
+                    Image.plus
+                    Text(.controlSectionCommonNewEntryTitle)
                 }
                 .foregroundStyle(.white)
                 .font(.system(size: 16, weight: .semibold))

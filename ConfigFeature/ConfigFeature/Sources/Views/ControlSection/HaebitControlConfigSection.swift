@@ -18,7 +18,7 @@ struct HaebitControlConfigSection: View {
                 HaebitApertureEntriesConfigView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewControlSectionApertureTitle)
+                    Text(.controlSectionApertureTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.apertures.count == 1, let singleValue = viewModel.apertures.first {
@@ -29,7 +29,7 @@ struct HaebitControlConfigSection: View {
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text(.configViewControlSectionItems(count: viewModel.apertures.count))
+                        Text(.controlSectionItems(count: viewModel.apertures.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -38,7 +38,7 @@ struct HaebitControlConfigSection: View {
                 HaebitShutterSpeedEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewControlSectionShutterSpeedTitle)
+                    Text(.controlSectionShutterSpeedTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
@@ -49,7 +49,7 @@ struct HaebitControlConfigSection: View {
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text(.configViewControlSectionItems(count: viewModel.shutterSpeeds.count))
+                        Text(.controlSectionItems(count: viewModel.shutterSpeeds.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -58,7 +58,7 @@ struct HaebitControlConfigSection: View {
                 HaebitIsoEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewControlSectionIsoTitle)
+                    Text(.controlSectionIsoTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.isoValues.count == 1, let singleValue = viewModel.isoValues.first {
@@ -69,7 +69,7 @@ struct HaebitControlConfigSection: View {
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text(.configViewControlSectionItems(count: viewModel.isoValues.count))
+                        Text(.controlSectionItems(count: viewModel.isoValues.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -78,7 +78,7 @@ struct HaebitControlConfigSection: View {
                 HaebitFocalLengthEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewControlSectionFocalLengthTitle)
+                    Text(.controlSectionFocalLengthTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.focalLengths.count == 1, let singleValue = viewModel.focalLengths.first {
@@ -89,7 +89,7 @@ struct HaebitControlConfigSection: View {
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text(.configViewControlSectionItems(count: viewModel.focalLengths.count))
+                        Text(.controlSectionItems(count: viewModel.focalLengths.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -97,11 +97,11 @@ struct HaebitControlConfigSection: View {
         } header: {
             HStack {
                 Image.fCursive
-                Text(.configViewControlSectionTitle)
+                Text(.soundSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            Text(.configViewControlSectionDescription)
+            Text(.controlSectionDescription)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 .listRowInsets(.init(top: 8, leading: 8, bottom: 12, trailing: 8))

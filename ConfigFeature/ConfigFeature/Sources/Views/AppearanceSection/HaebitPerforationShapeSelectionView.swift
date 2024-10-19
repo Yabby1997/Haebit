@@ -35,13 +35,13 @@ struct HaebitPerforationShapeSelectionView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(.init(top: 4, leading: 4, bottom: 4, trailing: 4))
             } footer: {
-                Text(.configViewAppearanceSectionPerforationDescription)
+                Text(.appearanceSectionPerforationDescription)
                     .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(.configViewAppearanceSectionPerforationTitle)
+        .navigationTitle(Text(.appearanceSectionPerforationTitle))
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

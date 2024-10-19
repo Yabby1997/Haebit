@@ -19,7 +19,7 @@ struct HaebitAppearanceConfigSection: View {
                 HaebitPerforationShapeSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewAppearanceSectionPerforationTitle)
+                    Text(.appearanceSectionPerforationTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.perforationShape.description)
@@ -30,7 +30,7 @@ struct HaebitAppearanceConfigSection: View {
                 HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text(.configViewAppearanceSectionFilmCanisterTitle)
+                    Text(.appearanceSectionFilmCanisterTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     Text(viewModel.filmCanister.description)
@@ -40,7 +40,7 @@ struct HaebitAppearanceConfigSection: View {
         } header: {
             HStack {
                 Image.sparkles
-                Text(.configViewAppearanceSectionTitle)
+                Text(.appearanceSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         }
