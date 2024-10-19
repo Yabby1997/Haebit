@@ -62,7 +62,7 @@ public struct HaebitConfigView: View {
                     Button {
                         isPresented = false
                     } label: {
-                        Image(systemName: "xmark")
+                        Image.xmark
                             .foregroundStyle(.white)
                     }
                 }

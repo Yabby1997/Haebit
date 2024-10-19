@@ -18,18 +18,18 @@ struct HaebitControlConfigSection: View {
                 HaebitApertureEntriesConfigView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("Aperture")
+                    Text(.configViewControlSectionApertureTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.apertures.count == 1, let singleValue = viewModel.apertures.first {
                         HStack(spacing: 4) {
                             Text("\(singleValue.description)")
                                 .font(.system(size: 14, design: .monospaced))
-                            Image(systemName: "lock.fill")
+                            Image.lockFill
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text("\(viewModel.apertures.count) items")
+                        Text(.configViewControlSectionItems(count: viewModel.apertures.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -38,18 +38,18 @@ struct HaebitControlConfigSection: View {
                 HaebitShutterSpeedEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("ShutterSpeed")
+                    Text(.configViewControlSectionShutterSpeedTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.shutterSpeeds.count == 1, let singleValue = viewModel.shutterSpeeds.first {
                         HStack(spacing: 4) {
                             Text("\(singleValue.description)")
                                 .font(.system(size: 14, design: .monospaced))
-                            Image(systemName: "lock.fill")
+                            Image.lockFill
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text("\(viewModel.shutterSpeeds.count) items")
+                        Text(.configViewControlSectionItems(count: viewModel.shutterSpeeds.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -58,18 +58,18 @@ struct HaebitControlConfigSection: View {
                 HaebitIsoEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("ISO")
+                    Text(.configViewControlSectionIsoTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.isoValues.count == 1, let singleValue = viewModel.isoValues.first {
                         HStack(spacing: 4) {
                             Text("\(singleValue.description)")
                                 .font(.system(size: 14, design: .monospaced))
-                            Image(systemName: "lock.fill")
+                            Image.lockFill
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text("\(viewModel.isoValues.count) items")
+                        Text(.configViewControlSectionItems(count: viewModel.isoValues.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
@@ -78,30 +78,30 @@ struct HaebitControlConfigSection: View {
                 HaebitFocalLengthEntriesView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
-                    Text("FocalLength")
+                    Text(.configViewControlSectionFocalLengthTitle)
                         .font(.system(size: 16, weight: .semibold))
                     Spacer()
                     if viewModel.focalLengths.count == 1, let singleValue = viewModel.focalLengths.first {
                         HStack(spacing: 4) {
                             Text("\(singleValue.title)")
                                 .font(.system(size: 14, design: .monospaced))
-                            Image(systemName: "lock.fill")
+                            Image.lockFill
                                 .font(.system(size: 12))
                         }
                     } else {
-                        Text("\(viewModel.focalLengths.count) items")
+                        Text(.configViewControlSectionItems(count: viewModel.focalLengths.count))
                             .font(.system(size: 14, design: .monospaced))
                     }
                 }
             }
         } header: {
             HStack {
-                Image(systemName: "f.cursive")
-                Text("Control")
+                Image.fCursive
+                Text(.configViewControlSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {
-            Text("ControlDescription")
+            Text(.configViewControlSectionDescription)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 .listRowInsets(.init(top: 8, leading: 8, bottom: 12, trailing: 8))

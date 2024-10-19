@@ -35,20 +35,20 @@ struct HaebitPerforationShapeSelectionView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(.init(top: 4, leading: 4, bottom: 4, trailing: 4))
             } footer: {
-                Text("PerforationSelectionDescription")
+                Text(.configViewAppearanceSectionPerforationDescription)
                     .listRowInsets(.init(top: 8, leading: .zero, bottom: 8, trailing: .zero))
             }
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Perforation")
+        .navigationTitle(.configViewAppearanceSectionPerforationTitle)
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -58,7 +58,7 @@ struct HaebitPerforationShapeSelectionView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }

@@ -15,39 +15,43 @@ struct HaebitOtherConfigSection: View {
     var body: some View {
         Section {
             HStack {
-                Text("Feedback & Inquiry")
+                Text(.configViewOthersSectionFeedbackAndInquiryTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
-                Image(systemName: "arrow.up.forward")
+                Image.arrowUpForward
                     .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapContact)
             HStack {
-                Text("Review on AppStore")
+                Text(.configViewOthersSectionReviewOnAppstoreTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
-                Image(systemName: "arrow.up.forward")
+                Image.arrowUpForward
                     .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapReview)
             HStack {
-                Text("Version")
+                Text(.configViewOthersSectionVersionTitle)
                     .font(.system(size: 16, weight: .semibold))
                 Text(viewModel.appVersion)
                     .font(.system(size: 14, design: .monospaced))
                 Spacer()
-                Text(viewModel.isLatestVersion ? "Latest" : "Update Available")
-                    .font(.system(size: 14, design: .monospaced))
-                    .foregroundStyle(.yellow)
+                Text(
+                    viewModel.isLatestVersion
+                        ? .configViewOthersSectionLatestDescription
+                        : .configViewOthersSectionUpdateAvailableDescription
+                )
+                .font(.system(size: 14, design: .monospaced))
+                .foregroundStyle(.yellow)
             }
             .contentShape(Rectangle())
             .onTapGesture(perform: viewModel.didTapAppVersion)
         } header: {
             HStack {
-                Image(systemName: "text.bubble")
-                Text("Other")
+                Image.textBubble
+                Text(.configViewOthersSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         }

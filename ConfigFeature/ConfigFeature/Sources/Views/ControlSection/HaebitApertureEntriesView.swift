@@ -31,7 +31,7 @@ struct HaebitApertureEntriesConfigView: View {
                                 Button(role: .destructive) {
                                     viewModel.delete(aperture: apertureEntry)
                                 } label: {
-                                    Image(systemName: "trash")
+                                    Image.trash
                                 }
                             }
                         }
@@ -40,8 +40,8 @@ struct HaebitApertureEntriesConfigView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "ControlCommonDescription",
-                            "ApertureControlDescription",
+                            .configViewControlSectionCommonEntriesDescription,
+                            .configViewControlSectionApertureEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -51,7 +51,7 @@ struct HaebitApertureEntriesConfigView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("ApertureEntries")
+        .navigationTitle(.configViewControlSectionApertureEntriesTitle)
         .animation(.easeInOut, value: viewModel.apertureEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -59,7 +59,7 @@ struct HaebitApertureEntriesConfigView: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -69,14 +69,14 @@ struct HaebitApertureEntriesConfigView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("AddNewEntry")
+                Text(.configViewControlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

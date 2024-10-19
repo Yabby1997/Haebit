@@ -31,7 +31,7 @@ struct HaebitIsoEntriesView: View {
                                 Button(role: .destructive) {
                                     viewModel.delete(iso: isoEntry)
                                 } label: {
-                                    Image(systemName: "trash")
+                                    Image.trash
                                 }
                             }
                         }
@@ -40,8 +40,8 @@ struct HaebitIsoEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "ControlCommonDescription",
-                            "ISOControlDescription",
+                            .configViewControlSectionCommonEntriesDescription,
+                            .configViewControlSectionIsoEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -51,7 +51,7 @@ struct HaebitIsoEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("ISOEntries")
+        .navigationTitle(.configViewControlSectionIsoEntriesTitle)
         .animation(.easeInOut, value: viewModel.isoEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -59,7 +59,7 @@ struct HaebitIsoEntriesView: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -69,14 +69,14 @@ struct HaebitIsoEntriesView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("AddNewEntry")
+                Text(.configViewControlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

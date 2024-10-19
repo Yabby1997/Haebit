@@ -14,7 +14,6 @@ enum HeaderType: CaseIterable {
     case feedbackSection
     case soundSection
     case appearanceSection
-    case othersSection
     
     var next: HeaderType {
         HeaderType.allCases.drop { $0 != self }.dropFirst().first ?? .reviewRequest

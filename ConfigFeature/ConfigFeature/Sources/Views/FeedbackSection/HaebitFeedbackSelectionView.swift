@@ -33,7 +33,7 @@ struct HaebitFeedbackSelectionView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if selection == feedbackStyle {
                     Spacer()
-                    Image(systemName: "checkmark")
+                    Image.checkMark
                         .foregroundStyle(.yellow)
                 }
             }
@@ -48,7 +48,7 @@ struct HaebitFeedbackSelectionView: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -58,7 +58,7 @@ struct HaebitFeedbackSelectionView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }

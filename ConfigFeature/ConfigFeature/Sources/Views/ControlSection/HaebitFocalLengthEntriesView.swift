@@ -31,7 +31,7 @@ struct HaebitFocalLengthEntriesView: View {
                                 Button(role: .destructive) {
                                     viewModel.delete(focalLength: focalLengthEntry)
                                 } label: {
-                                    Image(systemName: "trash")
+                                    Image.trash
                                 }
                             }
                         }
@@ -40,9 +40,9 @@ struct HaebitFocalLengthEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "ControlCommonDescription",
-                            "FocalLengthDescription",
-                            "FocalLengthDescription2",
+                            .configViewControlSectionCommonEntriesDescription,
+                            .configViewControlSectionFocalLengthEntriesDescription,
+                            .configViewControlSectionFocalLengthEntriesDescription2
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -52,7 +52,7 @@ struct HaebitFocalLengthEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("FocalLengthEntries")
+        .navigationTitle(.configViewControlSectionFocalLengthEntriesTitle)
         .animation(.easeInOut, value: viewModel.focalLengthEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -60,7 +60,7 @@ struct HaebitFocalLengthEntriesView: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -70,14 +70,14 @@ struct HaebitFocalLengthEntriesView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("AddNewEntry")
+                Text(.configViewControlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

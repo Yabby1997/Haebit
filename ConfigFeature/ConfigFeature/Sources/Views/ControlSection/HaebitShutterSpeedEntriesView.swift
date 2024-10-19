@@ -68,7 +68,7 @@ struct HaebitShutterSpeedEntriesView: View {
                             Button(role: .destructive) {
                                 viewModel.delete(shutterSpeed: shutterSpeedEntry)
                             } label: {
-                                Image(systemName: "trash")
+                                Image.trash
                             }
                         }
                     }
@@ -77,8 +77,8 @@ struct HaebitShutterSpeedEntriesView: View {
                 VStack(spacing: 20) {
                     BulletedList(
                         listItems: [
-                            "ControlCommonDescription",
-                            "ShutterSpeedControlDescription",
+                            .configViewControlSectionCommonEntriesDescription,
+                            .configViewControlSectionShutterSpeedEntriesDescription,
                         ]
                     )
                     AddEntryButton { isPresenting = true }
@@ -88,7 +88,7 @@ struct HaebitShutterSpeedEntriesView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("ShutterSpeedEntries")
+        .navigationTitle(.configViewControlSectionShutterSpeedEntriesTitle)
         .animation(.easeInOut, value: viewModel.shutterSpeedEntries.count)
         .scrollIndicators(.hidden)
         .toolbar {
@@ -96,7 +96,7 @@ struct HaebitShutterSpeedEntriesView: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Image(systemName: "xmark")
+                    Image.xmark
                         .foregroundStyle(.white)
                 }
             }
@@ -106,14 +106,14 @@ struct HaebitShutterSpeedEntriesView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
+                    Image.arrowBackward
                         .foregroundStyle(.white)
                 }
             }
         }
         .bottomSheet(isPresented: $isPresenting) {
             VStack(alignment: .center, spacing: 8) {
-                Text("AddNewEntry")
+                Text(.configViewControlSectionCommonNewEntryTitle)
                     .font(.system(size: 18, weight: .bold))
                 NumberField(
                     numberString: $numberString,

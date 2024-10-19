@@ -43,43 +43,40 @@ struct HaebitConfigHeaderSection: View {
         case .controlSection: viewModel.highlightedSection = .control
         case .feedbackSection: viewModel.highlightedSection = .feedback
         case .soundSection: viewModel.highlightedSection = .sound
-        case .othersSection: viewModel.highlightedSection = .others
         }
     }
 }
 
 extension HeaderType {
+    @MainActor
     var title: LocalizedStringKey {
         switch self {
         case .reviewRequest: 
-            return "headerReviewRequestTitle"
+            return .configViewHeaderReviewRequestTitle
         case .controlSection:
-            return "headerControlSectionTitle"
+            return .configViewHeaderControlSectionTitle
         case .feedbackSection:
-            return "headerFeedbackSectionTitle"
+            return .configViewHeaderFeedbackSectionTitle
         case .soundSection:
-            return "headerSoundSectionTitle"
+            return .configViewHeaderSoundSectionTitle
         case .appearanceSection:
-            return "headerAppearanceSectionTitle"
-        case .othersSection:
-            return "headerOthersSectionTitle"
+            return .configViewHeaderAppearanceSectionTitle
         }
     }
     
+    @MainActor
     var description: LocalizedStringKey {
         switch self {
         case .reviewRequest:
-            return "headerReviewRequestDescription"
+            return .configViewHeaderReviewRequestDescription
         case .controlSection:
-            return "headerControlSectionDescription"
+            return .configViewHeaderControlSectionDescription
         case .feedbackSection:
-            return "headerFeedbackSectionDescription"
+            return .configViewHeaderFeedbackSectionDescription
         case .soundSection:
-            return "headerSoundSectionDescription"
+            return .configViewHeaderSoundSectionDescription
         case .appearanceSection:
-            return "headerAppearanceSectionDescription"
-        case .othersSection:
-            return "headerOthersSectionDescription"
+            return .configViewHeaderAppearanceSectionDescription
         }
     }
 }
