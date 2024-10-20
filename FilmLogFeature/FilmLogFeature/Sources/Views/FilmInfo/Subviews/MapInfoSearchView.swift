@@ -62,7 +62,10 @@ struct MapInfoSearchView<ViewModel: MapInfoViewModelProtocol>: View {
             }
             .transition(.slide)
             .animation(.easeInOut(duration: 0.3), value: viewModel.searchResults)
-            TextField(.mapInfoSearchViewQueryPlaceholder, text: $viewModel.searchQuery)
+            TextField(text: $viewModel.searchQuery) {
+                Text(.mapInfoSearchViewQueryPlaceholder)
+            }
+//            TextField(.mapInfoSearchViewQueryPlaceholder, text: $viewModel.searchQuery)
                 .multilineTextAlignment(.center)
                 .font(.system(size: 24, weight: .bold, design: .serif))
                 .autocorrectionDisabled()

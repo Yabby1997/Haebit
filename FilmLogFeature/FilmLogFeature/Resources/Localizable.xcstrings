@@ -1,12 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "/" : {
-
-    },
-    "Add" : {
-
-    },
     "apertureInputViewTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -109,7 +103,7 @@
         }
       }
     },
-    "filmInfoViewUpdateConfirmationTitme" : {
+    "filmInfoViewUpdateConfirmationTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -261,21 +255,6 @@
           }
         }
       }
-    },
-    "Open Configuration" : {
-
-    },
-    "Open HaebitFilmLogView" : {
-
-    },
-    "Register" : {
-
-    },
-    "s" : {
-
-    },
-    "Select image" : {
-
     },
     "shutterSpeedInputViewTitle" : {
       "extractionState" : "manual",

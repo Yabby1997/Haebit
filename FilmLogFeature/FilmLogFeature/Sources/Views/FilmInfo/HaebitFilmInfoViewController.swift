@@ -47,13 +47,13 @@ struct HaebitFilmInfoView: View {
                     MemoView(
                         text: $viewModel.memo,
                         isEditing: $isMemoEditing,
-                        placeholderKey: .memoViewPlaceholder,
+                        placeholderResource: .memoViewPlaceholder,
                         font: .systemFont(ofSize: 16, weight: .bold, design: .serif)
                     )
                     .padding(.horizontal, 12)
                 }
             }
-            .navigationTitle(.filmInfoViewTitle)
+            .navigationTitle(Text(.filmInfoViewTitle))
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively)
             .scrollIndicators(.hidden)
@@ -87,24 +87,35 @@ struct HaebitFilmInfoView: View {
                     .foregroundStyle(.white)
                 }
             }
-            .confirmationDialog(.filmInfoViewDeleteConfirmationTitle, isPresented: $isDeleteConfirmationDialogPresented,  titleVisibility: .visible) {
-                Button(.filmInfoViewDeleteConfirmationDelete, role: .destructive) {
+            .confirmationDialog("", isPresented: $isDeleteConfirmationDialogPresented) {
+                Button(role: .destructive) {
                     Task {
                         try? await viewModel.didTapDelete()
                         dismiss()
                     }
+                } label: {
+                    Text(.filmInfoViewDeleteConfirmationDelete)
                 }
+                .foregroundStyle(.red)
+            } message: {
+                Text(.filmInfoViewDeleteConfirmationTitle)
             }
-            .confirmationDialog(.filmInfoViewUpdateConfirmationTitme, isPresented: $isUpdateConfirmationDialogPresented, titleVisibility: .visible) {
-                Button(.filmInfoViewUpdateConfirmationAbandon, role: .destructive) {
+            .confirmationDialog("", isPresented: $isUpdateConfirmationDialogPresented) {
+                Button(role: .destructive) {
                     dismiss()
+                } label: {
+                    Text(.filmInfoViewUpdateConfirmationAbandon)
                 }
-                Button(.filmInfoViewUpdateConfirmationUpdate, role: .none) {
+                Button {
                     Task {
                         try? await viewModel.didTapSave()
                         dismiss()
                     }
+                } label: {
+                    Text(.filmInfoViewUpdateConfirmationUpdate)
                 }
+            } message: {
+                Text(.filmInfoViewUpdateConfirmationTitle)
             }
         }
     }
