@@ -52,6 +52,40 @@
         }
       }
     },
+    "configOnboardingViewNew" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEW"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "신기능"
+          }
+        }
+      }
+    },
+    "configOnboardingViewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configs"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "설정 열기"
+          }
+        }
+      }
+    },
     "controlViewUnlockButton" : {
       "extractionState" : "manual",
       "localizations" : {

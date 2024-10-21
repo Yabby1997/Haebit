@@ -16,4 +16,6 @@ extension LocalizedStringResource {
     static let gpsAccessDoNotAskAgainButton: Self = .init("gpsAccessDoNotAskAgainButton", bundle: .atURL(Bundle.module.bundleURL))
     static let alertOpenSettingsButton: Self = .init("alertOpenSettingsButton", bundle: .atURL(Bundle.module.bundleURL))
     static let controlViewUnlockButton: Self = .init("controlViewUnlockButton", bundle: .atURL(Bundle.module.bundleURL))
+    static let configOnboardingViewNew: Self = .init("configOnboardingViewNew", bundle: .atURL(Bundle.module.bundleURL))
+    static let configOnboardingViewTitle: Self = .init("configOnboardingViewTitle", bundle: .atURL(Bundle.module.bundleURL))
 }

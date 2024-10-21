@@ -9,6 +9,7 @@
 import SwiftUI
 
 extension Image {
-    static let gearshape2fill: Self = Image(systemName: "gearshape.2.fill")
     static let lockFill: Self = Image(systemName: "lock.fill")
+    static let handPointUpLeftFill: Self = Image(systemName: "hand.point.up.left.fill")
+    static let sparkles: Self = Image(systemName: "sparkles")
 }

@@ -73,6 +73,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
+    @Published public var shouldShowConfigOnboarding: Bool
     @Published public var apertureRingFeedbackStyle: FeedbackStyle
     @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
     @Published public var isoDialFeedbackStyle: FeedbackStyle
@@ -122,6 +123,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
+        // TODO: Remove next line for release!!!
+        statePersistence.shouldShowConfigOnboarding = true
+        shouldShowConfigOnboarding = statePersistence.shouldShowConfigOnboarding
         bind()
     }
     
@@ -464,6 +468,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.stop()
+            shouldShowConfigOnboarding = false
+            statePersistence.shouldShowConfigOnboarding = false
         }
     }
     

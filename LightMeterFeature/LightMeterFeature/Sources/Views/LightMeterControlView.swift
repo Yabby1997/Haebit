@@ -14,7 +14,6 @@ struct LightMeterControlView: View {
     
     @StateObject var viewModel: HaebitLightMeterViewModel
     @Binding var isPresentingLogger: Bool
-    @Binding var isPresentingConfig: Bool
     
     var body: some View {
         VStack {
@@ -33,7 +32,6 @@ struct LightMeterControlView: View {
                 }
                 FocalRing(viewModel: viewModel)
                 ZStack {
-                    ConfigButton { isPresentingConfig = true }
                     ShutterButton(viewModel: viewModel)
                     LoggerButton(viewModel: viewModel) { isPresentingLogger = true }
                 }

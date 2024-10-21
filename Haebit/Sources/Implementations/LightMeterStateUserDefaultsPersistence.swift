@@ -11,18 +11,30 @@ import HaebitCommonModels
 import LightMeterFeature
 
 final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistenceProtocol {
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.mode", defaultValue: .shutterSpeed)
+    enum UserDefaultKey: String, CaseIterable {
+        case mode = "LightMeterStateUserDefaultsPersistence.mode"
+        case aperture = "LightMeterStateUserDefaultsPersistence.aperture"
+        case shutterSpeed = "LightMeterStateUserDefaultsPersistence.shutterSpeed"
+        case iso = "LightMeterStateUserDefaultsPersistence.iso"
+        case focalLength = "LightMeterStateUserDefaultsPersistence.focalLength"
+        case shouldShowConfigOnboarding = "LightMeterStateUserDefaultsPersistence.shouldShowConfigOnboarding"
+    }
+    
+    @UserDefault(key: UserDefaultKey.mode.rawValue, defaultValue: .shutterSpeed)
     var mode: LightMeterMode
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.aperture", defaultValue: ApertureValue(1.4)!)
+    @UserDefault(key: UserDefaultKey.aperture.rawValue, defaultValue: ApertureValue(1.4)!)
     var aperture: ApertureValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.shutterSpeed", defaultValue: ShutterSpeedValue(denominator: 60)!)
+    @UserDefault(key: UserDefaultKey.shutterSpeed.rawValue, defaultValue: ShutterSpeedValue(denominator: 60)!)
     var shutterSpeed: ShutterSpeedValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.iso", defaultValue: IsoValue(200)!)
+    @UserDefault(key: UserDefaultKey.iso.rawValue, defaultValue: IsoValue(200)!)
     var iso: IsoValue
     
-    @UserDefault(key: "LightMeterStateUserDefaultsPersistence.focalLength", defaultValue: FocalLengthValue(50)!)
+    @UserDefault(key: UserDefaultKey.focalLength.rawValue, defaultValue: FocalLengthValue(50)!)
     var focalLength: FocalLengthValue
+    
+    @UserDefault(key: UserDefaultKey.shouldShowConfigOnboarding.rawValue, defaultValue: true)
+    var shouldShowConfigOnboarding: Bool
 }

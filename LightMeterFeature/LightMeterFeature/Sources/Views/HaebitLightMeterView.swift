@@ -33,6 +33,14 @@ public struct HaebitLightMeterView: View {
             HaebitCameraView(previewLayer: viewModel.previewLayer)
                 .ignoresSafeArea()
                 .onTapGesture(coordinateSpace: .local, perform: viewModel.didTap(point:))
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            guard abs(value.velocity.height) > abs(value.velocity.width),
+                                  value.translation.height < -50 else { return }
+                            isPresentingConfig = true
+                        }
+                )
             if viewModel.isFixedDescriptionVisible {
                 LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
             }
@@ -41,11 +49,7 @@ public struct HaebitLightMeterView: View {
                 exposureValue: viewModel.exposureValue,
                 isLocked: viewModel.isLocked
             )
-            LightMeterControlView(
-                viewModel: viewModel,
-                isPresentingLogger: $isPresentingLogger,
-                isPresentingConfig: $isPresentingConfig
-            )
+            LightMeterControlView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger)
             if let point = viewModel.lockPoint {
                 LockIindicatorView(point: point, isHighlighted: viewModel.isLocked)
             }
@@ -56,6 +60,11 @@ public struct HaebitLightMeterView: View {
         .onChange(of: isPresentingLogger, perform: didChange(isPresentingLogger:))
         .onChange(of: isPresentingConfig, perform: didChange(isPresentingConfig:))
         .disabled(viewModel.isCapturing)
+        .overlay {
+            if viewModel.shouldShowConfigOnboarding {
+                ConfigOnboardingView()
+            }
+        }
         .alert(
             Text(.cameraAccessAlertTitle),
             isPresented: $viewModel.shouldRequestCameraAccess
