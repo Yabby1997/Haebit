@@ -260,8 +260,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$iso)
         
-        $focalLength
-            .sink { [weak self] focalLength in
+        $isCameraRunning.combineLatest($focalLength)
+            .removeDuplicates { $0 == $1 }
+            .filter { $0.0 }
+            .sink { [weak self] _, focalLength in
                 try? self?.zoomCamera(factor: focalLength.zoomFactor)
             }
             .store(in: &cancellables)
