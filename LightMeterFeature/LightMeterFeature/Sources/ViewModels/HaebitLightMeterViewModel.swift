@@ -135,6 +135,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         cancellables = []
         
         $apertures
+            .removeDuplicates()
             .compactMap { [weak self] apertures in
                 guard let value = self?.aperture.value else { return nil }
                 return apertures.first { $0.value == value.nearest(among: apertures.map { $0.value }) }
@@ -142,6 +143,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .assign(to: &$aperture)
         
         $shutterSpeeds
+            .removeDuplicates()
             .compactMap { [weak self] shutterSpeeds in
                 guard let value = self?.shutterSpeed.value else { return nil }
                 return shutterSpeeds.first { $0.value == value.nearest(among: shutterSpeeds.map { $0.value }) }
@@ -149,6 +151,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .assign(to: &$shutterSpeed)
         
         $isoValues
+            .removeDuplicates()
             .compactMap { [weak self] isoValues in
                 guard let self else { return nil }
                 let value = Float(iso.value)
@@ -172,10 +175,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .assign(to: &$focalLengths)
         
         $focalLengths
+            .removeDuplicates()
             .compactMap { [weak self] focalLengths in
-                guard let self else { return nil }
-                let value = Float(focalLength.value)
-                return focalLengths.first { Float($0.value) == value.nearest(among: focalLengths.compactMap { Float($0.value) }) }
+                guard let value = self?.focalLength.value else { return nil }
+                return focalLengths.first { $0.value == value.nearest(among: focalLengths.map { $0.value }) }
             }
             .assign(to: &$focalLength)
         
