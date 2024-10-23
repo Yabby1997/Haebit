@@ -146,7 +146,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .removeDuplicates()
             .compactMap { [weak self] shutterSpeeds in
                 guard let value = self?.shutterSpeed.value else { return nil }
-                return shutterSpeeds.first { $0.value == value.nearest(among: shutterSpeeds.map { $0.value }) }
+                return shutterSpeeds.first { log2($0.value) == log2(value).nearest(among: shutterSpeeds.map { log2($0.value) }) }
             }
             .assign(to: &$shutterSpeed)
         
