@@ -137,25 +137,24 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         $apertures
             .removeDuplicates()
             .compactMap { [weak self] apertures in
-                guard let value = self?.aperture.value else { return nil }
-                return apertures.first { $0.value == value.nearest(among: apertures.map { $0.value }) }
+                guard let aperture = self?.aperture else { return nil }
+                return apertures.nearest(to: aperture)
             }
             .assign(to: &$aperture)
         
         $shutterSpeeds
             .removeDuplicates()
             .compactMap { [weak self] shutterSpeeds in
-                guard let value = self?.shutterSpeed.value else { return nil }
-                return shutterSpeeds.first { log2($0.value) == log2(value).nearest(among: shutterSpeeds.map { log2($0.value) }) }
+                guard let shutterSpeed = self?.shutterSpeed else { return nil }
+                return shutterSpeeds.nearest(to: shutterSpeed)
             }
             .assign(to: &$shutterSpeed)
         
         $isoValues
             .removeDuplicates()
             .compactMap { [weak self] isoValues in
-                guard let self else { return nil }
-                let value = Float(iso.value)
-                return isoValues.first { Float($0.value) == value.nearest(among: isoValues.compactMap { Float($0.value) }) }
+                guard let iso = self?.iso else { return nil }
+                return isoValues.nearest(to: iso)
             }
             .assign(to: &$iso)
         
@@ -178,7 +177,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .removeDuplicates()
             .compactMap { [weak self] focalLengths in
                 guard let value = self?.focalLength.value else { return nil }
-                return focalLengths.first { $0.value == value.nearest(among: focalLengths.map { $0.value }) }
+                return focalLengths.first { Float($0.value) == Float(value).nearest(among: focalLengths.map { Float($0.value) }) }
             }
             .assign(to: &$focalLength)
         
@@ -206,14 +205,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                 self?.lightMeterMode == .aperture && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, shutterSpeed in
-                guard let self else { return nil }
-                let aperture = try? LightMeterService.getApertureValue(
-                    ev: ev,
-                    iso: Float(iso.value),
-                    shutterSpeed: shutterSpeed.value
-                )
-                    .nearest(among: apertures.map { $0.value } )
-                return apertures.first { $0.value == aperture }
+                guard let self,
+                      let apertureValue = try? LightMeterService.getApertureValue(ev: ev, iso: Float(iso.value), shutterSpeed: shutterSpeed.value) else { return nil }
+                return apertures.nearest(to: apertureValue)
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -228,14 +222,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                 self?.lightMeterMode == .shutterSpeed && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, iso, aperture in
-                guard let self else { return nil }
-                let value = try? LightMeterService.getShutterSpeedValue(
-                    ev: ev,
-                    iso: Float(iso.value),
-                    aperture: aperture.value
-                )
-                    .nearest(among: shutterSpeeds.map { $0.value } )
-                return shutterSpeeds.first { $0.value == value }
+                guard let self,
+                      let shutterSpeedValue = try? LightMeterService.getShutterSpeedValue(ev: ev, iso: Float(iso.value), aperture: aperture.value) else { return nil }
+                return shutterSpeeds.nearest(to: shutterSpeedValue)
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -250,14 +239,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                 self?.lightMeterMode == .iso && self?.isCapturing == false
             }
             .compactMap { [weak self] ev, shutterSpeed, aperture in
-                guard let self else { return nil }
-                let iso = try? LightMeterService.getIsoValue(
-                    ev: ev,
-                    shutterSpeed: shutterSpeed.value,
-                    aperture: aperture.value
-                )
-                    .nearest(among: isoValues.map { Float($0.value) } )
-                return isoValues.first { Float($0.value) == iso }
+                guard let self,
+                      let isoValue = try? LightMeterService.getIsoValue(ev: ev, shutterSpeed: shutterSpeed.value, aperture: aperture.value) else { return nil }
+                return isoValues.nearest(to: isoValue)
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
