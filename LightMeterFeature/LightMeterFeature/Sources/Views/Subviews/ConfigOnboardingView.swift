@@ -18,6 +18,7 @@ struct ConfigOnboardingView: View {
                 Image.handPointUpLeftFill
                     .resizable()
                     .frame(width: 35, height: 35)
+                    .rotationEffect(.degrees(viewModel.isLowered ? -30 : .zero))
                 VStack {
                     HStack(spacing: .zero) {
                         Image.sparkles
@@ -29,9 +30,12 @@ struct ConfigOnboardingView: View {
                 .font(.system(size: 12, weight: .bold, design: .serif))
             }
             .shadow(radius: 10)
-            .offset(y: viewModel.offset)
+            .offset(y: viewModel.isLowered ? 50 : -30)
         }
         .padding()
-        .animation(.bouncy, value: viewModel.offset)
+        .animation(
+            .snappy(duration: 0.4, extraBounce: 0.2),
+            value: viewModel.isLowered
+        )
     }
 }

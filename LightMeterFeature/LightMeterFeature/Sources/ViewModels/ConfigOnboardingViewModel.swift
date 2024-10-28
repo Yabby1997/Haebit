@@ -11,7 +11,7 @@ import Foundation
 
 @MainActor
 final class ConfigOnboardingViewModel: ObservableObject {
-    @Published var offset: CGFloat = 30
+    @Published var isLowered = true
     @Published var isHidden: Bool = false
     
     var cancellable: Set<AnyCancellable> = []
@@ -21,11 +21,11 @@ final class ConfigOnboardingViewModel: ObservableObject {
     }
     
     private func bind() {
-        Timer.publish(every: 1.0, on: .main, in: .default)
+        Timer.publish(every: 1.2, on: .main, in: .default)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self else { return }
-                offset = offset == 30 ? -30.0 : 30
+                isLowered.toggle()
             }
             .store(in: &cancellable)
     }
