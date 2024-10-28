@@ -82,7 +82,7 @@ struct HaebitIsoEntriesView: View {
                     numberString: $numberString,
                     isEditing: $isEditing,
                     format: .integer,
-                    maxDigitCount: 4,
+                    maxDigitCount: 5,
                     placeholder: "200",
                     font: .systemFont(ofSize: 40, weight: .bold, design: .serif)
                 )

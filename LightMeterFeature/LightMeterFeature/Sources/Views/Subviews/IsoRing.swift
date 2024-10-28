@@ -30,6 +30,9 @@ struct IsoRing: View {
                         : .white
                     )
                     .font(.system(size: 14, weight: .bold, design: .serif))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
                     .shadow(radius: 2)
             }
             .onTapGesture { viewModel.lightMeterMode = .iso }

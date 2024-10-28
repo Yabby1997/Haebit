@@ -82,7 +82,7 @@ struct HaebitApertureEntriesConfigView: View {
                     numberString: $numberString,
                     isEditing: $isEditing,
                     format: .decimal,
-                    maxDigitCount: 2,
+                    maxDigitCount: 3,
                     prefix: "ƒ",
                     placeholder: "ƒ1.4",
                     font: .systemFont(ofSize: 40, weight: .bold, design: .monospaced)

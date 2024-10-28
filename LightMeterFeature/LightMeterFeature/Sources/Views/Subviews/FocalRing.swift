@@ -28,6 +28,9 @@ struct FocalRing: View {
                 Text(focalLength.title)
                     .foregroundStyle(.green)
                     .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
                     .shadow(radius: 2)
             }
         }

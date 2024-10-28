@@ -29,6 +29,9 @@ struct ApertureRing: View {
                             : .white
                     )
                     .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
                     .shadow(radius: 2)
             }
             .onTapGesture { viewModel.lightMeterMode = .aperture }
