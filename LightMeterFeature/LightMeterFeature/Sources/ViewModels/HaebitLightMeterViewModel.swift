@@ -84,6 +84,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public private(set) var isCapturing = false
     @Published private var location: Coordinate? = nil
     @Published private var isCameraRunning = false
+    @Published private var preferedFocalLengths: [FocalLengthValue]
     private let fallbackFocalLength: UInt32
     
     private var cancellables: Set<AnyCancellable> = []
@@ -112,6 +113,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         apertures = preferenceProvider.apertures
         shutterSpeeds = preferenceProvider.shutterSpeeds
         isoValues = preferenceProvider.isoValues
+        preferedFocalLengths = preferenceProvider.focalLengths
         focalLengths = preferenceProvider.focalLengths
         apertureRingFeedbackStyle = preferenceProvider.apertureRingFeedbackStyle
         shutterSpeedDialFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
@@ -158,9 +160,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             }
             .assign(to: &$iso)
         
-        $isCameraRunning.combineLatest($focalLengths, camera.minZoomFactor, camera.maxZoomFactor)
-            .filter { $0.0 }
-            .map { [weak self] _, focalLengths, minZoomFactor, maxZoomFactor -> [FocalLengthValue] in
+        $preferedFocalLengths.removeDuplicates().combineLatest(camera.minZoomFactor, camera.maxZoomFactor)
+            .map { [weak self] focalLengths, minZoomFactor, maxZoomFactor -> [FocalLengthValue] in
                 guard let self else { return [] }
                 let filtered = focalLengths
                     .filter { $0.zoomFactor >= minZoomFactor }
@@ -476,7 +477,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         apertures = preferenceProvider.apertures
         shutterSpeeds = preferenceProvider.shutterSpeeds
         isoValues = preferenceProvider.isoValues
-        focalLengths = preferenceProvider.focalLengths
+        preferedFocalLengths = preferenceProvider.focalLengths
         apertureRingFeedbackStyle = preferenceProvider.apertureRingFeedbackStyle
         shutterSpeedDialFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
         isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
