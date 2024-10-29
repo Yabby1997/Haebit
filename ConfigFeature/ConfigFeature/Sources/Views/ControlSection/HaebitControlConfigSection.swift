@@ -97,7 +97,7 @@ struct HaebitControlConfigSection: View {
         } header: {
             HStack {
                 Image.fCursive
-                Text(.soundSectionTitle)
+                Text(.controlSectionTitle)
             }
             .font(.system(size: 14, weight: .bold))
         } footer: {

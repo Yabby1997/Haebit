@@ -70,7 +70,7 @@ final class HaebitConfigViewModel: ObservableObject {
     }
     
     private func bind() {
-        Timer.publish(every: 5, on: .main, in: .common)
+        Timer.publish(every: 10, on: .main, in: .common)
             .autoconnect()
             .combineLatest($currentHeaderType)
             .map { $1.next }
