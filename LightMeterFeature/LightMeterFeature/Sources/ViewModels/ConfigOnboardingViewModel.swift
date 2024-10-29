@@ -21,7 +21,7 @@ final class ConfigOnboardingViewModel: ObservableObject {
     }
     
     private func bind() {
-        Timer.publish(every: 1.2, on: .main, in: .default)
+        Timer.publish(every: 1.2, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self else { return }
