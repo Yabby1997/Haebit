@@ -75,12 +75,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Configs"
+            "value" : "Open Configs"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "설정 열기"
           }
         }

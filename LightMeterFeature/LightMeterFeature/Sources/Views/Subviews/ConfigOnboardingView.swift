@@ -27,7 +27,8 @@ struct ConfigOnboardingView: View {
                     }
                     Text(.configOnboardingViewTitle)
                 }
-                .font(.system(size: 12, weight: .bold, design: .serif))
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(.white)
             }
             .shadow(radius: 10)
             .offset(y: viewModel.isLowered ? 50 : -30)

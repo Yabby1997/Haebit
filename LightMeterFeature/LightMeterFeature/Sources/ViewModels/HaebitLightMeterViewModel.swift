@@ -125,8 +125,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
-        // TODO: Remove next line for release!!!
-        statePersistence.shouldShowConfigOnboarding = true
         shouldShowConfigOnboarding = statePersistence.shouldShowConfigOnboarding
         bind()
     }
