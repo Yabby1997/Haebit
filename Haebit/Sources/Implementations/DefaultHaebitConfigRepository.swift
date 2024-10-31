@@ -62,19 +62,19 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
             .map { FocalLengthEntry(value: $0, isActive: true) }
     )
     var focalLengthEntries: [ConfigFeature.FocalLengthEntry]
-    @UserDefault(key: UserDefaultKey.apertureRingFeedbackStyle.rawValue, defaultValue: .rigid)
+    @UserDefault(key: UserDefaultKey.apertureRingFeedbackStyle.rawValue, defaultValue: .light)
     var apertureRingFeedbackStyle: FeedbackStyle
-    @UserDefault(key: UserDefaultKey.shutterSpeedDialFeedbackStyle.rawValue, defaultValue: .rigid)
+    @UserDefault(key: UserDefaultKey.shutterSpeedDialFeedbackStyle.rawValue, defaultValue: .light)
     var shutterSpeedDialFeedbackStyle: FeedbackStyle
-    @UserDefault(key: UserDefaultKey.isoDialFeedbackStyle.rawValue, defaultValue: .rigid)
+    @UserDefault(key: UserDefaultKey.isoDialFeedbackStyle.rawValue, defaultValue: .light)
     var isoDialFeedbackStyle: FeedbackStyle
-    @UserDefault(key: UserDefaultKey.focalLengthRingFeedbackStyle.rawValue, defaultValue: .rigid)
+    @UserDefault(key: UserDefaultKey.focalLengthRingFeedbackStyle.rawValue, defaultValue: .soft)
     var focalLengthRingFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.shutterSound.rawValue, defaultValue: true)
     var shutterSound: Bool
     @UserDefault(key: UserDefaultKey.perforationShape.rawValue, defaultValue: .ks)
     var perforationShape: PerforationShape
-    @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .fujiXtra400)
+    @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .kodakUltramax400)
     var filmCanister: FilmCanister
     
     func reset() {

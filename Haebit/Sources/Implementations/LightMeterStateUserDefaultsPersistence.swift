@@ -37,4 +37,8 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
     
     @UserDefault(key: UserDefaultKey.shouldShowConfigOnboarding.rawValue, defaultValue: true)
     var shouldShowConfigOnboarding: Bool
+
+    func reset() {
+        UserDefaultKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }
+    }
 }
