@@ -8,4 +8,5 @@ class MockStatePersistence: LightMeterStatePersistenceProtocol {
     var shutterSpeed: ShutterSpeedValue = .init(denominator: 2000)!
     var iso: IsoValue = .init(400)!
     var focalLength: FocalLengthValue = .init(50)!
+    var shouldShowConfigOnboarding: Bool = true
 }
