@@ -51,6 +51,24 @@
           }
         }
       }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "illumeter uses GPS to record the location along with the log."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "해빛은 로그 기록시 위치를 함께 기록하기 위해 GPS를 사용합니다."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
