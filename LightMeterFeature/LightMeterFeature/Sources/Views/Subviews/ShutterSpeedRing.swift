@@ -21,22 +21,33 @@ struct ShutterSpeedRing: View {
                 feedbackStyle: .constant(viewModel.shutterSpeedDialFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { shutterSpeed in
-                Text(shutterSpeed.title)
-                    .foregroundStyle(
-                        viewModel.shutterSpeedMode
-                        ? viewModel.shutterSpeed == shutterSpeed
-                        ? .yellow
-                        : .gray
-                        : .white
-                    )
-                    .font(.system(size: 18, weight: .bold, design: .serif))
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .shadow(radius: 2)
+                ShutterSpeedRingEntry(shutterSpeed: shutterSpeed, viewModel: viewModel)
             }
             .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
             .disabled(viewModel.shutterSpeedMode)
         }
+    }
+}
+
+struct ShutterSpeedRingEntry: View {
+    let shutterSpeed: ShutterSpeedValue
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    
+    var body: some View {
+        Text(shutterSpeed.title)
+            .foregroundStyle(
+                viewModel.shutterSpeedMode
+                    ? viewModel.shutterSpeed == shutterSpeed
+                        ? .yellow
+                        : .gray
+                    : .white
+            )
+            .animation(.easeInOut(duration: 0.2), value: viewModel.shutterSpeed == shutterSpeed)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.shutterSpeedMode)
+            .font(.system(size: 18, weight: .bold, design: .serif))
+            .minimumScaleFactor(0.7)
+            .lineLimit(1)
+            .fixedSize(horizontal: false, vertical: true)
+            .shadow(radius: 2)
     }
 }

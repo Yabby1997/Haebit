@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import HaebitCommonModels
 import HaebitUI
 
 struct ApertureRing: View {
@@ -20,22 +21,33 @@ struct ApertureRing: View {
                 feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { aperture in
-                Text(aperture.title)
-                    .foregroundStyle(
-                        viewModel.apertureMode
-                            ? viewModel.aperture == aperture
-                                ? .yellow
-                                : .gray
-                            : .white
-                    )
-                    .font(.system(size: 14, weight: .semibold, design: .monospaced))
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .shadow(radius: 2)
+                ApertureRingEntry(aperture: aperture, viewModel: viewModel)
             }
             .onTapGesture { viewModel.lightMeterMode = .aperture }
             .disabled(viewModel.apertureMode)
         }
+    }
+}
+
+struct ApertureRingEntry: View {
+    let aperture: ApertureValue
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    
+    var body: some View {
+        Text(aperture.title)
+            .foregroundStyle(
+                viewModel.apertureMode
+                    ? viewModel.aperture == aperture
+                        ? .yellow
+                        : .gray
+                    : .white
+            )
+            .animation(.easeInOut(duration: 0.2), value: viewModel.aperture == aperture)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.apertureMode)
+            .font(.system(size: 14, weight: .semibold, design: .monospaced))
+            .minimumScaleFactor(0.7)
+            .lineLimit(1)
+            .fixedSize(horizontal: false, vertical: true)
+            .shadow(radius: 2)
     }
 }
