@@ -25,7 +25,7 @@ struct NumberField: UIViewRepresentable {
     @Binding var numberString: String
     @Binding var isEditing: Bool
     let format: Format
-    let maxDigitCount: Int?
+    let maxDigitCount: Int
     let prefix: String
     let suffix: String
     let placeholder: String
@@ -46,7 +46,7 @@ struct NumberField: UIViewRepresentable {
         _numberString = numberString
         _isEditing = isEditing
         self.format = format
-        self.maxDigitCount = maxDigitCount
+        self.maxDigitCount = maxDigitCount ?? .max
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
@@ -113,7 +113,7 @@ fileprivate class InternalTextField: UITextField {
 class Coordinator: NSObject {
     @Binding var numberString: String
     @Binding var isEditing:    Bool
-    var maxDigitCount: Int?
+    var maxDigitCount: Int
     var prefix: String
     var suffix: String
     
@@ -129,7 +129,7 @@ class Coordinator: NSObject {
     init(
         numberString: Binding<String>,
         isEditing: Binding<Bool>,
-        maxDigitCount: Int?,
+        maxDigitCount: Int,
         prefix: String,
         suffix: String
     ) {
@@ -162,40 +162,28 @@ extension Coordinator: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        if string.isEmpty {
-            return true
+        guard string.isEmpty == false else { return true }
+        
+        let currentText = textToNumberString()
+        guard currentText.replacingOccurrences(of: ".", with: "").count < maxDigitCount else { return false }
+        
+        if currentText.contains(".") == false, (string == Locale.current.decimalSeparator || string == ".") {
+            textField.text = currentText.isEmpty ? "\(prefix)0.\(suffix)" : "\(prefix)\(currentText).\(suffix)"
+            textField.sendActions(for: .editingChanged)
+            return false
         }
         
-        if string == "." {
-            if textField.text == "" {
-                textField.text = "\(prefix)0.\(suffix)"
-                textField.sendActions(for: .editingChanged)
-                return false
-            } else if textField.text == "\(prefix)0\(suffix)" {
-                return true
-            } else if textToNumberString().contains(".") {
-                return false
-            } else if let maxDigitCount {
-                return textToNumberString().count < maxDigitCount
-            }
+        if currentText == "0", string == "0" {
+            return false
         }
-        
-        if string == "0" {
-            if textField.text == "\(prefix)0\(suffix)" {
-                return false
-            }
-        }
-        
+    
         if CharacterSet(charactersIn: string).isSubset(of: .decimalDigits) {
-            if textField.text == "\(prefix)0\(suffix)" {
+            if currentText == "0" {
                 textField.text = "\(prefix)\(string)\(suffix)"
                 textField.sendActions(for: .editingChanged)
                 return false
-            } else if let maxDigitCount {
-                return textToNumberString().replacingOccurrences(of: ".", with: "").count < maxDigitCount
-            } else { 
-                return true
             }
+            return true
         }
         
         return false
