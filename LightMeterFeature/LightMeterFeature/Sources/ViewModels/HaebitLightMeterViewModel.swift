@@ -55,6 +55,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     public var isFixedDescriptionVisible: Bool {
         isApertureFixed || isShutterSpeedFixed || isIsoFixed || isFocalLengthFixed
     }
+    var isUnlockable: Bool { lockPoint != nil || isLocked }
     
     @Published public var isApertureFixed = false
     @Published public var isShutterSpeedFixed = false
@@ -394,6 +395,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         Task {
             try await camera.unlockExposure()
             try await camera.unlockFocus()
+            lockPoint = nil
             feedbackProvider.generateInteractionFeedback()
         }
     }

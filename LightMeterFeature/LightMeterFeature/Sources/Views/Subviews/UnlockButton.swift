@@ -16,7 +16,7 @@ struct UnlockButton: View {
             .font(.system(size: 18, weight: .bold, design: .monospaced))
             .foregroundStyle(.yellow)
             .shadow(radius: 5)
-            .opacity(viewModel.isLocked ? 1.0 : .zero)
-            .animation(.easeInOut, value: viewModel.isLocked)
+            .opacity(viewModel.isUnlockable ? 1.0 : .zero)
+            .animation(.easeInOut, value: viewModel.isUnlockable)
     }
 }
