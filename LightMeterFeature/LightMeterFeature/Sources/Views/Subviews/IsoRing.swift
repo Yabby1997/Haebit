@@ -23,6 +23,7 @@ struct IsoRing: View {
             ) { iso in
                 IsoEntryView(iso: iso, viewModel: viewModel)
             }
+            .frame(height: 30)
             .onTapGesture { viewModel.lightMeterMode = .iso }
             .disabled(viewModel.isoMode)
         }

@@ -14,24 +14,26 @@ struct FocalRing: View {
     
     var body: some View {
         if viewModel.isFocalLengthFixed == false {
-            HaebitApertureRing(
-                selection: $viewModel.focalLength,
-                entries: $viewModel.focalLengths,
-                feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
-                isMute: .constant(true)
-            ) {
+            VStack(spacing: .zero) {
                 Rectangle()
                     .foregroundStyle(.white)
                     .frame(width: 2, height: 6)
                     .cornerRadius(0.5)
-            } content: { focalLength in
-                Text(focalLength.title)
-                    .foregroundStyle(.green)
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .shadow(radius: 2)
+                HaebitApertureRing(
+                    selection: $viewModel.focalLength,
+                    entries: $viewModel.focalLengths,
+                    feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                    isMute: .constant(true)
+                ) { focalLength in
+                    Text(focalLength.title)
+                        .foregroundStyle(.green)
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .minimumScaleFactor(0.7)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .shadow(radius: 2)
+                }
+                .frame(height: 30)
             }
         }
     }

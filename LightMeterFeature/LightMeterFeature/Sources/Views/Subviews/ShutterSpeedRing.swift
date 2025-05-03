@@ -23,6 +23,7 @@ struct ShutterSpeedRing: View {
             ) { shutterSpeed in
                 ShutterSpeedRingEntry(shutterSpeed: shutterSpeed, viewModel: viewModel)
             }
+            .frame(height: 30)
             .onTapGesture { viewModel.lightMeterMode = .shutterSpeed }
             .disabled(viewModel.shutterSpeedMode)
         }

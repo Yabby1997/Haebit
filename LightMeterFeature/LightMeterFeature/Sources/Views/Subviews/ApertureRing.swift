@@ -23,6 +23,7 @@ struct ApertureRing: View {
             ) { aperture in
                 ApertureRingEntry(aperture: aperture, viewModel: viewModel)
             }
+            .frame(height: 30)
             .onTapGesture { viewModel.lightMeterMode = .aperture }
             .disabled(viewModel.apertureMode)
         }
