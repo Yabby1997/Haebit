@@ -25,6 +25,7 @@ struct LightMeterResultDescriptionView: View {
                 .animation(.easeInOut, value: exposureValue)
                 .animation(.easeInOut, value: isLocked)
         }
+        .frame(maxWidth: .infinity)
         .contentTransition(.numericText())
         .shadow(radius: 10)
         .allowsHitTesting(false)
@@ -38,4 +39,3 @@ struct LightMeterResultDescriptionView: View {
 #Preview {
     LightMeterResultDescriptionView(resultDescription: "800", exposureValue: 7.623, isLocked: true)
 }
-
