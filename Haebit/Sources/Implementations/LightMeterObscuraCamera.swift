@@ -44,6 +44,8 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     nonisolated public let isFocusLocked: AnyPublisher<Bool, Never>
     nonisolated public let zoomFactor: AnyPublisher<CGFloat, Never>
     nonisolated public let isCapturing: AnyPublisher<Bool, Never>
+    nonisolated public let exposureValue: AnyPublisher<Float, Never>
+    nonisolated public let exposureOffset: AnyPublisher<Float, Never>
 
     init() {
         self.previewLayer = camera.previewLayer
@@ -60,6 +62,8 @@ actor LightMeterObscuraCamera: LightMeterCamera {
         self.isFocusLocked = camera.isFocusLocked
         self.zoomFactor = camera.zoomFactor
         self.isCapturing = camera.isCapturing
+        self.exposureValue = camera.exposureValue
+        self.exposureOffset = camera.exposureOffset
     }
     
     func setup() async throws {
@@ -80,7 +84,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     func zoom(factor: CGFloat) async throws {
         do {
-            try await camera.zoom(factor: factor)
+            try camera.zoom(factor: factor)
         } catch {
             throw error.lightMeterCameraError ?? error
         }
@@ -88,19 +92,19 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     func setHDRMode(isEnabled: Bool) async throws {
         do {
-            try await camera.setHDRMode(isEnabled: isEnabled)
+            try camera.setHDRMode(isEnabled: isEnabled)
         } catch {
             throw error.lightMeterCameraError ?? error
         }
     }
     
     func setMute(_ isMuted: Bool) async {
-        await camera.setMute(isMuted)
+        camera.setMute(isMuted)
     }
     
     func lockExposure(on point: CGPoint) async throws {
         do {
-            try await camera.lockExposure(on: point)
+            try camera.lockExposure(on: point)
         } catch {
             throw error.lightMeterCameraError ?? error
         }
@@ -108,7 +112,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     func unlockExposure() async throws {
         do {
-            try await camera.unlockExposure()
+            try camera.unlockExposure()
         } catch {
             throw error.lightMeterCameraError ?? error
         }
@@ -116,7 +120,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     func lockFocus(on point: CGPoint) async throws {
         do {
-            try await camera.lockFocus(on: point)
+            try camera.lockFocus(on: point)
         } catch {
             throw error.lightMeterCameraError ?? error
         }
@@ -124,7 +128,7 @@ actor LightMeterObscuraCamera: LightMeterCamera {
     
     func unlockFocus() async throws {
         do {
-            try await camera.unlockFocus()
+            try camera.unlockFocus()
         } catch {
             throw error.lightMeterCameraError ?? error
         }

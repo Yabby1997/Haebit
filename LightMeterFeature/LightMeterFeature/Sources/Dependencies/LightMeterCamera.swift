@@ -52,6 +52,10 @@ public protocol LightMeterCamera: Actor {
     nonisolated var zoomFactor: AnyPublisher<CGFloat, Never> { get }
     /// A `Bool` value indicating the camera is currently capturing.
     nonisolated var isCapturing: AnyPublisher<Bool, Never> { get }
+    /// A `Float` value representing the metered exposure level in stops.
+    nonisolated var exposureValue: AnyPublisher<Float, Never> { get }
+    /// A `Float` value representing the difference between the metered exposure level and the current exposure settings in stops.
+    nonisolated var exposureOffset: AnyPublisher<Float, Never> { get }
     
     
     /// Sets up the Camera.

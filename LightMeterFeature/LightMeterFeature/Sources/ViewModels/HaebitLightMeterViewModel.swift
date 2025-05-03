@@ -199,7 +199,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .removeDuplicates { $0 == $1 }
             .filter { $0.0 }
             .map { ($0.1, $0.2, $0.3) }
-            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .aperture && self?.isCapturing == false
             }
@@ -216,7 +215,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .removeDuplicates { $0 == $1 }
             .filter { $0.0 }
             .map { ($0.1, $0.2, $0.3) }
-            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .shutterSpeed && self?.isCapturing == false
             }
@@ -233,7 +231,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .removeDuplicates { $0 == $1 }
             .filter { $0.0 }
             .map { ($0.1, $0.2, $0.3) }
-            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
             .filter { [weak self] _ in
                 self?.lightMeterMode == .iso && self?.isCapturing == false
             }
@@ -271,16 +268,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$isCameraRunning)
         
-        camera.iso.combineLatest(camera.shutterSpeed, camera.aperture)
-            .removeDuplicates { $0 == $1 }
-            .debounce(for: .seconds(0.1), scheduler: debounceQueue)
-            .compactMap { iso, shutterSpeed, aperture in
-                try? LightMeterService.getExposureValue(
-                    iso: iso,
-                    shutterSpeed: shutterSpeed,
-                    aperture: aperture
-                )
-            }
+        camera.exposureValue.combineLatest(camera.exposureOffset)
+            .map { $0 + $1 }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .assign(to: &$exposureValue)
