@@ -118,6 +118,14 @@ actor LightMeterObscuraCamera: LightMeterCamera {
         }
     }
     
+    func setExposure(bias: Float) async throws {
+        do {
+            try await camera.setExposure(bias: bias)
+        } catch {
+            throw error.lightMeterCameraError ?? error
+        }
+    }
+    
     func lockFocus(on point: CGPoint) async throws {
         do {
             try camera.lockFocus(on: point)

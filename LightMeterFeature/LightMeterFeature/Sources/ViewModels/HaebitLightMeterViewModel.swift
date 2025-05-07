@@ -70,10 +70,12 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeeds: [ShutterSpeedValue]
     @Published public var isoValues: [IsoValue]
     @Published public var focalLengths: [FocalLengthValue]
+    @Published public var exposureBiases: [Float] =  [-2.0, -1.0, 0.0, 1.0, 2.0]
     @Published public var aperture: ApertureValue
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
+    @Published public var exposureBias: Float = .zero
     @Published public var shouldShowConfigOnboarding: Bool
     @Published public var apertureRingFeedbackStyle: FeedbackStyle
     @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
@@ -330,6 +332,13 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                     : .aperture
             }
             .assign(to: &$lightMeterMode)
+        
+        $exposureBias
+            .removeDuplicates()
+            .sink { [weak self] bias in
+                Task { try? await self?.camera.setExposure(bias: bias) }
+            }
+            .store(in: &cancellables)
     }
     
     private func zoomCamera(factor: CGFloat) throws {

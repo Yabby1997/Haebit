@@ -28,6 +28,7 @@ struct LightMeterControlView: View {
                         ApertureRing(viewModel: viewModel)
                         ShutterSpeedRing(viewModel: viewModel)
                         IsoRing(viewModel: viewModel)
+                        ExposureBiasRing(viewModel: viewModel)
                     }
                 }
                 FocalRing(viewModel: viewModel)

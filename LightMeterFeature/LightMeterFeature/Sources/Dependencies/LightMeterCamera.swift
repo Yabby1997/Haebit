@@ -97,6 +97,12 @@ public protocol LightMeterCamera: Actor {
     ///     - point: The certain point on ``previewLayer`` to lock exposure.
     func lockExposure(on point: CGPoint) async throws
     
+    /// Sets the exposure bias level.
+    ///
+    /// - Parameters:
+    ///   - bias: The exposure bias in stops.
+    func setExposure(bias: Float) async throws
+    
     /// Unlocks the exposure.
     func unlockExposure() async throws
     
