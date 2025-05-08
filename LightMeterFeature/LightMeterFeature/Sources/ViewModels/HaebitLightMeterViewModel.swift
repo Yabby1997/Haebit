@@ -61,6 +61,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isShutterSpeedFixed = false
     @Published public var isIsoFixed = false
     @Published public var isFocalLengthFixed = false
+    @Published public var isExposureCompensationRingVisible = true
     @Published public var shouldRequestReview = false
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
@@ -70,12 +71,12 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeeds: [ShutterSpeedValue]
     @Published public var isoValues: [IsoValue]
     @Published public var focalLengths: [FocalLengthValue]
-    @Published public var exposureBiases: [Float] =  [-2.0, -1.0, 0.0, 1.0, 2.0]
+    @Published public var exposureCompensationValues: [Float] =  [-2.0, -1.666, -1.333, -1.0, -0.666, -0.333, 0.0, 0.333, 0.666, 1.0, 1.333, 1.666, 2.0]
     @Published public var aperture: ApertureValue
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
-    @Published public var exposureBias: Float = .zero
+    @Published public var exposureCompensation: Float = .zero
     @Published public var shouldShowConfigOnboarding: Bool
     @Published public var apertureRingFeedbackStyle: FeedbackStyle
     @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
@@ -333,10 +334,18 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             }
             .assign(to: &$lightMeterMode)
         
-        $exposureBias
+        $exposureCompensation
             .removeDuplicates()
             .sink { [weak self] bias in
                 Task { try? await self?.camera.setExposure(bias: bias) }
+            }
+            .store(in: &cancellables)
+        
+        $exposureCompensation.combineLatest($isExposureCompensationRingVisible.filter { $0 })
+            .debounce(for: .seconds(3), scheduler: debounceQueue)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.isExposureCompensationRingVisible = false
             }
             .store(in: &cancellables)
     }
@@ -407,6 +416,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             lockPoint = nil
             feedbackProvider.generateInteractionFeedback()
         }
+    }
+    
+    public func didTapExposureCompensationButton() {
+        isExposureCompensationRingVisible.toggle()
     }
     
     public func didTapShutter() {

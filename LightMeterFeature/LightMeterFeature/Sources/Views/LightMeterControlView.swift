@@ -24,26 +24,28 @@ struct LightMeterControlView: View {
                     Circle()
                         .foregroundColor(.red)
                         .frame(width: 5, height: 5)
-                    VStack(spacing: 6) {
+                    VStack(spacing: 2) {
+                        ExposureCompensationRing(viewModel: viewModel)
                         ApertureRing(viewModel: viewModel)
                         ShutterSpeedRing(viewModel: viewModel)
                         IsoRing(viewModel: viewModel)
-                        ExposureBiasRing(viewModel: viewModel)
                     }
                 }
                 FocalRing(viewModel: viewModel)
                 ZStack {
+                    ExposureCompensationButton(viewModel: viewModel)
                     ShutterButton(viewModel: viewModel)
                     LoggerButton(viewModel: viewModel) { isPresentingLogger = true }
                 }
                 .disabled(viewModel.isCapturing)
                 .padding(.vertical, 8)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 40)
             }
             .background {
                 BackgroundGradient()
             }
         }
         .animation(.easeIn(duration: 0.1), value: viewModel.isCapturing)
+        .animation(.easeInOut, value: viewModel.isExposureCompensationRingVisible)
     }
 }
