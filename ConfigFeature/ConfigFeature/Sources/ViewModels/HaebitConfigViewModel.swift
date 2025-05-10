@@ -28,6 +28,7 @@ final class HaebitConfigViewModel: ObservableObject {
     @Published var apertureRingFeedbackStyle: FeedbackStyle
     @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle
     @Published var isoDialFeedbackStyle: FeedbackStyle
+    @Published var exposureCompensationDialFeedbackStyle: FeedbackStyle
     @Published var focalLengthRingFeedbackStyle: FeedbackStyle
     @Published var shutterSound: Bool
     @Published var perforationShape: PerforationShape
@@ -62,6 +63,7 @@ final class HaebitConfigViewModel: ObservableObject {
         apertureRingFeedbackStyle = configRepository.apertureRingFeedbackStyle
         shutterSpeedDialFeedbackStyle = configRepository.shutterSpeedDialFeedbackStyle
         isoDialFeedbackStyle = configRepository.isoDialFeedbackStyle
+        exposureCompensationDialFeedbackStyle = configRepository.exposureCompensationDialFeedbackStyle
         focalLengthRingFeedbackStyle = configRepository.focalLengthRingFeedbackStyle
         shutterSound = configRepository.shutterSound
         perforationShape = configRepository.perforationShape
@@ -150,6 +152,14 @@ final class HaebitConfigViewModel: ObservableObject {
             .dropFirst()
             .sink { [weak self] feedbackStyle in
                 self?.configRepository.isoDialFeedbackStyle = feedbackStyle
+                self?.feedbackGenerator.generate(feedback: feedbackStyle)
+            }
+            .store(in: &cancellables)
+        
+        $exposureCompensationDialFeedbackStyle
+            .dropFirst()
+            .sink { [weak self] feedbackStyle in
+                self?.configRepository.exposureCompensationDialFeedbackStyle = feedbackStyle
                 self?.feedbackGenerator.generate(feedback: feedbackStyle)
             }
             .store(in: &cancellables)

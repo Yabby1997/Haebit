@@ -17,6 +17,7 @@ public protocol HaebitConfigRepository: AnyObject {
     var apertureRingFeedbackStyle: FeedbackStyle { get set }
     var shutterSpeedDialFeedbackStyle: FeedbackStyle { get set }
     var isoDialFeedbackStyle: FeedbackStyle { get set }
+    var exposureCompensationDialFeedbackStyle: FeedbackStyle { get set }
     var focalLengthRingFeedbackStyle: FeedbackStyle { get set }
     var shutterSound: Bool { get set }
     var perforationShape: PerforationShape { get set }

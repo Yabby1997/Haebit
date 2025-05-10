@@ -36,6 +36,7 @@ extension LocalizedStringResource {
     static let feedbackSectionApertureRingTitle: Self = .init("feedbackSectionApertureRingTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let feedbackSectionShutterSpeedDialTitle: Self = .init("feedbackSectionShutterSpeedDialTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let feedbackSectionIsoDialTitle: Self = .init("feedbackSectionIsoDialTitle", bundle: .atURL(Bundle.module.bundleURL))
+    static let feedbackSectionExposureCompensationDialTitle: Self = .init("feedbackSectionExposureCompensationDialTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let feedbackSectionFocalLengthRingTitle: Self = .init("feedbackSectionFocalLengthRingTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let feedbackSectionTitle: Self = .init("feedbackSectionTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let othersSectionFeedbackAndInquiryTitle: Self = .init("othersSectionFeedbackAndInquiryTitle", bundle: .atURL(Bundle.module.bundleURL))

@@ -52,6 +52,18 @@ struct HaebitFeedbackConfigSection: View {
                 }
             }
             NavigationLink {
+                HaebitFeedbackSelectionView(selection: $viewModel.exposureCompensationDialFeedbackStyle, isPresented: $isPresented)
+                    .navigationTitle(Text(.feedbackSectionExposureCompensationDialTitle))
+            } label: {
+                HStack {
+                    Text(.feedbackSectionExposureCompensationDialTitle)
+                        .font(.system(size: 16, weight: .semibold))
+                    Spacer()
+                    Text(viewModel.exposureCompensationDialFeedbackStyle.description)
+                        .font(.system(size: 14, design: .monospaced))
+                }
+            }
+            NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.focalLengthRingFeedbackStyle, isPresented: $isPresented)
                     .navigationTitle(Text(.feedbackSectionFocalLengthRingTitle))
             } label: {

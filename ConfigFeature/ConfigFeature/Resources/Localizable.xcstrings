@@ -415,6 +415,23 @@
         }
       }
     },
+    "feedbackSectionExposureCompensationDialTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure Compensation Dial"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노출보정 다이얼"
+          }
+        }
+      }
+    },
     "feedbackSectionFocalLengthRingTitle" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -19,7 +19,7 @@ struct ExposureCompensationRing: View {
                 selection: $viewModel.exposureCompensation,
                 entries: $viewModel.exposureCompensationValues,
                 cellWidth: 24,
-                feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                feedbackStyle: .constant(viewModel.exposureCompensationDialFeedbackStyle.impactGeneratorFeedbackSyle),
                 isMute: .constant(false)
             ) { value in
                 ExposureCompensationEntry(value: value, viewModel: viewModel)

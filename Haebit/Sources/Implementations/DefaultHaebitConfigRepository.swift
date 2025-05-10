@@ -23,6 +23,7 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case apertureRingFeedbackStyle = "DefaultHeabitConfigRepository.apertureRingFeedbackStyle"
         case shutterSpeedDialFeedbackStyle = "DefaultHeabitConfigRepository.shutterSpeedDialFeedbackStyle"
         case isoDialFeedbackStyle = "DefaultHeabitConfigRepository.isoDialFeedbackStyle"
+        case exposureCompensationDialFeedbackStyle = "DefaultHeabitConfigRepository.exposureCompensationDialFeedbackStyle"
         case focalLengthRingFeedbackStyle = "DefaultHeabitConfigRepository.focalLengthRingFeedbackStyle"
         case perforationShape = "DefaultHeabitConfigRepository.perforationShape"
         case filmCanister = "DefaultHeabitConfigRepository.filmCanister"
@@ -68,6 +69,8 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     var shutterSpeedDialFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.isoDialFeedbackStyle.rawValue, defaultValue: .light)
     var isoDialFeedbackStyle: FeedbackStyle
+    @UserDefault(key: UserDefaultKey.exposureCompensationDialFeedbackStyle.rawValue, defaultValue: .soft)
+    var exposureCompensationDialFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.focalLengthRingFeedbackStyle.rawValue, defaultValue: .soft)
     var focalLengthRingFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.shutterSound.rawValue, defaultValue: true)

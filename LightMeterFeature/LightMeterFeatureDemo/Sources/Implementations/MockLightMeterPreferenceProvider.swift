@@ -20,6 +20,7 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
     @Published var apertureRingFeedbackStyle: FeedbackStyle = .light
     @Published var shutterSpeedDialFeedbackStyle: FeedbackStyle = .light
     @Published var isoDialFeedbackStyle: FeedbackStyle = .light
+    @Published var exposureCompensationDialFeedbackStyle: FeedbackStyle = .light
     @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .soft
     @Published var filmCanister: FilmCanister = .kodakUltramax400
     

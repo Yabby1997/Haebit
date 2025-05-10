@@ -70,6 +70,7 @@ final class MockConfigRepository: HaebitConfigRepository {
     var apertureRingFeedbackStyle: FeedbackStyle = .rigid
     var shutterSpeedDialFeedbackStyle: FeedbackStyle = .rigid
     var isoDialFeedbackStyle: FeedbackStyle = .rigid
+    var exposureCompensationDialFeedbackStyle: FeedbackStyle = .rigid
     var focalLengthRingFeedbackStyle: FeedbackStyle = .rigid
     var shutterSound: Bool = true
     var perforationShape: PerforationShape = .bh
