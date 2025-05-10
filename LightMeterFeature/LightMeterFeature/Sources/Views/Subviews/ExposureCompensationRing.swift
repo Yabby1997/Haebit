@@ -14,20 +14,34 @@ struct ExposureCompensationRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
 
     var body: some View {
-        HaebitApertureRing(
-            selection: $viewModel.exposureCompensation,
-            entries: $viewModel.exposureCompensationValues,
-            cellWidth: 24,
-            feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
-            isMute: .constant(true)
-        ) { bias in
-            Rectangle()
-                .foregroundStyle(.white)
-                .cornerRadius(1)
-                .frame(width: 3, height: bias.remainder(dividingBy: 1.0) == .zero ? 12: 8)
-                .offset(y: bias.remainder(dividingBy: 1.0) == .zero ? .zero : 2)
+        if viewModel.isExposureCompensationModeToggled {
+            HaebitApertureRing(
+                selection: $viewModel.exposureCompensation,
+                entries: $viewModel.exposureCompensationValues,
+                cellWidth: 24,
+                feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
+                isMute: .constant(false)
+            ) { value in
+                ExposureCompensationEntry(value: value, viewModel: viewModel)
+            }
+            .opacity(viewModel.isExposureCompensationMode ? 1.0 : .zero)
+            .frame(height: viewModel.isExposureCompensationMode ? 24 : .zero)
+            .animation(.easeInOut, value: viewModel.isExposureCompensationMode)
         }
-        .opacity(viewModel.isExposureCompensationRingVisible ? 1.0 : .zero)
-        .frame(height: viewModel.isExposureCompensationRingVisible ? 24 : .zero)
+    }
+}
+
+struct ExposureCompensationEntry: View {
+    let value: Float
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    
+    var body: some View {
+        Rectangle()
+            .foregroundStyle(viewModel.exposureCompensation == value ? .yellow : .gray)
+            .animation(.easeInOut(duration: 0.1), value: viewModel.exposureCompensation)
+            .cornerRadius(1)
+            .frame(width: 3, height: value.remainder(dividingBy: 1.0) == .zero ? 12: 8)
+            .offset(y: value.remainder(dividingBy: 1.0) == .zero ? .zero : 2)
+            .shadow(radius: 2)
     }
 }

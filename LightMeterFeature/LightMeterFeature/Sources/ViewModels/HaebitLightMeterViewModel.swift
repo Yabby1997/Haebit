@@ -61,7 +61,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isShutterSpeedFixed = false
     @Published public var isIsoFixed = false
     @Published public var isFocalLengthFixed = false
-    @Published public var isExposureCompensationRingVisible = true
+    @Published public var isExposureCompensationMode = false
+    @Published public var isExposureCompensationModeToggled = false
     @Published public var shouldRequestReview = false
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
@@ -341,11 +342,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        $exposureCompensation.combineLatest($isExposureCompensationRingVisible.filter { $0 })
+        $exposureCompensation.combineLatest($isExposureCompensationMode.filter { $0 })
             .debounce(for: .seconds(3), scheduler: debounceQueue)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.isExposureCompensationRingVisible = false
+                self?.isExposureCompensationMode = false
             }
             .store(in: &cancellables)
     }
@@ -419,7 +420,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     }
     
     public func didTapExposureCompensationButton() {
-        isExposureCompensationRingVisible.toggle()
+        feedbackProvider.generateInteractionFeedback()
+        isExposureCompensationMode.toggle()
+        isExposureCompensationModeToggled = true
     }
     
     public func didTapShutter() {

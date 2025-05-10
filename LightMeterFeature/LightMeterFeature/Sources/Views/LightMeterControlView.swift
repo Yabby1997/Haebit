@@ -25,10 +25,10 @@ struct LightMeterControlView: View {
                         .foregroundColor(.red)
                         .frame(width: 5, height: 5)
                     VStack(spacing: 2) {
-                        ExposureCompensationRing(viewModel: viewModel)
                         ApertureRing(viewModel: viewModel)
                         ShutterSpeedRing(viewModel: viewModel)
                         IsoRing(viewModel: viewModel)
+                        ExposureCompensationRing(viewModel: viewModel)
                     }
                 }
                 FocalRing(viewModel: viewModel)
@@ -46,6 +46,6 @@ struct LightMeterControlView: View {
             }
         }
         .animation(.easeIn(duration: 0.1), value: viewModel.isCapturing)
-        .animation(.easeInOut, value: viewModel.isExposureCompensationRingVisible)
+        .animation(.easeInOut, value: viewModel.isExposureCompensationMode)
     }
 }
