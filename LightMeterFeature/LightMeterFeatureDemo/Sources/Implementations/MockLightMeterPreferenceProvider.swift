@@ -22,6 +22,7 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
     @Published var isoDialFeedbackStyle: FeedbackStyle = .light
     @Published var exposureCompensationDialFeedbackStyle: FeedbackStyle = .light
     @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .soft
+    @Published var fullScreenPreview = true
     @Published var filmCanister: FilmCanister = .kodakUltramax400
     
     var apertures: [HaebitCommonModels.ApertureValue] { rawApertures.components(separatedBy: ",").compactMap { Float($0) }.compactMap { ApertureValue($0) } }

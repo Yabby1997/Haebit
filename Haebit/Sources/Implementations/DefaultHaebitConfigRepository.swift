@@ -20,6 +20,7 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case isoEntries = "DefaultHeabitConfigRepository.isoEntries"
         case focalLengthEntries = "DefaultHeabitConfigRepository.focalLengthEntries"
         case shutterSound = "DefaultHaebitConfigRepository.shutterSound"
+        case previewType = "DefaultHaebitConfigRepository.previewType"
         case apertureRingFeedbackStyle = "DefaultHeabitConfigRepository.apertureRingFeedbackStyle"
         case shutterSpeedDialFeedbackStyle = "DefaultHeabitConfigRepository.shutterSpeedDialFeedbackStyle"
         case isoDialFeedbackStyle = "DefaultHeabitConfigRepository.isoDialFeedbackStyle"
@@ -75,6 +76,8 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     var focalLengthRingFeedbackStyle: FeedbackStyle
     @UserDefault(key: UserDefaultKey.shutterSound.rawValue, defaultValue: true)
     var shutterSound: Bool
+    @UserDefault(key: UserDefaultKey.previewType.rawValue, defaultValue: .fullScreen)
+    var previewType: PreviewType
     @UserDefault(key: UserDefaultKey.perforationShape.rawValue, defaultValue: .ks)
     var perforationShape: PerforationShape
     @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .kodakUltramax400)

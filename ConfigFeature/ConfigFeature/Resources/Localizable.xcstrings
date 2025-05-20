@@ -75,6 +75,57 @@
         }
       }
     },
+    "appearanceSectionPreviewDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Screen displays a full-screen preview, but not the exact capture area."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Screen은 전체 화면으로 미리보기를 보여주지만, 실제 촬영 영역은 정확히 반영되지 않습니다."
+          }
+        }
+      }
+    },
+    "appearanceSectionPreviewDescription2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Coverage displays the exact capture area, but not a full-screen UI."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Coverage는 실제 촬영 영역을 정확히 보여주지만, UI는 전체 화면으로 표시되지 않습니다."
+          }
+        }
+      }
+    },
+    "appearanceSectionPreviewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "미리보기"
+          }
+        }
+      }
+    },
     "appearanceSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {

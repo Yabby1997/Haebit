@@ -29,29 +29,10 @@ public struct HaebitLightMeterView: View {
     }
     
     public var body: some View {
-        ZStack {
-            HaebitCameraView(previewLayer: viewModel.previewLayer)
-                .ignoresSafeArea()
-                .onTapGesture(coordinateSpace: .local, perform: viewModel.didTap(point:))
-                .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            guard abs(value.velocity.height) > abs(value.velocity.width),
-                                  value.translation.height < -50 else { return }
-                            isPresentingConfig = true
-                        }
-                )
-            if viewModel.isFixedDescriptionVisible {
-                LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
-            }
-            LightMeterResultDescriptionView(
-                resultDescription: viewModel.resultDescription,
-                exposureValue: viewModel.exposureValue,
-                isLocked: viewModel.isLocked
-            )
-            LightMeterControlView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger)
-            if let point = viewModel.lockPoint {
-                LockIindicatorView(point: point, isHighlighted: viewModel.isLocked)
+        Group {
+            switch viewModel.previewType {
+            case .fullScreen: HaebitLightMeterFullScreenView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger, isPresentingConfig: $isPresentingConfig)
+            case .fullCoverage: HaebitLightMeterFullCoverageView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger, isPresentingConfig: $isPresentingConfig)
             }
         }
         .persistentSystemOverlays(.hidden)

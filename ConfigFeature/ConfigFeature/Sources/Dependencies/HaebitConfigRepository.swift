@@ -20,6 +20,7 @@ public protocol HaebitConfigRepository: AnyObject {
     var exposureCompensationDialFeedbackStyle: FeedbackStyle { get set }
     var focalLengthRingFeedbackStyle: FeedbackStyle { get set }
     var shutterSound: Bool { get set }
+    var previewType: PreviewType { get set }
     var perforationShape: PerforationShape { get set }
     var filmCanister: FilmCanister { get set }
 }

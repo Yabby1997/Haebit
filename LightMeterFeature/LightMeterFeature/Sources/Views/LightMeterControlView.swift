@@ -38,7 +38,7 @@ struct LightMeterControlView: View {
                     LoggerButton(viewModel: viewModel) { isPresentingLogger = true }
                 }
                 .disabled(viewModel.isCapturing)
-                .padding(.vertical, 8)
+                .padding(.top, 8)
                 .padding(.horizontal, 40)
             }
             .background {

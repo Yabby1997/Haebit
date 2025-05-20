@@ -84,6 +84,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isoDialFeedbackStyle: FeedbackStyle
     @Published public var exposureCompensationDialFeedbackStyle: FeedbackStyle
     @Published public var focalRingFeedbackStyle: FeedbackStyle
+    @Published public var previewType: PreviewType
     @Published public var filmCanister: FilmCanister
     @Published public var lockPoint: CGPoint? = nil
     @Published public var isLocked: Bool = false
@@ -126,6 +127,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
         exposureCompensationDialFeedbackStyle = preferenceProvider.exposureCompensationDialFeedbackStyle
         focalRingFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        previewType = preferenceProvider.previewType
         filmCanister = preferenceProvider.filmCanister
         lightMeterMode = statePersistence.mode
         aperture = statePersistence.aperture
@@ -499,6 +501,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
         exposureCompensationDialFeedbackStyle = preferenceProvider.exposureCompensationDialFeedbackStyle
         focalRingFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        previewType = preferenceProvider.previewType
         filmCanister = preferenceProvider.filmCanister
     }
 }

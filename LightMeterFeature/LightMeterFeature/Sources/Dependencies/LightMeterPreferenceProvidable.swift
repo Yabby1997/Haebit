@@ -20,5 +20,6 @@ public protocol LightMeterPreferenceProvidable: AnyObject {
     var exposureCompensationDialFeedbackStyle: FeedbackStyle { get }
     var focalLengthRingFeedbackStyle: FeedbackStyle { get }
     var shutterSound: Bool { get }
+    var previewType: PreviewType { get }
     var filmCanister: FilmCanister { get }
 }

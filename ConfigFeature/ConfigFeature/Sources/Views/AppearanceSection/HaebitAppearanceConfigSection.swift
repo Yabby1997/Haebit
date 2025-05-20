@@ -16,6 +16,17 @@ struct HaebitAppearanceConfigSection: View {
     var body: some View {
         Section {
             NavigationLink {
+                HaebitPreviewTypeSelectionView(viewModel: viewModel, isPresented: $isPresented)
+            } label: {
+                HStack {
+                    Text(.appearanceSectionPreviewTitle)
+                        .font(.system(size: 16, weight: .semibold))
+                    Spacer()
+                    Text(viewModel.previewType.description)
+                        .font(.system(size: 14, design: .monospaced))
+                }
+            }
+            NavigationLink {
                 HaebitPerforationShapeSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
                 HStack {
