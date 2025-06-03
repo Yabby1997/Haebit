@@ -18,35 +18,17 @@ struct HaebitAppearanceConfigSection: View {
             NavigationLink {
                 HaebitPreviewTypeSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
-                HStack {
-                    Text(.appearanceSectionPreviewTitle)
-                        .font(.system(size: 16, weight: .semibold))
-                    Spacer()
-                    Text(viewModel.previewType.description)
-                        .font(.system(size: 14, design: .monospaced))
-                }
+                ConfigLabel(title: .appearanceSectionPreviewTitle, value: viewModel.previewType.description, isNew: viewModel.isPreviewNew)
             }
             NavigationLink {
                 HaebitPerforationShapeSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
-                HStack {
-                    Text(.appearanceSectionPerforationTitle)
-                        .font(.system(size: 16, weight: .semibold))
-                    Spacer()
-                    Text(viewModel.perforationShape.description)
-                        .font(.system(size: 14, design: .monospaced))
-                }
+                ConfigLabel(title: .appearanceSectionPerforationTitle, value: viewModel.perforationShape.description)
             }
             NavigationLink {
                 HaebitFilmCanisterSelectionView(viewModel: viewModel, isPresented: $isPresented)
             } label: {
-                HStack {
-                    Text(.appearanceSectionFilmCanisterTitle)
-                        .font(.system(size: 16, weight: .semibold))
-                    Spacer()
-                    Text(viewModel.filmCanister.description)
-                        .font(.system(size: 14, design: .monospaced))
-                }
+                ConfigLabel(title: .appearanceSectionFilmCanisterTitle, value: viewModel.filmCanister.description)
             }
         } header: {
             HStack {

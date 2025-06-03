@@ -2,10 +2,10 @@
   "sourceLanguage" : "en",
   "strings" : {
     "%@" : {
-
+      "shouldTranslate" : false
     },
     "•" : {
-
+      "shouldTranslate" : false
     },
     "appearanceSectionFilmCanisterDescription" : {
       "extractionState" : "manual",
@@ -720,6 +720,9 @@
           }
         }
       }
+    },
+    "NEW" : {
+      "shouldTranslate" : false
     },
     "othersSectionFeedbackAndInquiryTitle" : {
       "extractionState" : "manual",

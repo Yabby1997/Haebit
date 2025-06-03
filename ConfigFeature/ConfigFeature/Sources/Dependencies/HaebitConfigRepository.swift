@@ -23,4 +23,6 @@ public protocol HaebitConfigRepository: AnyObject {
     var previewType: PreviewType { get set }
     var perforationShape: PerforationShape { get set }
     var filmCanister: FilmCanister { get set }
+    
+    var isPreviewNew: Bool { get set }
 }

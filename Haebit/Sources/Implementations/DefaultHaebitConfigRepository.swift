@@ -28,6 +28,7 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case focalLengthRingFeedbackStyle = "DefaultHeabitConfigRepository.focalLengthRingFeedbackStyle"
         case perforationShape = "DefaultHeabitConfigRepository.perforationShape"
         case filmCanister = "DefaultHeabitConfigRepository.filmCanister"
+        case isPreviewNew = "DefaultHeabitConfigRepository.isPreviewNew"
     }
     
     @UserDefault(
@@ -82,6 +83,9 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     var perforationShape: PerforationShape
     @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .kodakUltramax400)
     var filmCanister: FilmCanister
+    
+    @UserDefault(key: UserDefaultKey.isPreviewNew.rawValue, defaultValue: true)
+    var isPreviewNew: Bool
     
     func reset() {
         UserDefaultKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }

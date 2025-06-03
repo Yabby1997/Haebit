@@ -68,6 +68,7 @@ struct HaebitPreviewTypeSelectionView: View {
                 }
             }
         }
+        .onAppear { viewModel.isPreviewNew = false }
     }
 }
 
