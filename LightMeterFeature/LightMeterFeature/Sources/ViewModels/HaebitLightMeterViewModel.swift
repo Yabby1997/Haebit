@@ -77,7 +77,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
-    @Published public var exposureCompensation: Float = .zero
+    @Published public var exposureCompensation: Float
     @Published public var shouldShowConfigOnboarding: Bool
     @Published public var apertureRingFeedbackStyle: FeedbackStyle
     @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
@@ -134,6 +134,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         shutterSpeed = statePersistence.shutterSpeed
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
+        exposureCompensation = statePersistence.exposureCompensation
         shouldShowConfigOnboarding = statePersistence.shouldShowConfigOnboarding
         bind()
     }
@@ -404,6 +405,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         statePersistence.shutterSpeed = shutterSpeed
         statePersistence.iso = iso
         statePersistence.focalLength = focalLength
+        statePersistence.exposureCompensation = exposureCompensation
     }
     
     public func didTap(point: CGPoint) {

@@ -17,6 +17,7 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
         case shutterSpeed = "LightMeterStateUserDefaultsPersistence.shutterSpeed"
         case iso = "LightMeterStateUserDefaultsPersistence.iso"
         case focalLength = "LightMeterStateUserDefaultsPersistence.focalLength"
+        case exposureCompensation = "LightMeterStateUserDefaultsPersistence.exposureCompensation"
         case shouldShowConfigOnboarding = "LightMeterStateUserDefaultsPersistence.shouldShowConfigOnboarding"
     }
     
@@ -34,6 +35,9 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
     
     @UserDefault(key: UserDefaultKey.focalLength.rawValue, defaultValue: FocalLengthValue(50)!)
     var focalLength: FocalLengthValue
+    
+    @UserDefault(key: UserDefaultKey.exposureCompensation.rawValue, defaultValue: .zero)
+    var exposureCompensation: Float
     
     @UserDefault(key: UserDefaultKey.shouldShowConfigOnboarding.rawValue, defaultValue: true)
     var shouldShowConfigOnboarding: Bool

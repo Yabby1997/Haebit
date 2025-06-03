@@ -15,5 +15,6 @@ public protocol LightMeterStatePersistenceProtocol: AnyObject {
     var shutterSpeed: ShutterSpeedValue { get set }
     var iso: IsoValue { get set }
     var focalLength: FocalLengthValue { get set }
+    var exposureCompensation: Float { get set }
     var shouldShowConfigOnboarding: Bool { get set }
 }
