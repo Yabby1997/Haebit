@@ -16,6 +16,7 @@ import SwiftUI
 @main
 struct HaebitApp: App {
     let configRepository = DefaultHaebitConfigRepository()
+    let statePersistence = LightMeterStateUserDefaultsPersistence()
     let logger = HaebitLogger(repository: DefaultHaebitLogRepository())
     @State var isPresentingLogger = false
     @State var isPresentingConfig = false
@@ -27,7 +28,7 @@ struct HaebitApp: App {
                     camera: LightMeterObscuraCamera(),
                     logger: logger,
                     preferenceProvider: configRepository,
-                    statePersistence: LightMeterStateUserDefaultsPersistence(),
+                    statePersistence: statePersistence,
                     fallbackFocalLength: UIDevice.focalLength,
                     reviewRequestValidator: DefaultReviewRequestValidator(),
                     gpsAccessValidator: DefaultGPSAccessValidator()
