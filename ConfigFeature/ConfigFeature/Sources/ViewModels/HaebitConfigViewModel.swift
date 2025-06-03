@@ -40,6 +40,7 @@ final class HaebitConfigViewModel: ObservableObject {
     @Published var focalLengths: [FocalLengthValue] = []
     @Published var isLatestVersion: Bool = false
     @Published var appVersion: String = "1.0.0"
+    @Published var isExposureCompensationNew: Bool
     @Published var isPreviewNew: Bool
     
     private var cancellables: Set<AnyCancellable> = []
@@ -71,6 +72,7 @@ final class HaebitConfigViewModel: ObservableObject {
         previewType = configRepository.previewType
         perforationShape = configRepository.perforationShape
         filmCanister = configRepository.filmCanister
+        isExposureCompensationNew = configRepository.isExposureCompensationNew
         isPreviewNew = configRepository.isPreviewNew
         bind()
     }
@@ -201,6 +203,13 @@ final class HaebitConfigViewModel: ObservableObject {
             .dropFirst()
             .sink { [weak self] filmCanister in
                 self?.configRepository.filmCanister = filmCanister
+            }
+            .store(in: &cancellables)
+        
+        $isExposureCompensationNew
+            .dropFirst()
+            .sink { [weak self] isExposureCompensationNew in
+                self?.configRepository.isExposureCompensationNew = isExposureCompensationNew
             }
             .store(in: &cancellables)
         

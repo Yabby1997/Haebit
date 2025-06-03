@@ -28,6 +28,7 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case focalLengthRingFeedbackStyle = "DefaultHeabitConfigRepository.focalLengthRingFeedbackStyle"
         case perforationShape = "DefaultHeabitConfigRepository.perforationShape"
         case filmCanister = "DefaultHeabitConfigRepository.filmCanister"
+        case isExposureCompensationNew = "DefaultHeabitConfigRepository.isExposureCompensationNew"
         case isPreviewNew = "DefaultHeabitConfigRepository.isPreviewNew"
     }
     
@@ -84,6 +85,8 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .kodakUltramax400)
     var filmCanister: FilmCanister
     
+    @UserDefault(key: UserDefaultKey.isExposureCompensationNew.rawValue, defaultValue: true)
+    var isExposureCompensationNew: Bool
     @UserDefault(key: UserDefaultKey.isPreviewNew.rawValue, defaultValue: true)
     var isPreviewNew: Bool
     

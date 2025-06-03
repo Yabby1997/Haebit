@@ -36,8 +36,9 @@ struct HaebitFeedbackConfigSection: View {
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.exposureCompensationDialFeedbackStyle, isPresented: $isPresented)
                     .navigationTitle(Text(.feedbackSectionExposureCompensationDialTitle))
+                    .onAppear { viewModel.isExposureCompensationNew = false }
             } label: {
-                ConfigLabel(title: .feedbackSectionExposureCompensationDialTitle, value: viewModel.exposureCompensationDialFeedbackStyle.description)
+                ConfigLabel(title: .feedbackSectionExposureCompensationDialTitle, value: viewModel.exposureCompensationDialFeedbackStyle.description, isNew: viewModel.isExposureCompensationNew)
             }
             NavigationLink {
                 HaebitFeedbackSelectionView(selection: $viewModel.focalLengthRingFeedbackStyle, isPresented: $isPresented)

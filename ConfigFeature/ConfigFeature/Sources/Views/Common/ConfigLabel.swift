@@ -23,6 +23,8 @@ struct ConfigLabel: View {
         HStack {
             Text(title)
                 .font(.system(size: 16, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.1)
             if isNew {
                 Text("NEW")
                     .font(.system(size: 10, weight: .bold))

@@ -24,5 +24,6 @@ public protocol HaebitConfigRepository: AnyObject {
     var perforationShape: PerforationShape { get set }
     var filmCanister: FilmCanister { get set }
     
+    var isExposureCompensationNew: Bool { get set }
     var isPreviewNew: Bool { get set }
 }
