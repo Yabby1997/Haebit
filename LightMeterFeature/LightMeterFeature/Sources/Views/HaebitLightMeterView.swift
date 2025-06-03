@@ -36,6 +36,7 @@ public struct HaebitLightMeterView: View {
             }
         }
         .persistentSystemOverlays(.hidden)
+        .statusBar(hidden: true)
         .onChange(of: scenePhase, perform: didChangeScene)
         .onChange(of: viewModel.shouldRequestReview, perform: requestReview)
         .onChange(of: isPresentingLogger, perform: didChange(isPresentingLogger:))

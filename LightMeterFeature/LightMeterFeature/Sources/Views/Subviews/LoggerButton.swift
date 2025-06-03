@@ -25,6 +25,8 @@ struct LoggerButton: View {
                     .scaledToFit()
             }
             .frame(height: 60)
+            .rotationEffect(viewModel.orientation.angle)
+            .animation(.easeInOut, value: viewModel.orientation)
         }
     }
 }

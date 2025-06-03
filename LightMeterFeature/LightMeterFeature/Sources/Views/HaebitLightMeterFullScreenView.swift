@@ -75,7 +75,7 @@ struct HaebitLightMeterFullScreenView: View {
                     }
                     .opacity(viewModel.orientation == .landscapeLeft ? 1.0 : .zero)
                 }
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 6)
                 LightMeterControlView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger)
             }
             .animation(.easeInOut, value: viewModel.orientation)

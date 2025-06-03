@@ -21,12 +21,14 @@ struct ExposureCompensationButton: View {
                         .frame(width: 16, height: 16)
                     Text("\(viewModel.exposureCompensation > 0 ? "+" : "")\(String(format: "%.1f", (viewModel.exposureCompensation * 10).rounded() / 10))")
                 }
+                .rotationEffect(viewModel.orientation.angle)
                 .foregroundStyle(viewModel.isExposureCompensationMode ? .white : .gray)
                 .font(.system(size: 16, weight: .semibold, design: .monospaced))
                 .shadow(radius: 2)
                 .contentTransition(.numericText())
                 .animation(.easeInOut, value: viewModel.exposureCompensation)
                 .animation(.easeInOut, value: viewModel.isExposureCompensationMode)
+                .animation(.easeInOut, value: viewModel.orientation)
             }
             Spacer()
         }

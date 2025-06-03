@@ -38,11 +38,6 @@ struct HaebitLightMeterFullCoverageView: View {
                         )
                         .rotationEffect(viewModel.orientation.angle)
                         if viewModel.isFixedDescriptionVisible {
-                            VStack {
-                                LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
-                                Spacer()
-                            }
-                            .opacity(viewModel.orientation == .portrait ? 1.0 : .zero)
                             HStack {
                                 Spacer()
                                 LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
@@ -69,12 +64,19 @@ struct HaebitLightMeterFullCoverageView: View {
                         }
                         .opacity(viewModel.orientation == .landscapeLeft ? 1.0 : .zero)
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 6)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .aspectRatio(2 / 3, contentMode: .fit)
-                .padding(.horizontal, 2)
                 Spacer()
+            }
+            .ignoresSafeArea(edges: .top)
+            if viewModel.isFixedDescriptionVisible {
+                VStack {
+                    LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
+                    Spacer()
+                }
+                .opacity(viewModel.orientation == .portrait ? 1.0 : .zero)
             }
             VStack {
                 Spacer()
