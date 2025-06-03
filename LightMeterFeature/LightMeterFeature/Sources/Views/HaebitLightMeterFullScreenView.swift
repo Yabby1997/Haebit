@@ -26,18 +26,60 @@ struct HaebitLightMeterFullScreenView: View {
                             isPresentingConfig = true
                         }
                 )
-            if viewModel.isFixedDescriptionVisible {
-                LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
-            }
-            LightMeterResultDescriptionView(
-                resultDescription: viewModel.resultDescription,
-                exposureValue: viewModel.exposureValue,
-                isLocked: viewModel.isLocked
-            )
             if let point = viewModel.lockPoint {
                 LockIindicatorView(point: point, isHighlighted: viewModel.isLocked)
             }
-            LightMeterControlView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger)
+            VStack {
+                ZStack {
+                    Spacer()
+                    LightMeterResultDescriptionView(
+                        resultDescription: viewModel.resultDescription,
+                        exposureValue: viewModel.exposureValue,
+                        isLocked: viewModel.isLocked
+                    )
+                    .rotationEffect(viewModel.orientation.angle)
+                    if viewModel.isFixedDescriptionVisible {
+                        VStack {
+                            LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
+                            Spacer()
+                        }
+                        .opacity(viewModel.orientation == .portrait ? 1.0 : .zero)
+                        HStack {
+                            Spacer()
+                            LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
+                                .rotateClockwise()
+                        }
+                        .opacity(viewModel.orientation == .landscapeRight ? 1.0 : .zero)
+                        HStack {
+                            LightMeterFixedDescriptionView(description: viewModel.fixedDescription)
+                                .rotateAnticlockwise()
+                            Spacer()
+                        }
+                        .opacity(viewModel.orientation == .landscapeLeft ? 1.0 : .zero)
+                    }
+                    VStack {
+                        Spacer()
+                        UnlockButton(viewModel: viewModel)
+                    }
+                    .opacity(viewModel.orientation == .portrait ? 1.0 : .zero)
+                    HStack {
+                        UnlockButton(viewModel: viewModel)
+                            .rotateClockwise()
+                        Spacer()
+                    }
+                    .opacity(viewModel.orientation == .landscapeRight ? 1.0 : .zero)
+                    HStack {
+                        Spacer()
+                        UnlockButton(viewModel: viewModel)
+                            .rotateAnticlockwise()
+                    }
+                    .opacity(viewModel.orientation == .landscapeLeft ? 1.0 : .zero)
+                }
+                .padding(.horizontal, 14)
+                LightMeterControlView(viewModel: viewModel, isPresentingLogger: $isPresentingLogger)
+            }
+            .animation(.easeInOut, value: viewModel.orientation)
+            .animation(.easeInOut, value: viewModel.isExposureCompensationMode)
         }
     }
 }

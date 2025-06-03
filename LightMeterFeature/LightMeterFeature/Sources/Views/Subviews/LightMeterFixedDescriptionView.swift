@@ -12,17 +12,14 @@ struct LightMeterFixedDescriptionView: View {
     let description: String
     
     var body: some View {
-        VStack {
+        HStack {
+            Spacer()
             HStack {
-                Spacer()
-                HStack {
-                    Image.lockFill
-                    Text(description)
-                }
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                .foregroundStyle(.white)
-                Spacer()
+                Image.lockFill
+                Text(description)
             }
+            .font(.system(size: 14, weight: .bold, design: .monospaced))
+            .foregroundStyle(.white)
             Spacer()
         }
         .shadow(radius: 10)

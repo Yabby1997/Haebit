@@ -43,12 +43,15 @@ struct ShutterSpeedRingEntry: View {
                         : .gray
                     : .white
             )
+            .frame(width: viewModel.orientation.isLandscape ? 30 : 60, height: viewModel.orientation.isLandscape ? 60 : 30)
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(1)
+            .minimumScaleFactor(0.1)
+            .font(.system(size: 18, weight: .bold, design: .serif))
+            .rotationEffect(viewModel.orientation.angle)
+            .animation(.easeInOut, value: viewModel.orientation)
             .animation(.easeInOut(duration: 0.2), value: viewModel.shutterSpeed == shutterSpeed)
             .animation(.easeInOut(duration: 0.2), value: viewModel.shutterSpeedMode)
-            .font(.system(size: 18, weight: .bold, design: .serif))
-            .minimumScaleFactor(0.7)
-            .lineLimit(1)
-            .fixedSize(horizontal: false, vertical: true)
             .shadow(radius: 2)
     }
 }

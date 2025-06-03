@@ -25,7 +25,7 @@ struct ExposureCompensationRing: View {
                 ExposureCompensationEntry(value: value, viewModel: viewModel)
             }
             .opacity(viewModel.isExposureCompensationMode ? 1.0 : .zero)
-            .frame(height: viewModel.isExposureCompensationMode ? 30 : .zero)
+            .frame(height: viewModel.isExposureCompensationMode ? 24 : .zero)
             .animation(.easeInOut, value: viewModel.isExposureCompensationMode)
         }
     }

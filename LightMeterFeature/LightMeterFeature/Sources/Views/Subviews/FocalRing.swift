@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import HaebitCommonModels
 import HaebitUI
 
 struct FocalRing: View {
@@ -14,7 +15,7 @@ struct FocalRing: View {
     
     var body: some View {
         if viewModel.isFocalLengthFixed == false {
-            VStack(spacing: .zero) {
+            VStack(spacing: 4) {
                 Rectangle()
                     .foregroundStyle(.white)
                     .frame(width: 2, height: 6)
@@ -25,16 +26,28 @@ struct FocalRing: View {
                     feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
                     isMute: .constant(true)
                 ) { focalLength in
-                    Text(focalLength.title)
-                        .foregroundStyle(.green)
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                        .minimumScaleFactor(0.7)
-                        .lineLimit(1)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .shadow(radius: 2)
+                    FocalRingView(focalLength: focalLength, viewModel: viewModel)
                 }
                 .frame(height: 30)
             }
         }
+    }
+}
+
+struct FocalRingView: View {
+    let focalLength: FocalLengthValue
+    @StateObject var viewModel: HaebitLightMeterViewModel
+    
+    var body: some View {
+        Text(focalLength.title)
+            .foregroundStyle(.green)
+            .frame(width: viewModel.orientation.isLandscape ? 30 : 60, height: viewModel.orientation.isLandscape ? 60 : 30)
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(1)
+            .minimumScaleFactor(0.1)
+            .font(.system(size: 14, weight: .bold, design: .monospaced))
+            .rotationEffect(viewModel.orientation.angle)
+            .animation(.easeInOut, value: viewModel.orientation)
+            .shadow(radius: 2)
     }
 }

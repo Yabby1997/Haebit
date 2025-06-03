@@ -25,6 +25,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     private let reviewRequestValidator: ReviewRequestValidatable
     private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
+    private let orientationObserver = OrientationObserver()
     private let debounceQueue = DispatchQueue.global()
     public let previewLayer: CALayer
     
@@ -92,6 +93,8 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published private var location: Coordinate? = nil
     @Published private var isCameraRunning = false
     @Published private var preferedFocalLengths: [FocalLengthValue]
+    @Published var orientation: Orientation = .portrait
+    
     private let fallbackFocalLength: UInt32
     
     private var cancellables: Set<AnyCancellable> = []
@@ -354,6 +357,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
                 self?.isExposureCompensationMode = false
             }
             .store(in: &cancellables)
+        
+        orientationObserver.orientation
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$orientation)
     }
     
     private func zoomCamera(factor: CGFloat) throws {

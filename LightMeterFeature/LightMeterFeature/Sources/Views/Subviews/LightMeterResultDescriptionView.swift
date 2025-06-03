@@ -31,11 +31,3 @@ struct LightMeterResultDescriptionView: View {
         .allowsHitTesting(false)
     }
 }
-
-#Preview {
-    LightMeterResultDescriptionView(resultDescription: "32000", exposureValue: 11.2314, isLocked: false)
-}
-
-#Preview {
-    LightMeterResultDescriptionView(resultDescription: "800", exposureValue: 7.623, isLocked: true)
-}
