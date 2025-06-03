@@ -348,7 +348,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $exposureCompensation.combineLatest($isExposureCompensationMode.filter { $0 })
-            .debounce(for: .seconds(3), scheduler: debounceQueue)
+            .debounce(for: .seconds(5), scheduler: debounceQueue)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.isExposureCompensationMode = false
