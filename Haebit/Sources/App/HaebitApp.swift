@@ -36,6 +36,10 @@ struct HaebitApp: App {
                 isPresentingLogger: $isPresentingLogger,
                 isPresentingConfig: $isPresentingConfig
             )
+            .onTapGesture(count: 3) {
+                configRepository.reset()
+                statePersistence.reset()
+            }
             .environmentObject(
                 LightMeterControlViewDependencies(
                     shutterButtonDependency: HaebitShutterButtonDependencies(

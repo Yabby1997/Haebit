@@ -57,6 +57,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         isApertureFixed || isShutterSpeedFixed || isIsoFixed || isFocalLengthFixed
     }
     var isUnlockable: Bool { lockPoint != nil || isLocked }
+    var shouldShowConfigOnboarding: Bool {
+        (orientation == .portrait && statePersistence.shouldShowConfigOnboarding)
+        || (orientation.isLandscape && statePersistence.shouldShowConfigOnboardingForLandscape )
+    }
     
     @Published public var isApertureFixed = false
     @Published public var isShutterSpeedFixed = false
@@ -79,7 +83,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var iso: IsoValue
     @Published public var focalLength: FocalLengthValue
     @Published public var exposureCompensation: Float
-    @Published public var shouldShowConfigOnboarding: Bool
     @Published public var apertureRingFeedbackStyle: FeedbackStyle
     @Published public var shutterSpeedDialFeedbackStyle: FeedbackStyle
     @Published public var isoDialFeedbackStyle: FeedbackStyle
@@ -138,7 +141,6 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         iso = statePersistence.iso
         focalLength = statePersistence.focalLength
         exposureCompensation = statePersistence.exposureCompensation
-        shouldShowConfigOnboarding = statePersistence.shouldShowConfigOnboarding
         bind()
     }
     
@@ -490,8 +492,11 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         feedbackProvider.generateInteractionFeedback()
         Task {
             await camera.stop()
-            shouldShowConfigOnboarding = false
-            statePersistence.shouldShowConfigOnboarding = false
+            if orientation.isLandscape {
+                statePersistence.shouldShowConfigOnboardingForLandscape = false
+            } else {
+                statePersistence.shouldShowConfigOnboarding = false
+            }
         }
     }
     

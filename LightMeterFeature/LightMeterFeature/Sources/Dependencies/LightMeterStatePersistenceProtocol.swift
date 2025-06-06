@@ -17,4 +17,5 @@ public protocol LightMeterStatePersistenceProtocol: AnyObject {
     var focalLength: FocalLengthValue { get set }
     var exposureCompensation: Float { get set }
     var shouldShowConfigOnboarding: Bool { get set }
+    var shouldShowConfigOnboardingForLandscape: Bool { get set }
 }

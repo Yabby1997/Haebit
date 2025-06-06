@@ -43,11 +43,15 @@ public struct HaebitLightMeterView: View {
         .onChange(of: isPresentingConfig, perform: didChange(isPresentingConfig:))
         .disabled(viewModel.isCapturing)
         .overlay {
-            if viewModel.shouldShowConfigOnboarding {
-                ConfigOnboardingView()
-                    .rotationEffect(viewModel.orientation.angle)
-                    .animation(.easeInOut, value: viewModel.orientation)
+            Group {
+                if viewModel.shouldShowConfigOnboarding {
+                    ConfigOnboardingView()
+                        .opacity(viewModel.shouldShowConfigOnboarding ? 1.0 : .zero)
+                        .rotationEffect(viewModel.orientation.angle)
+                }
             }
+            .animation(.easeInOut, value: viewModel.shouldShowConfigOnboarding)
+            .animation(.easeInOut, value: viewModel.orientation)
         }
         .alert(
             Text(.cameraAccessAlertTitle),

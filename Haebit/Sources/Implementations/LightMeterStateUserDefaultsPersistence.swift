@@ -19,6 +19,7 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
         case focalLength = "LightMeterStateUserDefaultsPersistence.focalLength"
         case exposureCompensation = "LightMeterStateUserDefaultsPersistence.exposureCompensation"
         case shouldShowConfigOnboarding = "LightMeterStateUserDefaultsPersistence.shouldShowConfigOnboarding"
+        case shouldShowConfigOnboardingLandscape = "LightMeterStateUserDefaultsPersistence.shouldShowConfigOnboardingLandscape"
     }
     
     @UserDefault(key: UserDefaultKey.mode.rawValue, defaultValue: .shutterSpeed)
@@ -41,6 +42,9 @@ final class LightMeterStateUserDefaultsPersistence: LightMeterStatePersistencePr
     
     @UserDefault(key: UserDefaultKey.shouldShowConfigOnboarding.rawValue, defaultValue: true)
     var shouldShowConfigOnboarding: Bool
+    
+    @UserDefault(key: UserDefaultKey.shouldShowConfigOnboardingLandscape.rawValue, defaultValue: true)
+    var shouldShowConfigOnboardingForLandscape: Bool
 
     func reset() {
         UserDefaultKey.allCases.forEach { UserDefaults.standard.removeObject(forKey: $0.rawValue) }

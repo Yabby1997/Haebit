@@ -21,9 +21,19 @@ struct HaebitLightMeterFullScreenView: View {
                 .gesture(
                     DragGesture()
                         .onChanged { value in
-                            guard abs(value.velocity.height) > abs(value.velocity.width),
-                                  value.translation.height < -50 else { return }
-                            isPresentingConfig = true
+                            if viewModel.orientation == .portrait {
+                               guard abs(value.velocity.height) > abs(value.velocity.width),
+                                     value.translation.height < -50 else { return }
+                               isPresentingConfig = true
+                           } else if viewModel.orientation == .landscapeRight {
+                                guard abs(value.velocity.width) > abs(value.velocity.height),
+                                      value.translation.width > 50 else { return }
+                                isPresentingConfig = true
+                            } else if viewModel.orientation == .landscapeLeft {
+                                guard abs(value.velocity.width) > abs(value.velocity.height),
+                                      value.translation.width < -50 else { return }
+                                isPresentingConfig = true
+                            }
                         }
                 )
             if let point = viewModel.lockPoint {
