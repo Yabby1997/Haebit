@@ -15,6 +15,7 @@ import LightMeterFeature
 
 final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     fileprivate enum UserDefaultKey: String, CaseIterable {
+        case rotation = "DefaultHeabitConfigRepository.rotation"
         case apertureEntries = "DefaultHeabitConfigRepository.apertureEntries"
         case shutterSpeedEntries = "DefaultHeabitConfigRepository.shutterSpeedEntries"
         case isoEntries = "DefaultHeabitConfigRepository.isoEntries"
@@ -28,9 +29,13 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
         case focalLengthRingFeedbackStyle = "DefaultHeabitConfigRepository.focalLengthRingFeedbackStyle"
         case perforationShape = "DefaultHeabitConfigRepository.perforationShape"
         case filmCanister = "DefaultHeabitConfigRepository.filmCanister"
+        case isRotationNew = "DefaultHeabitConfigRepository.isRotationNew"
         case isExposureCompensationNew = "DefaultHeabitConfigRepository.isExposureCompensationNew"
         case isPreviewNew = "DefaultHeabitConfigRepository.isPreviewNew"
     }
+    
+    @UserDefault(key: UserDefaultKey.rotation.rawValue, defaultValue: true)
+    var rotation: Bool
     
     @UserDefault(
         key: UserDefaultKey.apertureEntries.rawValue,
@@ -85,6 +90,8 @@ final class DefaultHaebitConfigRepository: HaebitConfigRepository {
     @UserDefault(key: UserDefaultKey.filmCanister.rawValue, defaultValue: .kodakUltramax400)
     var filmCanister: FilmCanister
     
+    @UserDefault(key: UserDefaultKey.isRotationNew.rawValue, defaultValue: true)
+    var isRotationNew: Bool
     @UserDefault(key: UserDefaultKey.isExposureCompensationNew.rawValue, defaultValue: true)
     var isExposureCompensationNew: Bool
     @UserDefault(key: UserDefaultKey.isPreviewNew.rawValue, defaultValue: true)

@@ -10,6 +10,7 @@ import Foundation
 import HaebitCommonModels
 
 public protocol HaebitConfigRepository: AnyObject {
+    var rotation: Bool { get set }
     var apertureEntries: [ApertureEntry] { get set }
     var shutterSpeedEntries: [ShutterSpeedEntry] { get set }
     var isoEntries: [IsoEntry] { get set }
@@ -24,6 +25,7 @@ public protocol HaebitConfigRepository: AnyObject {
     var perforationShape: PerforationShape { get set }
     var filmCanister: FilmCanister { get set }
     
+    var isRotationNew: Bool { get set }
     var isExposureCompensationNew: Bool { get set }
     var isPreviewNew: Bool { get set }
 }

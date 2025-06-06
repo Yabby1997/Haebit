@@ -21,6 +21,7 @@ final class HaebitConfigViewModel: ObservableObject {
     
     @Published var currentHeaderType: HeaderType = .reviewRequest
     @Published var highlightedSection: ConfigSection?
+    @Published var rotation: Bool
     @Published var apertureEntries: [ApertureEntry]
     @Published var shutterSpeedEntries: [ShutterSpeedEntry]
     @Published var isoEntries: [IsoEntry]
@@ -40,6 +41,7 @@ final class HaebitConfigViewModel: ObservableObject {
     @Published var focalLengths: [FocalLengthValue] = []
     @Published var isLatestVersion: Bool = false
     @Published var appVersion: String = "1.0.0"
+    @Published var isRotationNew: Bool
     @Published var isExposureCompensationNew: Bool
     @Published var isPreviewNew: Bool
     
@@ -59,6 +61,7 @@ final class HaebitConfigViewModel: ObservableObject {
         self.mailService = mailService
         self.feedbackGenerator = feedbackGenerator
         self.systemInfoProvider = systemInfoProvider
+        rotation = configRepository.rotation
         apertureEntries = configRepository.apertureEntries
         shutterSpeedEntries = configRepository.shutterSpeedEntries
         isoEntries = configRepository.isoEntries
@@ -72,6 +75,7 @@ final class HaebitConfigViewModel: ObservableObject {
         previewType = configRepository.previewType
         perforationShape = configRepository.perforationShape
         filmCanister = configRepository.filmCanister
+        isRotationNew = configRepository.isRotationNew
         isExposureCompensationNew = configRepository.isExposureCompensationNew
         isPreviewNew = configRepository.isPreviewNew
         bind()
@@ -89,6 +93,13 @@ final class HaebitConfigViewModel: ObservableObject {
             .map { _ in nil }
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .assign(to: &$highlightedSection)
+        
+        $rotation
+            .dropFirst()
+            .sink { [weak self] rotation in
+                self?.configRepository.rotation = rotation
+            }
+            .store(in: &cancellables)
         
         $apertureEntries
             .map { $0.filter { $0.isActive }.map { $0.value } }
@@ -203,6 +214,13 @@ final class HaebitConfigViewModel: ObservableObject {
             .dropFirst()
             .sink { [weak self] filmCanister in
                 self?.configRepository.filmCanister = filmCanister
+            }
+            .store(in: &cancellables)
+        
+        $isRotationNew
+            .dropFirst()
+            .sink { [weak self] isRotationNew in
+                self?.configRepository.isRotationNew = isRotationNew
             }
             .store(in: &cancellables)
         

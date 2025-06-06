@@ -19,6 +19,8 @@ extension LocalizedStringResource {
     static let headerSoundSectionDescription: Self = .init("headerSoundSectionDescription", bundle: .atURL(Bundle.module.bundleURL))
     static let headerAppearanceSectionTitle: Self = .init("headerAppearanceSectionTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let headerAppearanceSectionDescription: Self = .init("headerAppearanceSectionDescription", bundle: .atURL(Bundle.module.bundleURL))
+    static let featureSectionRotationTitle: Self = .init("featureSectionRotationTitle", bundle: .atURL(Bundle.module.bundleURL))
+    static let featureSectionTitle: Self = .init("featureSectionTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let controlSectionApertureTitle: Self = .init("controlSectionApertureTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let controlSectionShutterSpeedTitle: Self = .init("controlSectionShutterSpeedTitle", bundle: .atURL(Bundle.module.bundleURL))
     static let controlSectionIsoTitle: Self = .init("controlSectionIsoTitle", bundle: .atURL(Bundle.module.bundleURL))

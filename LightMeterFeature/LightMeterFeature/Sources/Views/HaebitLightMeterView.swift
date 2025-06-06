@@ -45,6 +45,8 @@ public struct HaebitLightMeterView: View {
         .overlay {
             if viewModel.shouldShowConfigOnboarding {
                 ConfigOnboardingView()
+                    .rotationEffect(viewModel.orientation.angle)
+                    .animation(.easeInOut, value: viewModel.orientation)
             }
         }
         .alert(

@@ -29,10 +29,13 @@ struct ConfigLabel: View {
                 Text("NEW")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundStyle(.yellow)
+                    .opacity(isNew ? 1.0 : .zero)
             }
             Spacer()
+                .background(.blue)
             Text(value)
                 .font(.system(size: 14, design: .monospaced))
         }
+        .animation(.easeInOut, value: isNew)
     }
 }

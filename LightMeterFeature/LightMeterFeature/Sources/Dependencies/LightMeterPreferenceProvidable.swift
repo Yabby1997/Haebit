@@ -10,6 +10,7 @@ import Foundation
 import HaebitCommonModels
 
 public protocol LightMeterPreferenceProvidable: AnyObject {
+    var rotation: Bool { get }
     var apertures: [ApertureValue] { get }
     var shutterSpeeds: [ShutterSpeedValue] { get }
     var isoValues: [IsoValue] { get }

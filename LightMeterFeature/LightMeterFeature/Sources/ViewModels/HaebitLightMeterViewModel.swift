@@ -73,7 +73,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var shutterSpeeds: [ShutterSpeedValue]
     @Published public var isoValues: [IsoValue]
     @Published public var focalLengths: [FocalLengthValue]
-    @Published public var exposureCompensationValues: [Float] =  [-2.0, -1.666, -1.333, -1.0, -0.666, -0.333, 0.0, 0.333, 0.666, 1.0, 1.333, 1.666, 2.0]
+    @Published public var exposureCompensationValues: [Float] =  [-2.0, -1.7, -1.3, -1.0, -0.7, -0.3, 0.0, 0.3, 0.7, 1.0, 1.3, 1.7, 2.0]
     @Published public var aperture: ApertureValue
     @Published public var shutterSpeed: ShutterSpeedValue
     @Published public var iso: IsoValue
@@ -359,6 +359,10 @@ public final class HaebitLightMeterViewModel: ObservableObject {
             .store(in: &cancellables)
         
         orientationObserver.orientation
+            .compactMap { [weak self] orientation in
+                guard let self else { return nil }
+                return preferenceProvider.rotation ? orientation : .portrait
+            }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .assign(to: &$orientation)

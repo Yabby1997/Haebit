@@ -38,6 +38,7 @@ public struct HaebitConfigView: View {
             ScrollViewReader { proxy in
                 List {
                     HaebitConfigHeaderSection(viewModel: viewModel)
+                    HaebitFeatureConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitControlConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitFeedbackConfigSection(viewModel: viewModel, isPresented: $isPresented)
                     HaebitSoundConfigSection(viewModel: viewModel)

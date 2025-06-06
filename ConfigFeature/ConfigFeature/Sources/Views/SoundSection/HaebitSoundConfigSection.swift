@@ -13,11 +13,7 @@ struct HaebitSoundConfigSection: View {
     
     var body: some View {
         Section {
-            Toggle(isOn: $viewModel.shutterSound) {
-                Text(.soundSectionShutterSoundOptionTitle)
-                    .font(.system(size: 16, weight: .semibold))
-            }
-            .tint(.yellow)
+            ConfigToggle(title: .soundSectionShutterSoundOptionTitle, isOn: $viewModel.shutterSound)
         } header: {
             HStack {
                 Image.speakerWave2
