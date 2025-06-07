@@ -8,6 +8,7 @@
 
 @preconcurrency import Combine
 import Foundation
+import LightMeter
 import LightMeterFeature
 @preconcurrency import QuartzCore
 
@@ -22,6 +23,8 @@ actor MockLightMeterCamera: LightMeterCamera {
     nonisolated let isoSubject = CurrentValueSubject<Float, Never>(100)
     nonisolated let lockPointSubject = CurrentValueSubject<CGPoint?, Never>(nil)
     nonisolated let isLockedSubject = CurrentValueSubject<Bool, Never>(false)
+    private let exposureValueSubject = CurrentValueSubject<Float, Never>(.zero)
+    private let exposureBiasSubject = CurrentValueSubject<Float, Never>(.zero)
     
     nonisolated let maxZoomFactor: AnyPublisher<CGFloat, Never> = Just(.greatestFiniteMagnitude).eraseToAnyPublisher()
     nonisolated let minZoomFactor: AnyPublisher<CGFloat, Never> = Just(.zero).eraseToAnyPublisher()
@@ -36,6 +39,8 @@ actor MockLightMeterCamera: LightMeterCamera {
     nonisolated let focusLockPoint: AnyPublisher<CGPoint?, Never>
     nonisolated let isExposureLocked: AnyPublisher<Bool, Never>
     nonisolated let isFocusLocked: AnyPublisher<Bool, Never>
+    nonisolated let exposureValue: AnyPublisher<Float, Never>
+    nonisolated let exposureOffset: AnyPublisher<Float, Never>
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -50,6 +55,8 @@ actor MockLightMeterCamera: LightMeterCamera {
         self.focusLockPoint = lockPointSubject.eraseToAnyPublisher()
         self.isExposureLocked = isLockedSubject.eraseToAnyPublisher()
         self.isFocusLocked = isLockedSubject.eraseToAnyPublisher()
+        self.exposureValue = exposureValueSubject.eraseToAnyPublisher()
+        self.exposureOffset = exposureBiasSubject.eraseToAnyPublisher()
         Task {
             await bind()
             await setCamera(isOn: true)
@@ -69,6 +76,14 @@ actor MockLightMeterCamera: LightMeterCamera {
                 CATransaction.commit()
             }
             .store(in: &cancellables)
+        
+        Publishers.CombineLatest(
+            Publishers.CombineLatest3(iso, shutterSpeed, aperture).compactMap { try? LightMeterService.getExposureValue(iso: $0.0, shutterSpeed: $0.1, aperture: $0.2) },
+            exposureOffset
+        )
+        .map { $0 + $1 }
+        .assign(to: \.value, on: exposureValueSubject)
+        .store(in: &cancellables)
     }
     
     func setCamera(isOn: Bool) {
@@ -76,6 +91,10 @@ actor MockLightMeterCamera: LightMeterCamera {
             try? await Task.sleep(nanoseconds: isOn ? 1_000_000_000 : .zero)
             isRunningSubject.send(isOn)
         }
+    }
+    
+    func setExposure(bias: Float) async throws {
+        exposureBiasSubject.send(bias)
     }
     
     func setup() async throws {}
