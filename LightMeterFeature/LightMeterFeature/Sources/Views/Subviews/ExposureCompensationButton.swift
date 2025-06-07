@@ -19,7 +19,7 @@ struct ExposureCompensationButton: View {
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 16, height: 16)
-                    Text("\(viewModel.exposureCompensation > 0 ? "+" : "")\(String(format: "%.1f", (viewModel.exposureCompensation * 10).rounded() / 10))")
+                    Text("\(viewModel.exposureCompensation.formatted)")
                 }
                 .rotationEffect(viewModel.orientation.angle)
                 .foregroundStyle(viewModel.isExposureCompensationMode ? .white : .gray)
@@ -32,5 +32,12 @@ struct ExposureCompensationButton: View {
             }
             Spacer()
         }
+    }
+}
+
+private extension Float {
+    var formatted: String {
+        let sign = self == .zero ? " " : self > .zero ? "+" : ""
+        return sign + String(format: "%.1f", self)
     }
 }
