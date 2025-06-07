@@ -18,8 +18,8 @@ struct ApertureRing: View {
             HaebitApertureRing(
                 selection: $viewModel.aperture,
                 entries: $viewModel.apertures,
-                feedbackStyle: .constant(viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle),
-                isMute: .constant(false)
+                feedbackStyle: viewModel.apertureRingFeedbackStyle.impactGeneratorFeedbackSyle,
+                isMute: false
             ) { aperture in
                 ApertureRingEntry(aperture: aperture, viewModel: viewModel)
             }

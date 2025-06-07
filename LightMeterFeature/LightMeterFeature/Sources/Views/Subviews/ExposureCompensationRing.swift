@@ -14,13 +14,14 @@ struct ExposureCompensationRing: View {
     @StateObject var viewModel: HaebitLightMeterViewModel
 
     var body: some View {
-        if viewModel.isExposureCompensationModeToggled {
+        if viewModel.isExposureCompensationModeInitiallyToggled {
             HaebitApertureRing(
                 selection: $viewModel.exposureCompensation,
                 entries: $viewModel.exposureCompensationValues,
                 cellWidth: 24,
-                feedbackStyle: .constant(viewModel.exposureCompensationDialFeedbackStyle.impactGeneratorFeedbackSyle),
-                isMute: .constant(false)
+                feedbackStyle: viewModel.exposureCompensationDialFeedbackStyle.impactGeneratorFeedbackSyle,
+                isInitialUpdateAnimated: false,
+                isMute: false
             ) { value in
                 ExposureCompensationEntry(value: value, viewModel: viewModel)
             }

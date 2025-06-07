@@ -23,8 +23,8 @@ struct FocalRing: View {
                 HaebitApertureRing(
                     selection: $viewModel.focalLength,
                     entries: $viewModel.focalLengths,
-                    feedbackStyle: .constant(viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle),
-                    isMute: .constant(true)
+                    feedbackStyle: viewModel.focalRingFeedbackStyle.impactGeneratorFeedbackSyle,
+                    isMute: true
                 ) { focalLength in
                     FocalRingView(focalLength: focalLength, viewModel: viewModel)
                 }

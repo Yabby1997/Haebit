@@ -67,7 +67,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     @Published public var isIsoFixed = false
     @Published public var isFocalLengthFixed = false
     @Published public var isExposureCompensationMode = false
-    @Published public var isExposureCompensationModeToggled = false
+    @Published public var isExposureCompensationModeInitiallyToggled = false
     @Published public var shouldRequestReview = false
     @Published public var shouldRequestCameraAccess = false
     @Published public var shouldRequestGPSAccess = false
@@ -444,7 +444,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     public func didTapExposureCompensationButton() {
         feedbackProvider.generateInteractionFeedback()
         isExposureCompensationMode.toggle()
-        isExposureCompensationModeToggled = true
+        isExposureCompensationModeInitiallyToggled = true
     }
     
     public func didTapShutter() {
@@ -522,6 +522,9 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         isoDialFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
         exposureCompensationDialFeedbackStyle = preferenceProvider.exposureCompensationDialFeedbackStyle
         focalRingFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        if isExposureCompensationModeInitiallyToggled {
+            isExposureCompensationModeInitiallyToggled = previewType == preferenceProvider.previewType
+        }
         previewType = preferenceProvider.previewType
         filmCanister = preferenceProvider.filmCanister
     }
