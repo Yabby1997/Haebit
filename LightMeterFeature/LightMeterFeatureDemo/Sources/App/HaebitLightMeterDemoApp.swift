@@ -6,11 +6,13 @@ import SwiftUI
 struct HaebitLightMeterDemoApp: App {
     let camera: MockLightMeterCamera
     let preferenceProvider: MockLightMeterPreferenceProvider
+    let orientationObserver: MockOrientationObserver
     @State var isPresentingConfig: Bool = false
     
     init() {
         camera = MockLightMeterCamera(screenScaleFactor: UIScreen.main.scale)
         preferenceProvider = MockLightMeterPreferenceProvider()
+        orientationObserver = MockOrientationObserver()
     }
     
     var body: some Scene {
@@ -21,6 +23,7 @@ struct HaebitLightMeterDemoApp: App {
                     logger: MockLightMeterLogger(),
                     preferenceProvider: preferenceProvider,
                     statePersistence: MockStatePersistence(),
+                    orientationObserver: orientationObserver,
                     reviewRequestValidator: MockReviewRequestValidator(),
                     gpsAccessValidator: MockGPSAccessValidator()
                 ),
@@ -38,7 +41,8 @@ struct HaebitLightMeterDemoApp: App {
                 DemoLightMeterConfigView(
                     viewModel: DemoLightMeterConfigViewModel(
                         camera: camera,
-                        preferenceProvider: preferenceProvider
+                        preferenceProvider: preferenceProvider,
+                        orientationObserver: orientationObserver
                     )
                 )
             }

@@ -10,13 +10,16 @@
 import CoreGraphics
 import Foundation
 import HaebitCommonModels
+import LightMeterFeature
 
 @MainActor
 final class DemoLightMeterConfigViewModel: ObservableObject {
     private let camera: MockLightMeterCamera
     private let preferenceProvider: MockLightMeterPreferenceProvider
+    private let orientationObserver: MockOrientationObserver
     
     @Published var previewImage: CGImage?
+    @Published var orientation: Orientation
     @Published var aperture: String
     @Published var shutterSpeed: String
     @Published var iso: String
@@ -31,15 +34,19 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
     @Published var shutterSpeedFeedbackStyle: FeedbackStyle
     @Published var isoFeedbackStyle: FeedbackStyle
     @Published var focalLengthFeedbackStyle: FeedbackStyle
+    @Published var previewType: PreviewType
     @Published var filmCanister: FilmCanister
     
     init(
         camera: MockLightMeterCamera,
-        preferenceProvider: MockLightMeterPreferenceProvider
+        preferenceProvider: MockLightMeterPreferenceProvider,
+        orientationObserver: MockOrientationObserver
     ) {
         self.camera = camera
         self.preferenceProvider = preferenceProvider
+        self.orientationObserver = orientationObserver
         self.previewImage = camera.previewImageSubject.value
+        self.orientation = orientationObserver._orientation
         self.aperture = String(camera.apertureSubject.value)
         self.shutterSpeed = String(camera.shutterSpeedSubject.value)
         self.iso = String(camera.isoSubject.value)
@@ -56,6 +63,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
         self.shutterSpeedFeedbackStyle = preferenceProvider.shutterSpeedDialFeedbackStyle
         self.isoFeedbackStyle = preferenceProvider.isoDialFeedbackStyle
         self.focalLengthFeedbackStyle = preferenceProvider.focalLengthRingFeedbackStyle
+        self.previewType = preferenceProvider.previewType
         self.filmCanister = preferenceProvider.filmCanister
         Task {
             await camera.setCamera(isOn: false)
@@ -73,6 +81,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
     func didTapDismiss() {
         Task {
             camera.previewImageSubject.send(previewImage)
+            orientationObserver._orientation = orientation
             if let aperture = Float(aperture) { camera.apertureSubject.send(aperture) }
             if let shutterSpeed = Float(shutterSpeed) { camera.shutterSpeedSubject.send(shutterSpeed) }
             if let iso = Float(iso) { camera.isoSubject.send(iso) }
@@ -90,6 +99,7 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
             preferenceProvider.shutterSpeedDialFeedbackStyle = shutterSpeedFeedbackStyle
             preferenceProvider.isoDialFeedbackStyle = isoFeedbackStyle
             preferenceProvider.focalLengthRingFeedbackStyle = focalLengthFeedbackStyle
+            preferenceProvider.previewType = previewType
             preferenceProvider.filmCanister = filmCanister
             await camera.setCamera(isOn: true)
         }

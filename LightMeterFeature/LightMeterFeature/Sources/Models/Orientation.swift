@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Orientation: Equatable {
+public enum Orientation: Equatable, CaseIterable {
     case portrait
     case landscapeRight
     case landscapeLeft

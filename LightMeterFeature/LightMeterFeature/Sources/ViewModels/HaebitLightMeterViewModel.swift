@@ -25,7 +25,7 @@ public final class HaebitLightMeterViewModel: ObservableObject {
     private let reviewRequestValidator: ReviewRequestValidatable
     private let gpsAccessValidator: GPSAccessValidatable
     private let feedbackProvider: LightMeterFeedbackProvidable
-    private let orientationObserver = OrientationObserver()
+    private let orientationObserver: OrientationObservable
     private let debounceQueue = DispatchQueue.global()
     public let previewLayer: CALayer
     
@@ -109,19 +109,21 @@ public final class HaebitLightMeterViewModel: ObservableObject {
         logger: HaebitLightMeterLoggable,
         preferenceProvider: LightMeterPreferenceProvidable,
         statePersistence: LightMeterStatePersistenceProtocol,
+        orientationObserver: OrientationObservable? = nil,
         fallbackFocalLength: UInt32 = 28,
         reviewRequestValidator: ReviewRequestValidatable,
         gpsAccessValidator: GPSAccessValidatable,
-        feedbackProvider: LightMeterFeedbackProvidable = LightMeterHapticFeedbackProvider()
+        feedbackProvider: LightMeterFeedbackProvidable? = nil
     ) {
         self.camera = camera
         self.logger = logger
         self.preferenceProvider = preferenceProvider
         self.statePersistence = statePersistence
+        self.orientationObserver = orientationObserver ?? OrientationObserver()
         self.fallbackFocalLength = fallbackFocalLength
         self.reviewRequestValidator = reviewRequestValidator
         self.gpsAccessValidator = gpsAccessValidator
-        self.feedbackProvider = feedbackProvider
+        self.feedbackProvider = feedbackProvider ?? LightMeterHapticFeedbackProvider()
         previewLayer = camera.previewLayer
         apertures = preferenceProvider.apertures
         shutterSpeeds = preferenceProvider.shutterSpeeds

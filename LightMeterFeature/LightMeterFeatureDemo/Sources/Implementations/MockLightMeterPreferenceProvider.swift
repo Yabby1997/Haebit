@@ -23,8 +23,10 @@ final class MockLightMeterPreferenceProvider: LightMeterPreferenceProvidable {
     @Published var exposureCompensationDialFeedbackStyle: FeedbackStyle = .light
     @Published var focalLengthRingFeedbackStyle: FeedbackStyle = .soft
     @Published var fullScreenPreview = true
+    @Published var previewType: PreviewType = .fullScreen
     @Published var filmCanister: FilmCanister = .kodakUltramax400
     
+    var rotation: Bool { true }
     var apertures: [HaebitCommonModels.ApertureValue] { rawApertures.components(separatedBy: ",").compactMap { Float($0) }.compactMap { ApertureValue($0) } }
     var shutterSpeeds: [HaebitCommonModels.ShutterSpeedValue] {
         rawShutterSpeeds.components(separatedBy: ",")

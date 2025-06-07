@@ -9,6 +9,7 @@
 import PhotosUI
 import SwiftUI
 import HaebitCommonModels
+import LightMeterFeature
 
 @MainActor
 struct DemoLightMeterConfigView: View {
@@ -28,6 +29,19 @@ struct DemoLightMeterConfigView: View {
                         } else {
                             Text("Select photo")
                         }
+                    }
+                }
+                Section("Orientation") {
+                    HStack {
+                        Text("Orientation")
+                            .fontWeight(.bold)
+                            .foregroundStyle(.yellow)
+                        Picker("", selection: $viewModel.orientation) {
+                            ForEach(Orientation.allCases, id: \.self) { orientation in
+                                Text(orientation.description).tag(orientation)
+                            }
+                        }
+                        .pickerStyle(.segmented)
                     }
                 }
                 Section("Exposure") {
@@ -155,6 +169,17 @@ struct DemoLightMeterConfigView: View {
                 Section("Appearance") {
                     VStack {
                         HStack {
+                            Text("Preview")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                            Picker("", selection: $viewModel.previewType) {
+                                ForEach(PreviewType.allCases, id: \.description) { previewType in
+                                    Text(previewType.description).tag(previewType)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        HStack {
                             Text("Film Canister")
                                 .fontWeight(.bold)
                                 .foregroundStyle(.yellow)
@@ -186,6 +211,16 @@ struct DemoLightMeterConfigView: View {
                     viewModel.previewImage = (UIImage(data: data)?.cgImage)
                 }
             }
+        }
+    }
+}
+
+extension Orientation {
+    var description: String {
+        switch self {
+        case .portrait: "Portrait"
+        case .landscapeLeft: "Left"
+        case .landscapeRight: "Right"
         }
     }
 }

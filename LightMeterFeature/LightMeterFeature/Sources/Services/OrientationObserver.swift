@@ -10,7 +10,7 @@
 import Foundation
 
 @MainActor
-final class OrientationObserver {
+final class OrientationObserver: OrientationObservable {
     var orientation: AnyPublisher<Orientation, Never>
     private var orientationSubject: CurrentValueSubject<Orientation?, Never> = .init(nil)
     private var cancellables: Set<AnyCancellable> = []
