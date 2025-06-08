@@ -30,6 +30,16 @@ struct DemoLightMeterConfigView: View {
                             Text("Select photo")
                         }
                     }
+                    HStack {
+                        Text("Rotate")
+                            .fontWeight(.bold)
+                        Spacer()
+                        Button(action: viewModel.didTapRotate) {
+                            Image(systemName: "rotate.right.fill")
+                        }
+                    }
+                    .foregroundStyle(viewModel.previewImage == nil ? .gray : .yellow)
+                    .disabled(viewModel.previewImage == nil)
                 }
                 Section("Orientation") {
                     HStack {

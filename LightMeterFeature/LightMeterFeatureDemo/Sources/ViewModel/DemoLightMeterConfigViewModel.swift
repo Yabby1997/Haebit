@@ -14,6 +14,7 @@ import LightMeterFeature
 
 @MainActor
 final class DemoLightMeterConfigViewModel: ObservableObject {
+    private let imageRotator = ImageRoatator()
     private let camera: MockLightMeterCamera
     private let preferenceProvider: MockLightMeterPreferenceProvider
     private let orientationObserver: MockOrientationObserver
@@ -68,6 +69,11 @@ final class DemoLightMeterConfigViewModel: ObservableObject {
         Task {
             await camera.setCamera(isOn: false)
         }
+    }
+    
+    func didTapRotate() {
+        guard let previewImage = previewImage else { return }
+        Task { self.previewImage = await imageRotator.rotateImage(previewImage) }
     }
     
     func didTapResetLock() {
