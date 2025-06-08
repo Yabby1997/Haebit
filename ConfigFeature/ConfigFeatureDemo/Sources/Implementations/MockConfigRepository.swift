@@ -10,6 +10,11 @@ import ConfigFeature
 import HaebitCommonModels
 
 final class MockConfigRepository: HaebitConfigRepository {
+    var isRotationNew = true
+    var isExposureCompensationNew = true
+    var isPreviewNew = true
+    var rotation = true
+    
     var apertureEntries: [ApertureEntry] = [
         .init(value: .init(1.4)!, isActive: true),
         .init(value: .init(2)!, isActive: false),
@@ -74,5 +79,6 @@ final class MockConfigRepository: HaebitConfigRepository {
     var focalLengthRingFeedbackStyle: FeedbackStyle = .rigid
     var shutterSound: Bool = true
     var perforationShape: PerforationShape = .bh
+    var previewType: PreviewType = .fullScreen
     var filmCanister: FilmCanister = .fujiXtra400
 }
